@@ -91,12 +91,32 @@ export default function FavoritesPage() {
   const [wishlist, setWishlist] = useState<WishlistListing[]>([]);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [authChecked, setAuthChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<"users" | "listings" | "wishlist">(
     "users"
   );
   const [removingId, setRemovingId] = useState<number | null>(null);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/api/users/me`, {
+          credentials: "include",
+        });
+        if (response.status === 401) {
+          router.push("/login");
+          return;
+        }
+        setAuthChecked(true);
+      } catch {
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [API_BASE, router]);
 
   // Get image URL
   const getImageUrl = (url: string | null | undefined): string | null => {
@@ -278,6 +298,14 @@ export default function FavoritesPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading favorites...</p>
         </div>
+      </div>
+    );
+  }
+
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
       </div>
     );
   }

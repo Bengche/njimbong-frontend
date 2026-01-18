@@ -199,6 +199,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [showMyListings, setShowMyListings] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
 
   // Onboarding & Personalization states
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -252,8 +253,16 @@ export default function Dashboard() {
       try {
         const response = await Axios.get(`${API_BASE}/api/users/me`);
         setCurrentUserId(response.data.id);
+        setAuthChecked(true);
       } catch (error) {
+        const axiosError = error as { response?: { status?: number } };
+        if (axiosError.response?.status === 401) {
+          window.location.href =
+            process.env.NEXT_PUBLIC_LOGIN_ENDPOINT || "/login";
+          return;
+        }
         console.error("Error fetching current user:", error);
+        setAuthChecked(true);
       }
     };
     fetchCurrentUser();
@@ -752,6 +761,14 @@ export default function Dashboard() {
       setUpdatingListingStatus(null);
     }
   };
+
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:py-10">

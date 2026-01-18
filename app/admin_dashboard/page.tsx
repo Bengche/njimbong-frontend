@@ -17,6 +17,7 @@ interface Category {
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const [adminChecked, setAdminChecked] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -30,6 +31,29 @@ export default function AdminDashboard() {
     imageurl: "",
     sortorder: 0,
   });
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const response = await Axios.get(`${API_BASE}/api/admin/reports/stats`);
+        if (response.status === 200) {
+          setAdminChecked(true);
+          return;
+        }
+        router.push(process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin");
+      } catch (error: any) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          router.push(
+            process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+          );
+          return;
+        }
+        console.error("Error checking admin auth:", error);
+      }
+    };
+
+    checkAdmin();
+  }, [router]);
 
   // Fetch categories
   const fetchCategories = useCallback(async () => {
@@ -185,6 +209,14 @@ export default function AdminDashboard() {
     setImagePreview(null);
     setShowAddModal(false);
   };
+
+  if (!adminChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:py-10">

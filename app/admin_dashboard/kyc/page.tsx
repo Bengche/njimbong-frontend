@@ -27,6 +27,7 @@ interface KYCVerification {
 
 export default function AdminKYCPage() {
   const router = useRouter();
+  const [adminChecked, setAdminChecked] = useState(false);
   const [verifications, setVerifications] = useState<KYCVerification[]>([]);
   const [filteredVerifications, setFilteredVerifications] = useState<
     KYCVerification[]
@@ -43,6 +44,37 @@ export default function AdminKYCPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const response = await Axios.get(`${API_BASE}/api/admin/reports/stats`);
+        if (response.status === 200) {
+          setAdminChecked(true);
+          return;
+        }
+        router.push(process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin");
+      } catch (error: any) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          router.push(
+            process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+          );
+          return;
+        }
+        console.error("Error checking admin auth:", error);
+      }
+    };
+
+    checkAdmin();
+  }, [router]);
+
+  if (!adminChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     fetchVerifications();

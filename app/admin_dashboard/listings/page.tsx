@@ -70,6 +70,7 @@ interface Pagination {
 
 export default function AdminListingsPage() {
   const router = useRouter();
+  const [adminChecked, setAdminChecked] = useState(false);
 
   // State management
   const [listings, setListings] = useState<Listing[]>([]);
@@ -79,6 +80,29 @@ export default function AdminListingsPage() {
     rejected: 0,
     total: 0,
   });
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const response = await Axios.get(`${API_BASE}/api/admin/reports/stats`);
+        if (response.status === 200) {
+          setAdminChecked(true);
+          return;
+        }
+        router.push(process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin");
+      } catch (error: any) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          router.push(
+            process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+          );
+          return;
+        }
+        console.error("Error checking admin auth:", error);
+      }
+    };
+
+    checkAdmin();
+  }, [router]);
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     limit: 10,
@@ -297,6 +321,14 @@ export default function AdminListingsPage() {
   // =====================================================
   // RENDER
   // =====================================================
+
+  if (!adminChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:py-10">

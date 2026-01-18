@@ -101,6 +101,7 @@ interface UserSummary {
 function ModerationDashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [adminChecked, setAdminChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "reports" | "appeals" | "users" | "broadcast"
   >("reports");
@@ -158,6 +159,26 @@ function ModerationDashboardContent() {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
   const adminLoginUrl =
     process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin";
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/api/admin/reports/stats`, {
+          credentials: "include",
+        });
+        if (response.status === 200) {
+          setAdminChecked(true);
+          return;
+        }
+        router.push(adminLoginUrl);
+      } catch (error) {
+        console.error("Error checking admin auth:", error);
+        router.push(adminLoginUrl);
+      }
+    };
+
+    checkAdmin();
+  }, [API_BASE, adminLoginUrl, router]);
 
   const getNumberValue = useCallback((value: unknown) => {
     if (typeof value === "number") return value;
@@ -473,6 +494,14 @@ function ModerationDashboardContent() {
       setActionLoading(false);
     }
   };
+
+  if (!adminChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
+      </div>
+    );
+  }
 
   // Initial load
   useEffect(() => {

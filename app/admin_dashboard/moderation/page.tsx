@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { Suspense, useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "../../components/PageHeader";
 
@@ -98,7 +98,7 @@ interface UserSummary {
   total_reports: number;
 }
 
-export default function ModerationDashboard() {
+function ModerationDashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<
@@ -2375,5 +2375,13 @@ export default function ModerationDashboard() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function ModerationDashboardPage() {
+  return (
+    <Suspense fallback={<div className="p-6">Loading...</div>}>
+      <ModerationDashboardContent />
+    </Suspense>
   );
 }

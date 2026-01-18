@@ -1,0 +1,17 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Njimbong favicon">
+  <defs>
+    <linearGradient id="njbGradient" x1="20" y1="20" x2="140" y2="140" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#10B981"/>
+      <stop offset="0.55" stop-color="#FACC15"/>
+      <stop offset="1" stop-color="#16A34A"/>
+    </linearGradient>
+    <linearGradient id="njbStroke" x1="0" y1="0" x2="160" y2="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#059669"/>
+      <stop offset="1" stop-color="#15803D"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="12" width="136" height="136" rx="32" fill="url(#njbGradient)"/>
+  <rect x="22" y="22" width="116" height="116" rx="26" fill="white" fill-opacity="0.92" stroke="url(#njbStroke)" stroke-width="2"/>
+  <path d="M48 112V48h14l36 44V48h14v64h-14L62 67v45H48z" fill="#065F46"/>
+  <path d="M112 48h-18v12h18v28c0 6.6-5.4 12-12 12h-4c-6.6 0-12-5.4-12-12v-6H70v6c0 14.4 11.6 26 26 26h4c14.4 0 26-11.6 26-26V60h8V48h-22z" fill="#065F46"/>
+</svg>

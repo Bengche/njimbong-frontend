@@ -4,7 +4,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import ReportModal from "../../components/ReportModal";
-import { ReviewList, WriteReviewModal } from "../../components/Reviews";
+import {
+  Review,
+  ReviewList,
+  ReviewStats,
+  WriteReviewModal,
+} from "../../components/Reviews";
 import PageHeader from "../../components/PageHeader";
 
 // ============================================

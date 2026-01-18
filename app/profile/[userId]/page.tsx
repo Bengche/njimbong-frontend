@@ -8,6 +8,7 @@ import {
   Review,
   ReviewList,
   ReviewStats,
+  ReviewSummary,
   WriteReviewModal,
 } from "../../components/Reviews";
 import PageHeader from "../../components/PageHeader";

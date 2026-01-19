@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface AuthUser {
   id: number;
@@ -15,27 +15,38 @@ export default function Navbar() {
 
   const API_BASE = useMemo(() => process.env.NEXT_PUBLIC_API_URL || "", []);
 
-  useEffect(() => {
-    const fetchMe = async () => {
-      try {
-        const response = await fetch(`${API_BASE}/api/user/me`, {
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUser({ id: data.id, name: data.name, email: data.email });
-        } else {
-          setUser(null);
-        }
-      } catch {
+  const fetchMe = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/user/me`, {
+        credentials: "include",
+        cache: "no-store",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUser({ id: data.id, name: data.name, email: data.email });
+      } else {
         setUser(null);
-      } finally {
-        setLoading(false);
       }
-    };
-
-    fetchMe();
+    } catch {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   }, [API_BASE]);
+
+  useEffect(() => {
+    fetchMe();
+
+    const handleFocus = () => fetchMe();
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [fetchMe]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchMe();
+    }
+  }, [fetchMe, isOpen]);
 
   const handleLogout = async () => {
     try {
@@ -58,6 +69,8 @@ export default function Navbar() {
         { label: "Chat", href: "/chat" },
         { label: "Profile", href: "/profile" },
       ]
+    : loading
+    ? [{ label: "Marketplace", href: "/dashboard" }]
     : [
         { label: "Marketplace", href: "/dashboard" },
         { label: "Sign in", href: "/login" },

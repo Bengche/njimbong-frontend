@@ -495,16 +495,9 @@ function ModerationDashboardContent() {
     }
   };
 
-  if (!adminChecked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
-      </div>
-    );
-  }
-
   // Initial load
   useEffect(() => {
+    if (!adminChecked) return;
     const loadData = async () => {
       setLoading(true);
       await Promise.all([fetchStats(), fetchReports(), fetchAppeals()]);
@@ -512,9 +505,10 @@ function ModerationDashboardContent() {
     };
 
     loadData();
-  }, [router, fetchStats, fetchReports, fetchAppeals]);
+  }, [adminChecked, router, fetchStats, fetchReports, fetchAppeals]);
 
   useEffect(() => {
+    if (!adminChecked) return;
     const tabParam = searchParams.get("tab");
     if (
       tabParam === "users" ||
@@ -524,20 +518,23 @@ function ModerationDashboardContent() {
     ) {
       setActiveTab(tabParam);
     }
-  }, [searchParams]);
+  }, [adminChecked, searchParams]);
 
   // Reload reports when filters change
   useEffect(() => {
+    if (!adminChecked) return;
     if (!loading) {
       fetchReports();
     }
-  }, [statusFilter, typeFilter, priorityFilter, fetchReports, loading]);
+  }, [adminChecked, statusFilter, typeFilter, priorityFilter, fetchReports, loading]);
 
   useEffect(() => {
+    if (!adminChecked) return;
     if (activeTab === "users") {
       fetchUsers();
     }
   }, [
+    adminChecked,
     activeTab,
     fetchUsers,
     userRoleFilter,
@@ -549,10 +546,12 @@ function ModerationDashboardContent() {
   ]);
 
   useEffect(() => {
+    if (!adminChecked) return;
     if (activeTab === "users") {
       setUsersPage(1);
     }
   }, [
+    adminChecked,
     activeTab,
     userSearch,
     userStatusFilter,
@@ -560,6 +559,14 @@ function ModerationDashboardContent() {
     userSortBy,
     userSortOrder,
   ]);
+
+  if (!adminChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
+      </div>
+    );
+  }
 
   // Report actions
   const handleDismissReport = async (reportId: number) => {

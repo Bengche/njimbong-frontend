@@ -32,13 +32,17 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
       });
 
+      if (response.data?.token) {
+        window.localStorage.setItem("authToken", response.data.token);
+      }
+
       // Store the user info if needed
       if (response.data.user) {
         console.log(
           "Logged in as:",
           response.data.user.email,
           "ID:",
-          response.data.user.id
+          response.data.user.id,
         );
       }
 

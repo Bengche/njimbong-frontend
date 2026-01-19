@@ -526,7 +526,14 @@ function ModerationDashboardContent() {
     if (!loading) {
       fetchReports();
     }
-  }, [adminChecked, statusFilter, typeFilter, priorityFilter, fetchReports, loading]);
+  }, [
+    adminChecked,
+    statusFilter,
+    typeFilter,
+    priorityFilter,
+    fetchReports,
+    loading,
+  ]);
 
   useEffect(() => {
     if (!adminChecked) return;

@@ -288,7 +288,11 @@ export default function OnboardingModal({
               ← Back
             </button>
           )}
-          <div className={`flex w-full flex-col gap-3 sm:w-auto sm:flex-row ${step === 1 ? "sm:ml-auto" : ""}`}>
+          <div
+            className={`flex w-full flex-col gap-3 sm:w-auto sm:flex-row ${
+              step === 1 ? "sm:ml-auto" : ""
+            }`}
+          >
             <button
               onClick={handleSkip}
               disabled={saving}

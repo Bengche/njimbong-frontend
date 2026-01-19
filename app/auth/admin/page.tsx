@@ -36,6 +36,10 @@ export default function AdminLogin() {
         },
       });
 
+      if (response.data?.token) {
+        window.localStorage.setItem("adminAuthToken", response.data.token);
+      }
+
       setLoginSuccess("Admin Logged in successful!");
       console.log("Login successful:", response.data);
 

@@ -1,4 +1,4 @@
-'use client";';
+"use client";
 import Axios from "axios";
 Axios.defaults.withCredentials = true;
 
@@ -7,7 +7,9 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 export default function Logout() {
   const handleLogout = async () => {
     try {
-      Axios.post(`${API_BASE}/auth/logout`);
+      await Axios.post(`${API_BASE}/auth/logout`);
+      window.localStorage.removeItem("authToken");
+      window.localStorage.removeItem("adminAuthToken");
       console.log("Logged out successfully");
 
       // Optionally, redirect to login page or homepage

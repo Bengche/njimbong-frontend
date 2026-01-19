@@ -5,6 +5,8 @@ import NotificationListener from "./components/NotificationListener";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AppShellWrapper from "./components/AppShellWrapper";
+import ClientPolyfills from "./components/ClientPolyfills";
+import AuthClientInit from "./components/AuthClientInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,6 +64,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ClientPolyfills />
+        <AuthClientInit />
         <NotificationListener />
         <Navbar />
         <AppShellWrapper>{children}</AppShellWrapper>

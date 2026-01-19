@@ -100,6 +100,8 @@ export default function ChatWindow({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const lastMessageIdRef = useRef<number | null>(null);
+  const isAtBottomRef = useRef(true);
+  const initialLoadRef = useRef(true);
 
   // Get current user ID
   useEffect(() => {
@@ -130,7 +132,17 @@ export default function ChatWindow({
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
     setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior });
+      isAtBottomRef.current = true;
     }, 100);
+  }, []);
+
+  const updateIsAtBottom = useCallback(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const threshold = 120;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+    isAtBottomRef.current = distanceFromBottom <= threshold;
   }, []);
 
   // Sort messages by created_at and ID to ensure consistent ordering
@@ -245,11 +257,17 @@ export default function ChatWindow({
         const sortedMessages = sortMessages(transformedMessages);
 
         if (sortedMessages.length > 0) {
-          const newestId = sortedMessages[sortedMessages.length - 1].id;
+          const newestMessage = sortedMessages[sortedMessages.length - 1];
+          const newestId = newestMessage.id;
           if (lastMessageIdRef.current !== newestId) {
+            const shouldAutoScroll =
+              isAtBottomRef.current ||
+              (currentUserId !== null && newestMessage.sender_id === currentUserId);
             setMessages(sortedMessages);
             lastMessageIdRef.current = newestId;
-            scrollToBottom();
+            if (shouldAutoScroll) {
+              scrollToBottom();
+            }
 
             // Mark as read
             await fetch(
@@ -316,6 +334,8 @@ export default function ChatWindow({
       setConversation(null);
       setReplyingTo(null);
       setHasMore(true);
+      initialLoadRef.current = true;
+      isAtBottomRef.current = true;
       fetchConversation();
 
       // Start polling every 3 seconds for new messages
@@ -340,7 +360,10 @@ export default function ChatWindow({
 
   useEffect(() => {
     if (!loading && messages.length > 0) {
-      scrollToBottom("auto");
+      if (initialLoadRef.current || isAtBottomRef.current) {
+        scrollToBottom("auto");
+        initialLoadRef.current = false;
+      }
     }
   }, [loading, messages, scrollToBottom]);
 
@@ -395,6 +418,7 @@ export default function ChatWindow({
 
   const handleScroll = () => {
     const container = messagesContainerRef.current;
+    updateIsAtBottom();
     if (container && container.scrollTop < 50 && hasMore && !loadingMore) {
       loadMoreMessages();
     }

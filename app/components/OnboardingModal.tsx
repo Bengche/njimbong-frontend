@@ -101,7 +101,7 @@ export default function OnboardingModal({
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       {/* Modal */}
-      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
+      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeIn flex flex-col max-h-[90vh]">
         {/* Header with gradient */}
         <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 px-4 py-5 text-white sm:px-8 sm:py-6">
           <div className="flex items-center gap-3">
@@ -138,7 +138,7 @@ export default function OnboardingModal({
         </div>
 
         {/* Content */}
-        <div className="p-4 max-h-[75vh] overflow-y-auto sm:p-8">
+        <div className="flex-1 p-4 overflow-y-auto sm:p-8">
           {step === 1 ? (
             // Welcome Step
             <div className="text-center py-8">
@@ -279,20 +279,20 @@ export default function OnboardingModal({
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-4 bg-gray-50 border-t flex justify-between items-center">
+        <div className="px-4 py-4 bg-gray-50 border-t flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:px-8">
           {step === 2 && (
             <button
               onClick={() => setStep(1)}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+              className="w-full px-4 py-2 text-gray-600 hover:text-gray-800 font-medium sm:w-auto"
             >
               ← Back
             </button>
           )}
-          <div className={step === 1 ? "ml-auto" : ""}>
+          <div className={`flex w-full flex-col gap-3 sm:w-auto sm:flex-row ${step === 1 ? "sm:ml-auto" : ""}`}>
             <button
               onClick={handleSkip}
               disabled={saving}
-              className="px-4 py-2 text-gray-500 hover:text-gray-700 font-medium mr-3"
+              className="w-full px-4 py-2 text-gray-500 hover:text-gray-700 font-medium sm:w-auto sm:mr-3"
             >
               Skip for now
             </button>
@@ -300,7 +300,7 @@ export default function OnboardingModal({
               <button
                 onClick={handleSave}
                 disabled={saving || selectedCategories.length < 5}
-                className={`px-6 py-2 rounded-xl font-semibold transition-all ${
+                className={`w-full px-6 py-2 rounded-xl font-semibold transition-all sm:w-auto ${
                   selectedCategories.length >= 5
                     ? "bg-gradient-to-r from-green-600 to-green-500 text-white hover:shadow-lg"
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"

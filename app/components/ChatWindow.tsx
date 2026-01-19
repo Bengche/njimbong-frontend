@@ -290,6 +290,7 @@ export default function ChatWindow({
     currentUserId,
     sortMessages,
     transformMessage,
+    updateIsAtBottom,
     scrollToBottom,
   ]);
 

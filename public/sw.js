@@ -20,8 +20,8 @@ self.addEventListener("push", (event) => {
   let notificationData = {
     title: "Marketplace Notification",
     body: "You have a new notification",
-    icon: "/icon-192x192.svg",
-    badge: "/badge-72x72.svg",
+    icon: "/logo.svg",
+    badge: "/logo.svg",
     tag: "marketplace-notification",
     requireInteraction: false,
     data: {},

@@ -93,7 +93,7 @@ export default function Signup() {
         formDataToSend.append("profileImage", image);
       }
 
-      await Axios.post(`${API_BASE}/register/signup`, formDataToSend, {
+      await Axios.post(`${API_BASE}/auth/signup`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

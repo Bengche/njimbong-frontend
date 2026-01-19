@@ -242,6 +242,7 @@ export default function ChatWindow({
     if (!conversationId || currentUserId === null) return;
 
     try {
+      updateIsAtBottom();
       const response = await fetch(
         `${API_BASE}/api/chat/conversations/${conversationId}/messages?limit=50`,
         {
@@ -262,7 +263,8 @@ export default function ChatWindow({
           if (lastMessageIdRef.current !== newestId) {
             const shouldAutoScroll =
               isAtBottomRef.current ||
-              (currentUserId !== null && newestMessage.sender_id === currentUserId);
+              (currentUserId !== null &&
+                newestMessage.sender_id === currentUserId);
             setMessages(sortedMessages);
             lastMessageIdRef.current = newestId;
             if (shouldAutoScroll) {
@@ -360,7 +362,7 @@ export default function ChatWindow({
 
   useEffect(() => {
     if (!loading && messages.length > 0) {
-      if (initialLoadRef.current || isAtBottomRef.current) {
+      if (initialLoadRef.current) {
         scrollToBottom("auto");
         initialLoadRef.current = false;
       }

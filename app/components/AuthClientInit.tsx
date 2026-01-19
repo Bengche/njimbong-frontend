@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Axios from "axios";
+import Axios, { AxiosHeaders } from "axios";
 
 declare global {
   interface Window {
@@ -29,10 +29,20 @@ export default function AuthClientInit() {
       const url = config.url;
       const token = getAuthTokenForUrl(url || "");
       if (token) {
-        config.headers = {
-          ...config.headers,
-          Authorization: `Bearer ${token}`,
-        };
+        if (
+          config.headers &&
+          typeof (config.headers as AxiosHeaders).set === "function"
+        ) {
+          (config.headers as AxiosHeaders).set(
+            "Authorization",
+            `Bearer ${token}`,
+          );
+        } else {
+          config.headers = AxiosHeaders.from({
+            ...(config.headers || {}),
+            Authorization: `Bearer ${token}`,
+          });
+        }
       }
       if (typeof config.withCredentials === "undefined") {
         config.withCredentials = true;

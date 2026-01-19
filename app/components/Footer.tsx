@@ -10,7 +10,7 @@ export default function Footer() {
               Njimbong: The Trusted Marketplace to Buy and Sell Online.
             </p>
             <a
-              href="/market"
+              href="/dashboard"
               className="inline-flex text-sm font-semibold text-emerald-700 hover:underline"
             >
               Explore the marketplace
@@ -21,7 +21,7 @@ export default function Footer() {
             <p className="font-semibold text-gray-800">Marketplace</p>
             <a
               className="block text-gray-600 hover:text-emerald-700"
-              href="/market"
+              href="/dashboard"
             >
               Browse listings
             </a>

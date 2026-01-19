@@ -480,7 +480,7 @@ export default function PublicProfilePage() {
             removed.
           </p>
           <button
-            onClick={() => router.push("/market")}
+            onClick={() => router.push("/dashboard")}
             className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-medium"
           >
             Browse Marketplace

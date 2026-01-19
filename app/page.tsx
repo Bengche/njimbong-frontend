@@ -55,7 +55,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <a
-                href="/market"
+                href="/dashboard"
                 className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3 text-white font-semibold shadow-lg hover:bg-emerald-700"
               >
                 Browse the Marketplace
@@ -163,7 +163,7 @@ export default function Home() {
               ].map((tag) => (
                 <a
                   key={tag}
-                  href={`/market?category=${encodeURIComponent(tag)}`}
+                  href={`/dashboard?category=${encodeURIComponent(tag)}`}
                   className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700 hover:bg-emerald-100"
                 >
                   {tag}
@@ -172,7 +172,7 @@ export default function Home() {
             </div>
             <p className="text-sm text-gray-500">
               Explore more on the{" "}
-              <a className="text-emerald-700 hover:underline" href="/market">
+              <a className="text-emerald-700 hover:underline" href="/dashboard">
                 marketplace
               </a>{" "}
               or list your first item from the{" "}
@@ -229,7 +229,7 @@ export default function Home() {
               step: "2",
               title: "List or shop",
               text: "Post listings or browse the marketplace to find the right deal.",
-              link: "/market",
+              link: "/dashboard",
               linkText: "Browse listings",
             },
             {
@@ -277,7 +277,7 @@ export default function Home() {
               Create Account
             </a>
             <a
-              href="/market"
+              href="/dashboard"
               className="inline-flex items-center justify-center rounded-lg border border-gray-200 px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50"
             >
               Explore Listings

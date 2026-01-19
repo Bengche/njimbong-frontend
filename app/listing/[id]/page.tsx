@@ -381,7 +381,7 @@ export default function ListingDetailPage() {
             Listing not found
           </h2>
           <button
-            onClick={() => router.push("/market")}
+            onClick={() => router.push("/dashboard")}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
           >
             Back to Market

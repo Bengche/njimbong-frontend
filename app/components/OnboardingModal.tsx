@@ -138,7 +138,7 @@ export default function OnboardingModal({
         </div>
 
         {/* Content */}
-        <div className="p-4 max-h-[70vh] overflow-y-auto sm:p-8">
+        <div className="p-4 max-h-[75vh] overflow-y-auto sm:p-8">
           {step === 1 ? (
             // Welcome Step
             <div className="text-center py-8">
@@ -191,7 +191,7 @@ export default function OnboardingModal({
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {categories.map((category) => {
                       const isSelected = selectedCategories.includes(
                         category.id
@@ -200,7 +200,7 @@ export default function OnboardingModal({
                         <button
                           key={category.id}
                           onClick={() => toggleCategory(category.id)}
-                          className={`relative p-4 rounded-xl border-2 transition-all transform hover:scale-102 ${
+                          className={`relative p-4 min-h-[96px] rounded-xl border-2 transition-all transform hover:scale-102 text-left ${
                             isSelected
                               ? "border-green-500 bg-green-50 shadow-md"
                               : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
@@ -229,7 +229,7 @@ export default function OnboardingModal({
                             {category.icon || "📦"}
                           </div>
                           <div
-                            className={`text-sm font-medium ${
+                            className={`text-sm font-medium break-words ${
                               isSelected ? "text-green-700" : "text-gray-700"
                             }`}
                           >

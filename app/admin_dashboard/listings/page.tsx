@@ -89,7 +89,9 @@ export default function AdminListingsPage() {
           setAdminChecked(true);
           return;
         }
-        router.push(process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin");
+        router.push(
+          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+        );
       } catch (error: any) {
         if (error.response?.status === 401 || error.response?.status === 403) {
           router.push(

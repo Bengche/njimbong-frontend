@@ -52,14 +52,14 @@ export default function Navbar() {
 
   const navLinks = user
     ? [
-        { label: "Marketplace", href: "/market" },
+        { label: "Marketplace", href: "/dashboard" },
         { label: "Dashboard", href: "/dashboard" },
         { label: "Favorites", href: "/favorites" },
         { label: "Chat", href: "/chat" },
         { label: "Profile", href: "/profile" },
       ]
     : [
-        { label: "Marketplace", href: "/market" },
+        { label: "Marketplace", href: "/dashboard" },
         { label: "Sign in", href: "/login" },
         { label: "Create account", href: "/signup" },
       ];

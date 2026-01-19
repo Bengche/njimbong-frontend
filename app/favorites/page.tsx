@@ -450,7 +450,7 @@ export default function FavoritesPage() {
                       post new listings.
                     </p>
                     <button
-                      onClick={() => router.push("/market")}
+                      onClick={() => router.push("/dashboard")}
                       className="bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition font-medium"
                     >
                       Browse Marketplace

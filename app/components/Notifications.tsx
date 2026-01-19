@@ -304,124 +304,134 @@ export default function Notifications({ userId }: NotificationsProps) {
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 max-h-[600px] overflow-hidden flex flex-col">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white p-4 flex items-center justify-between">
-            <h3 className="font-bold text-lg">Notifications</h3>
-            {unreadCount > 0 && (
-              <button
-                onClick={markAllAsRead}
-                className="text-xs bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1 rounded-full transition-colors"
-              >
-                Mark all read
-              </button>
-            )}
-          </div>
-
-          {/* Notifications List */}
-          <div className="overflow-y-auto flex-1">
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-              </div>
-            ) : notifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 px-4">
-                <svg
-                  className="w-16 h-16 text-gray-400 mb-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+        <>
+          <div
+            className="fixed inset-0 bg-black/30 sm:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="fixed inset-x-2 top-16 bottom-4 sm:absolute sm:inset-auto sm:right-0 sm:mt-2 sm:w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 max-h-[600px] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white p-4 flex items-center justify-between sticky top-0 z-10">
+              <h3 className="font-bold text-lg">Notifications</h3>
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllAsRead}
+                  className="text-xs bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1 rounded-full transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                  />
-                </svg>
-                <p className="text-gray-600 font-semibold">No notifications</p>
-                <p className="text-sm text-gray-500">
-                  You&apos;re all caught up!
-                </p>
-              </div>
-            ) : (
-              <div className="divide-y divide-gray-200">
-                {notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`p-4 hover:bg-gray-50 transition-colors ${
-                      !notification.isread ? "bg-blue-50" : ""
-                    }`}
+                  Mark all read
+                </button>
+              )}
+            </div>
+
+            {/* Notifications List */}
+            <div className="overflow-y-auto flex-1">
+              {loading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                </div>
+              ) : notifications.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 px-4">
+                  <svg
+                    className="w-16 h-16 text-gray-400 mb-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <div className="flex items-start gap-3">
-                      {getNotificationIcon(notification.type)}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
-                          <h4
-                            className={`text-sm font-semibold text-gray-800 ${
-                              !notification.isread ? "font-bold" : ""
-                            }`}
-                          >
-                            {notification.title}
-                          </h4>
-                          <button
-                            onClick={() => deleteNotification(notification.id)}
-                            className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"
-                          >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                    />
+                  </svg>
+                  <p className="text-gray-600 font-semibold">
+                    No notifications
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    You&apos;re all caught up!
+                  </p>
+                </div>
+              ) : (
+                <div className="divide-y divide-gray-200">
+                  {notifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={`p-4 hover:bg-gray-50 transition-colors ${
+                        !notification.isread ? "bg-blue-50" : ""
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        {getNotificationIcon(notification.type)}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <h4
+                              className={`text-sm font-semibold text-gray-800 ${
+                                !notification.isread ? "font-bold" : ""
+                              }`}
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {notification.message}
-                        </p>
-                        <div className="flex items-center gap-3 mt-2">
-                          <span className="text-xs text-gray-500">
-                            {getTimeAgo(notification.createdat)}
-                          </span>
-                          {!notification.isread && (
+                              {notification.title}
+                            </h4>
                             <button
-                              onClick={() => markAsRead(notification.id)}
-                              className="text-xs text-green-600 hover:text-green-700 font-semibold"
+                              onClick={() =>
+                                deleteNotification(notification.id)
+                              }
+                              className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"
                             >
-                              Mark as read
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
                             </button>
-                          )}
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {notification.message}
+                          </p>
+                          <div className="flex items-center gap-3 mt-2">
+                            <span className="text-xs text-gray-500">
+                              {getTimeAgo(notification.createdat)}
+                            </span>
+                            {!notification.isread && (
+                              <button
+                                onClick={() => markAsRead(notification.id)}
+                                className="text-xs text-green-600 hover:text-green-700 font-semibold"
+                              >
+                                Mark as read
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            {notifications.length > 0 && (
+              <div className="border-t border-gray-200 p-3 text-center bg-white">
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    // Could navigate to a full notifications page here
+                  }}
+                  className="text-sm text-green-600 hover:text-green-700 font-semibold"
+                >
+                  View All Notifications
+                </button>
               </div>
             )}
           </div>
-
-          {/* Footer */}
-          {notifications.length > 0 && (
-            <div className="border-t border-gray-200 p-3 text-center">
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  // Could navigate to a full notifications page here
-                }}
-                className="text-sm text-green-600 hover:text-green-700 font-semibold"
-              >
-                View All Notifications
-              </button>
-            </div>
-          )}
-        </div>
+        </>
       )}
     </div>
   );

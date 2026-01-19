@@ -70,17 +70,10 @@ export default function AdminKYCPage() {
     checkAdmin();
   }, [router]);
 
-  if (!adminChecked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
-      </div>
-    );
-  }
-
   useEffect(() => {
+    if (!adminChecked) return;
     fetchVerifications();
-  }, []);
+  }, [adminChecked]);
 
   useEffect(() => {
     let filtered = verifications;
@@ -101,6 +94,14 @@ export default function AdminKYCPage() {
 
     setFilteredVerifications(filtered);
   }, [verifications, statusFilter, searchQuery]);
+
+  if (!adminChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
+      </div>
+    );
+  }
 
   const fetchVerifications = async () => {
     try {

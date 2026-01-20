@@ -100,7 +100,7 @@ export function useBrowserNotifications() {
         return false;
       }
     },
-    [isSupported, permission, swRegistration]
+    [isSupported, permission, swRegistration],
   );
 
   return {
@@ -244,7 +244,7 @@ export function useNotificationPoller(userId: number | null) {
           `${API_BASE}/api/notifications/${userId}/new?${params}`,
           {
             credentials: "include",
-          }
+          },
         );
 
         if (response.ok) {

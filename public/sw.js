@@ -63,7 +63,7 @@ self.addEventListener("push", (event) => {
         { action: "view", title: "View" },
         { action: "dismiss", title: "Dismiss" },
       ],
-    })
+    }),
   );
 });
 
@@ -107,7 +107,7 @@ self.addEventListener("notificationclick", (event) => {
         if (clients.openWindow) {
           return clients.openWindow(url);
         }
-      })
+      }),
   );
 });
 

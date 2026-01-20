@@ -9,11 +9,28 @@ declare global {
   }
 }
 
+const isAdminEndpoint = (url: string | undefined): boolean => {
+  if (!url) return false;
+
+  return (
+    url.includes("/api/admin") ||
+    url.includes("/api/kyc/all") ||
+    url.includes("/api/kyc/pending") ||
+    url.includes("/api/kyc/approve") ||
+    url.includes("/api/kyc/reject") ||
+    url.includes("/api/categories")
+  );
+};
+
 const getAuthTokenForUrl = (url: string | undefined): string | null => {
   if (typeof window === "undefined") return null;
   const adminToken = window.localStorage.getItem("adminAuthToken");
   const userToken = window.localStorage.getItem("authToken");
-  if (url && url.includes("/admin") && adminToken) return adminToken;
+
+  if (adminToken && (isAdminEndpoint(url) || !userToken)) {
+    return adminToken;
+  }
+
   return userToken;
 };
 

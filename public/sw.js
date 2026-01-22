@@ -1,16 +1,111 @@
-// Service Worker for Push Notifications
-const CACHE_NAME = "marketplace-v1";
+// Service Worker for PWA + Push Notifications
+const CACHE_VERSION = "v2";
+const STATIC_CACHE = `marketplace-static-${CACHE_VERSION}`;
+const RUNTIME_CACHE = `marketplace-runtime-${CACHE_VERSION}`;
+const PRECACHE_URLS = [
+  "/",
+  "/manifest.webmanifest",
+  "/logo.svg",
+  "/icon-192x192.png",
+  "/icon-512x512.png",
+  "/apple-touch-icon.png",
+];
 
 // Install event
 self.addEventListener("install", (event) => {
   console.log("Service Worker installed");
-  self.skipWaiting();
+  event.waitUntil(
+    caches
+      .open(STATIC_CACHE)
+      .then((cache) => cache.addAll(PRECACHE_URLS))
+      .catch(() => null)
+      .finally(() => self.skipWaiting())
+  );
 });
 
 // Activate event
 self.addEventListener("activate", (event) => {
   console.log("Service Worker activated");
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    Promise.all([
+      caches
+        .keys()
+        .then((keys) =>
+          Promise.all(
+            keys
+              .filter(
+                (key) =>
+                  key !== STATIC_CACHE && key !== RUNTIME_CACHE
+              )
+              .map((key) => caches.delete(key))
+          )
+        ),
+      clients.claim(),
+    ])
+  );
+});
+
+// Fetch event - basic offline support
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+  const isSameOrigin = url.origin === self.location.origin;
+  const isApiRequest = isSameOrigin && url.pathname.startsWith("/api/");
+  const isNextStatic = isSameOrigin && url.pathname.startsWith("/_next/static");
+  const isAsset =
+    isSameOrigin &&
+    (isNextStatic ||
+      url.pathname === "/manifest.webmanifest" ||
+      url.pathname === "/logo.svg" ||
+      url.pathname === "/icon-192x192.png" ||
+      url.pathname === "/icon-512x512.png" ||
+      url.pathname === "/apple-touch-icon.png");
+
+  if (isApiRequest) {
+    return;
+  }
+
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  if (isAsset) {
+    event.respondWith(
+      caches.match(request).then((cached) =>
+        cached ||
+        fetch(request).then((response) => {
+          const copy = response.clone();
+          caches.open(STATIC_CACHE).then((cache) => cache.put(request, copy));
+          return response;
+        })
+      )
+    );
+    return;
+  }
+
+  if (isSameOrigin) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+  }
 });
 
 // Push event - handle incoming push notifications

@@ -24,6 +24,29 @@ export const metadata: Metadata = {
     template: "%s | Njimbong",
   },
   description: "Njimbong: The Trusted Marketplace to Buy and Sell Online",
+  applicationName: "Njimbong Marketplace",
+  manifest: "/manifest.webmanifest",
+  themeColor: "#16a34a",
+  colorScheme: "light",
+  appleWebApp: {
+    capable: true,
+    title: "Njimbong",
+    statusBarStyle: "default",
+  },
+  icons: {
+    icon: [
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+    shortcut: ["/icon-192x192.png"],
+  },
   keywords: [
     "Njimbong",
     "Njimbong Marketplace",

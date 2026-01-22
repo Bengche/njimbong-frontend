@@ -68,22 +68,6 @@ export function useBrowserNotifications() {
     }
   }, []);
 
-  const requestPermission = useCallback(async () => {
-    if (!isSupported) return false;
-
-    try {
-      const result = await Notification.requestPermission();
-      setPermission(result);
-      if (result === "granted" && swRegistration) {
-        await subscribeToPush();
-      }
-      return result === "granted";
-    } catch (error) {
-      console.error("Error requesting notification permission:", error);
-      return false;
-    }
-  }, [isSupported, subscribeToPush, swRegistration]);
-
   const subscribeToPush = useCallback(async () => {
     if (!VAPID_PUBLIC_KEY || permission !== "granted") {
       return;
@@ -116,6 +100,22 @@ export function useBrowserNotifications() {
       console.error("Error subscribing to push:", error);
     }
   }, [API_BASE, permission, swRegistration]);
+
+  const requestPermission = useCallback(async () => {
+    if (!isSupported) return false;
+
+    try {
+      const result = await Notification.requestPermission();
+      setPermission(result);
+      if (result === "granted" && swRegistration) {
+        await subscribeToPush();
+      }
+      return result === "granted";
+    } catch (error) {
+      console.error("Error requesting notification permission:", error);
+      return false;
+    }
+  }, [isSupported, subscribeToPush, swRegistration]);
 
   useEffect(() => {
     if (permission === "granted" && swRegistration) {

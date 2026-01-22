@@ -2,6 +2,23 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
+
+const urlBase64ToUint8Array = (base64String: string) => {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; i += 1) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+
+  return outputArray;
+};
 
 interface BrowserNotificationOptions {
   title: string;
@@ -58,6 +75,37 @@ export function useBrowserNotifications() {
       return false;
     }
   }, [isSupported]);
+
+  const subscribeToPush = useCallback(async () => {
+    if (!swRegistration || !VAPID_PUBLIC_KEY || permission !== "granted") {
+      return;
+    }
+
+    try {
+      const existing = await swRegistration.pushManager.getSubscription();
+      const subscription =
+        existing ||
+        (await swRegistration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        }));
+
+      await fetch(`${API_BASE}/api/notifications/subscribe`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subscription }),
+      });
+    } catch (error) {
+      console.error("Error subscribing to push:", error);
+    }
+  }, [permission, swRegistration]);
+
+  useEffect(() => {
+    if (permission === "granted") {
+      subscribeToPush();
+    }
+  }, [permission, subscribeToPush]);
 
   const showNotification = useCallback(
     async (options: BrowserNotificationOptions) => {

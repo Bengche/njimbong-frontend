@@ -19,7 +19,7 @@ self.addEventListener("install", (event) => {
       .open(STATIC_CACHE)
       .then((cache) => cache.addAll(PRECACHE_URLS))
       .catch(() => null)
-      .finally(() => self.skipWaiting())
+      .finally(() => self.skipWaiting()),
   );
 });
 
@@ -33,15 +33,12 @@ self.addEventListener("activate", (event) => {
         .then((keys) =>
           Promise.all(
             keys
-              .filter(
-                (key) =>
-                  key !== STATIC_CACHE && key !== RUNTIME_CACHE
-              )
-              .map((key) => caches.delete(key))
-          )
+              .filter((key) => key !== STATIC_CACHE && key !== RUNTIME_CACHE)
+              .map((key) => caches.delete(key)),
+          ),
         ),
       clients.claim(),
-    ])
+    ]),
   );
 });
 
@@ -76,21 +73,22 @@ self.addEventListener("fetch", (event) => {
           caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
           return response;
         })
-        .catch(() => caches.match(request))
+        .catch(() => caches.match(request)),
     );
     return;
   }
 
   if (isAsset) {
     event.respondWith(
-      caches.match(request).then((cached) =>
-        cached ||
-        fetch(request).then((response) => {
-          const copy = response.clone();
-          caches.open(STATIC_CACHE).then((cache) => cache.put(request, copy));
-          return response;
-        })
-      )
+      caches.match(request).then(
+        (cached) =>
+          cached ||
+          fetch(request).then((response) => {
+            const copy = response.clone();
+            caches.open(STATIC_CACHE).then((cache) => cache.put(request, copy));
+            return response;
+          }),
+      ),
     );
     return;
   }
@@ -103,7 +101,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
           return response;
         })
-        .catch(() => caches.match(request))
+        .catch(() => caches.match(request)),
     );
   }
 });

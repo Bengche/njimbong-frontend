@@ -7,6 +7,15 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 export default function Logout() {
   const handleLogout = async () => {
     try {
+      if ("serviceWorker" in navigator) {
+        const registration = await navigator.serviceWorker.getRegistration();
+        const subscription = await registration?.pushManager.getSubscription();
+        if (subscription) {
+          await Axios.post(`${API_BASE}/api/notifications/unsubscribe`, {
+            endpoint: subscription.endpoint,
+          });
+        }
+      }
       await Axios.post(`${API_BASE}/auth/logout`);
       window.localStorage.removeItem("authToken");
       window.localStorage.removeItem("adminAuthToken");

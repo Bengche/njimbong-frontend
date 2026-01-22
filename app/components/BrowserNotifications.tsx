@@ -54,10 +54,17 @@ export function useBrowserNotifications() {
         .then((registration) => {
           console.log("Service Worker registered:", registration);
           setSwRegistration(registration);
+          registration.update().catch(() => null);
         })
         .catch((error) => {
           console.error("Service Worker registration failed:", error);
         });
+
+      navigator.serviceWorker.ready
+        .then((registration) => {
+          setSwRegistration(registration);
+        })
+        .catch(() => null);
     }
   }, []);
 
@@ -67,23 +74,34 @@ export function useBrowserNotifications() {
     try {
       const result = await Notification.requestPermission();
       setPermission(result);
+      if (result === "granted" && swRegistration) {
+        await subscribeToPush();
+      }
       return result === "granted";
     } catch (error) {
       console.error("Error requesting notification permission:", error);
       return false;
     }
-  }, [isSupported]);
+  }, [isSupported, subscribeToPush, swRegistration]);
 
   const subscribeToPush = useCallback(async () => {
-    if (!swRegistration || !VAPID_PUBLIC_KEY || permission !== "granted") {
+    if (!VAPID_PUBLIC_KEY || permission !== "granted") {
       return;
     }
 
     try {
-      const existing = await swRegistration.pushManager.getSubscription();
+      const registration =
+        swRegistration ||
+        ("serviceWorker" in navigator
+          ? await navigator.serviceWorker.ready
+          : null);
+
+      if (!registration) return;
+
+      const existing = await registration.pushManager.getSubscription();
       const subscription =
         existing ||
-        (await swRegistration.pushManager.subscribe({
+        (await registration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
         }));
@@ -104,6 +122,16 @@ export function useBrowserNotifications() {
       subscribeToPush();
     }
   }, [permission, swRegistration, subscribeToPush]);
+
+  useEffect(() => {
+    if (permission !== "granted") return;
+
+    const interval = setInterval(() => {
+      subscribeToPush();
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [permission, subscribeToPush]);
 
   const showNotification = useCallback(
     async (options: BrowserNotificationOptions) => {

@@ -50,6 +50,18 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
+      if ("serviceWorker" in navigator) {
+        const registration = await navigator.serviceWorker.getRegistration();
+        const subscription = await registration?.pushManager.getSubscription();
+        if (subscription) {
+          await fetch(`${API_BASE}/api/notifications/unsubscribe`, {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ endpoint: subscription.endpoint }),
+          });
+        }
+      }
       await fetch(`${API_BASE}/auth/logout`, {
         method: "POST",
         credentials: "include",

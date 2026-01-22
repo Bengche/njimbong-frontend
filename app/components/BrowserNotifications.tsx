@@ -6,9 +6,7 @@ const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 
 const urlBase64ToUint8Array = (base64String: string) => {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/-/g, "+")
-    .replace(/_/g, "/");
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
   const rawData = atob(base64);
   const outputArray = new Uint8Array(rawData.length);
@@ -119,8 +117,8 @@ export function useBrowserNotifications() {
         if (swRegistration) {
           await swRegistration.showNotification(options.title, {
             body: options.body,
-            icon: options.icon || "/logo.svg",
-            badge: "/logo.svg",
+            icon: options.icon || "/icon-192x192.png",
+            badge: "/icon-192x192.png",
             tag: options.tag || "marketplace-notification",
             requireInteraction: options.requireInteraction || false,
             data: options.data,
@@ -129,7 +127,7 @@ export function useBrowserNotifications() {
           // Fallback to basic notification
           const notification = new Notification(options.title, {
             body: options.body,
-            icon: options.icon || "/logo.svg",
+            icon: options.icon || "/icon-192x192.png",
             tag: options.tag || "marketplace-notification",
             requireInteraction: options.requireInteraction || false,
           });

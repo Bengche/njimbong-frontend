@@ -9,6 +9,7 @@ const PRECACHE_URLS = [
   "/icon-192x192.png",
   "/icon-512x512.png",
   "/apple-touch-icon.png",
+  "/badge-72x72.svg",
 ];
 
 // Install event
@@ -59,7 +60,8 @@ self.addEventListener("fetch", (event) => {
       url.pathname === "/logo.svg" ||
       url.pathname === "/icon-192x192.png" ||
       url.pathname === "/icon-512x512.png" ||
-      url.pathname === "/apple-touch-icon.png");
+      url.pathname === "/apple-touch-icon.png" ||
+      url.pathname === "/badge-72x72.svg");
 
   if (isApiRequest) {
     return;
@@ -114,7 +116,7 @@ self.addEventListener("push", (event) => {
     title: "Marketplace Notification",
     body: "You have a new notification",
     icon: "/icon-192x192.png",
-    badge: "/icon-192x192.png",
+    badge: "/badge-72x72.svg",
     tag: "marketplace-notification",
     requireInteraction: false,
     data: {},

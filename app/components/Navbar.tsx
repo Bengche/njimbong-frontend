@@ -57,6 +57,9 @@ export default function Navbar() {
     } catch {
       // Ignore logout errors
     } finally {
+      window.localStorage.removeItem("authToken");
+      window.localStorage.removeItem("adminAuthToken");
+      setUser(null);
       window.location.href = "/login";
     }
   };

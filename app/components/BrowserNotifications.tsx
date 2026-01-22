@@ -118,7 +118,7 @@ export function useBrowserNotifications() {
           await swRegistration.showNotification(options.title, {
             body: options.body,
             icon: options.icon || "/icon-192x192.png",
-            badge: "/icon-192x192.png",
+            badge: "/badge-72x72.svg",
             tag: options.tag || "marketplace-notification",
             requireInteraction: options.requireInteraction || false,
             data: options.data,
@@ -128,6 +128,7 @@ export function useBrowserNotifications() {
           const notification = new Notification(options.title, {
             body: options.body,
             icon: options.icon || "/icon-192x192.png",
+            badge: "/badge-72x72.svg",
             tag: options.tag || "marketplace-notification",
             requireInteraction: options.requireInteraction || false,
           });

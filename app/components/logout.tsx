@@ -15,6 +15,8 @@ export default function Logout() {
       // Optionally, redirect to login page or homepage
       window.location.href = process.env.NEXT_PUBLIC_LOGIN_ENDPOINT || "/login";
     } catch (error) {
+      window.localStorage.removeItem("authToken");
+      window.localStorage.removeItem("adminAuthToken");
       console.error("Logout failed:", error);
     }
   };

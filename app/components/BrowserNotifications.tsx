@@ -97,13 +97,13 @@ export function useBrowserNotifications() {
     } catch (error) {
       console.error("Error subscribing to push:", error);
     }
-  }, [permission, swRegistration]);
+  }, [API_BASE, permission, swRegistration]);
 
   useEffect(() => {
-    if (permission === "granted") {
+    if (permission === "granted" && swRegistration) {
       subscribeToPush();
     }
-  }, [permission, subscribeToPush]);
+  }, [permission, swRegistration, subscribeToPush]);
 
   const showNotification = useCallback(
     async (options: BrowserNotificationOptions) => {

@@ -85,12 +85,12 @@ export default function Navbar() {
         { label: "Profile", href: "/profile" },
       ]
     : loading
-    ? [{ label: "Marketplace", href: "/dashboard" }]
-    : [
-        { label: "Marketplace", href: "/dashboard" },
-        { label: "Sign in", href: "/login" },
-        { label: "Create account", href: "/signup" },
-      ];
+      ? [{ label: "Marketplace", href: "/dashboard" }]
+      : [
+          { label: "Marketplace", href: "/dashboard" },
+          { label: "Sign in", href: "/login" },
+          { label: "Create account", href: "/signup" },
+        ];
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-emerald-100">

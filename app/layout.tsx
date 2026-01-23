@@ -35,17 +35,16 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/logo njimbong.jpeg", sizes: "512x512", type: "image/jpeg" },
     ],
     apple: [
       {
-        url: "/apple-touch-icon.png",
-        sizes: "180x180",
-        type: "image/png",
+        url: "/logo njimbong.jpeg",
+        sizes: "512x512",
+        type: "image/jpeg",
       },
     ],
-    shortcut: ["/icon-192x192.png"],
+    shortcut: ["/logo njimbong.jpeg"],
   },
   keywords: [
     "Njimbong",

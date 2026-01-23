@@ -6,6 +6,7 @@ import Image from "next/image";
 import { currencies } from "../../constants/currencies";
 import ReportModal from "../../components/ReportModal";
 import PageHeader from "../../components/PageHeader";
+import LoadingArt from "../../components/LoadingArt";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -367,9 +368,11 @@ export default function ListingDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
-      </div>
+      <LoadingArt
+        fullScreen
+        label="Loading listing"
+        subLabel="Preparing the details"
+      />
     );
   }
 

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import PageHeader from "../components/PageHeader";
+import LoadingArt from "../components/LoadingArt";
 
 // ============================================
 // Types
@@ -293,20 +294,21 @@ export default function FavoritesPage() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading favorites...</p>
-        </div>
-      </div>
+      <LoadingArt
+        fullScreen
+        label="Loading favorites"
+        subLabel="Curating your saved items"
+      />
     );
   }
 
   if (!authChecked) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
-      </div>
+      <LoadingArt
+        fullScreen
+        label="Checking your account"
+        subLabel="Securing your favorites"
+      />
     );
   }
 

@@ -16,6 +16,7 @@ import {
   ReviewList,
 } from "../components/Reviews";
 import PageHeader from "../components/PageHeader";
+import LoadingArt from "../components/LoadingArt";
 Axios.defaults.withCredentials = true;
 
 interface User {
@@ -447,9 +448,11 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
-      </div>
+      <LoadingArt
+        fullScreen
+        label="Loading your profile"
+        subLabel="Fetching account details"
+      />
     );
   }
 

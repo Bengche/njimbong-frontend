@@ -6,6 +6,7 @@ import Image from "next/image";
 import SellModal from "../components/SellModal";
 import SearchFilters from "../components/SearchFilters";
 import Notifications from "../components/Notifications";
+import LoadingArt from "../components/LoadingArt";
 import ReportModal from "../components/ReportModal";
 import SuspensionBanner from "../components/SuspensionBanner";
 import OnboardingModal from "../components/OnboardingModal";
@@ -764,9 +765,11 @@ export default function Dashboard() {
 
   if (!authChecked) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl font-semibold text-gray-700">Loading...</div>
-      </div>
+      <LoadingArt
+        fullScreen
+        label="Loading dashboard"
+        subLabel="Setting up your workspace"
+      />
     );
   }
 

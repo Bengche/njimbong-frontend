@@ -60,7 +60,7 @@ export default function ProfilePage() {
   const [kycStatus, setKycStatus] = useState<KYCStatus | null>(null);
   const [kycLoading, setKycLoading] = useState(false);
   const [profilePictureFile, setProfilePictureFile] = useState<File | null>(
-    null
+    null,
   );
   const [profilePicturePreview, setProfilePicturePreview] =
     useState<string>("");
@@ -85,7 +85,7 @@ export default function ProfilePage() {
   const getErrorStatus = useCallback(
     (error: unknown) =>
       Axios.isAxiosError(error) ? error.response?.status : undefined,
-    []
+    [],
   );
 
   const [formData, setFormData] = useState({
@@ -127,7 +127,7 @@ export default function ProfilePage() {
       try {
         const response = await Axios.get(
           `${API_BASE}/api/users/${userIdToUse}`,
-          {}
+          {},
         );
         setUser(response.data);
         setFormData({
@@ -139,7 +139,7 @@ export default function ProfilePage() {
         const profileUrl = response.data.profilepictureurl;
         if (profileUrl && !profileUrl.startsWith("http")) {
           setProfilePicturePreview(
-            `${API_BASE}${profileUrl.startsWith("/") ? "" : "/"}${profileUrl}`
+            `${API_BASE}${profileUrl.startsWith("/") ? "" : "/"}${profileUrl}`,
           );
         } else {
           setProfilePicturePreview(profileUrl || "");
@@ -155,7 +155,7 @@ export default function ProfilePage() {
         setLoading(false);
       }
     },
-    [API_BASE, getErrorStatus, userId]
+    [API_BASE, getErrorStatus, userId],
   );
 
   const fetchKYCStatus = useCallback(
@@ -167,7 +167,7 @@ export default function ProfilePage() {
         setKycLoading(true);
         const response = await Axios.get(
           `${API_BASE}/api/kyc/status/${userIdToUse}`,
-          {}
+          {},
         );
         if (response.data) {
           setKycStatus(response.data);
@@ -184,7 +184,7 @@ export default function ProfilePage() {
         setKycLoading(false);
       }
     },
-    [API_BASE, getErrorStatus, userId]
+    [API_BASE, getErrorStatus, userId],
   );
 
   const fetchTrustScore = useCallback(
@@ -196,7 +196,7 @@ export default function ProfilePage() {
         setTrustLoading(true);
         const response = await Axios.get(
           `${API_BASE}/api/user/${userIdToUse}/trust-score/breakdown`,
-          {}
+          {},
         );
         setTrustScore(response.data.trustScore || 0);
       } catch (error: unknown) {
@@ -207,7 +207,7 @@ export default function ProfilePage() {
         setTrustLoading(false);
       }
     },
-    [API_BASE, getErrorStatus, userId]
+    [API_BASE, getErrorStatus, userId],
   );
 
   const fetchReviews = useCallback(
@@ -218,7 +218,7 @@ export default function ProfilePage() {
       try {
         setReviewsLoading(true);
         const response = await Axios.get(
-          `${API_BASE}/api/user/${userIdToUse}/reviews?type=${filter}`
+          `${API_BASE}/api/user/${userIdToUse}/reviews?type=${filter}`,
         );
         setReviews(response.data.reviews || []);
         setReviewStats(response.data.stats || null);
@@ -228,7 +228,7 @@ export default function ProfilePage() {
         setReviewsLoading(false);
       }
     },
-    [API_BASE, userId]
+    [API_BASE, userId],
   );
 
   useEffect(() => {
@@ -268,7 +268,7 @@ export default function ProfilePage() {
 
   const handleKYCSuccess = () => {
     setSuccessMessage(
-      "KYC verification submitted successfully! You will be notified once reviewed."
+      "KYC verification submitted successfully! You will be notified once reviewed.",
     );
     fetchKYCStatus();
     fetchUserProfile();
@@ -298,7 +298,7 @@ export default function ProfilePage() {
       const response = await Axios.post(
         `${API_BASE}/api/user/review/${reportReview.id}/report`,
         { reason: reportReason.trim() },
-        {}
+        {},
       );
       if (response.data?.message) {
         setReportSuccess(response.data.message);
@@ -317,7 +317,7 @@ export default function ProfilePage() {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -327,7 +327,7 @@ export default function ProfilePage() {
   };
 
   const handlePasswordInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({
@@ -337,7 +337,7 @@ export default function ProfilePage() {
   };
 
   const handleProfilePictureChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -418,7 +418,7 @@ export default function ProfilePage() {
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword,
         },
-        {}
+        {},
       );
 
       setSuccessMessage("Password updated successfully!");
@@ -439,7 +439,7 @@ export default function ProfilePage() {
       setErrorMessage(
         Axios.isAxiosError(error)
           ? error.response?.data?.error || "Failed to update password"
-          : "Failed to update password"
+          : "Failed to update password",
       );
     } finally {
       setIsUpdatingPassword(false);
@@ -995,7 +995,7 @@ export default function ProfilePage() {
                   setProfilePicturePreview(
                     `${API_BASE}${
                       profileUrl.startsWith("/") ? "" : "/"
-                    }${profileUrl}`
+                    }${profileUrl}`,
                   );
                 } else {
                   setProfilePicturePreview(profileUrl || "");

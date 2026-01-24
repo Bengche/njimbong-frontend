@@ -122,7 +122,7 @@ export default function PublicProfilePage() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [activeTab, setActiveTab] = useState<"listings" | "reviews" | "about">(
-    "listings"
+    "listings",
   );
   const [trustScore, setTrustScore] = useState<number>(0);
 
@@ -212,7 +212,7 @@ export default function PublicProfilePage() {
     try {
       const response = await fetch(
         `${API_BASE}/api/user/${userId}/public-profile`,
-        { credentials: "include" }
+        { credentials: "include" },
       );
 
       if (!response.ok) {
@@ -233,7 +233,7 @@ export default function PublicProfilePage() {
       try {
         const trustResponse = await fetch(
           `${API_BASE}/api/user/${userId}/trust-score`,
-          { credentials: "include" }
+          { credentials: "include" },
         );
         if (trustResponse.ok) {
           const trustData = await trustResponse.json();
@@ -258,7 +258,7 @@ export default function PublicProfilePage() {
           if (meData.id !== parseInt(userId)) {
             const favResponse = await fetch(
               `${API_BASE}/api/favorites/${userId}/check`,
-              { credentials: "include" }
+              { credentials: "include" },
             );
             if (favResponse.ok) {
               const favData = await favResponse.json();
@@ -292,7 +292,7 @@ export default function PublicProfilePage() {
   // Fallback trust score calculation (used only if server call fails)
   const calculateFallbackTrustScore = (
     userData: UserProfile | null,
-    statsData: UserStats | null
+    statsData: UserStats | null,
   ): number => {
     if (!userData) return 0;
     let score = 0;
@@ -313,7 +313,7 @@ export default function PublicProfilePage() {
       try {
         const response = await fetch(
           `${API_BASE}/api/user/${userId}/reviews?type=${filter}`,
-          { credentials: "include" }
+          { credentials: "include" },
         );
         if (response.ok) {
           const data = await response.json();
@@ -326,7 +326,7 @@ export default function PublicProfilePage() {
         setReviewsLoading(false);
       }
     },
-    [API_BASE, userId]
+    [API_BASE, userId],
   );
 
   // Check if current user can review
@@ -336,7 +336,7 @@ export default function PublicProfilePage() {
         `${API_BASE}/api/user/can-review/${userId}`,
         {
           credentials: "include",
-        }
+        },
       );
       if (response.ok) {
         const data = await response.json();
@@ -373,7 +373,7 @@ export default function PublicProfilePage() {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          errorData.error || errorData.message || "Failed to submit review"
+          errorData.error || errorData.message || "Failed to submit review",
         );
       }
 
@@ -1186,8 +1186,8 @@ export default function PublicProfilePage() {
                         {user.kyc_status === "approved"
                           ? "Identity Verified ✓"
                           : user.kyc_status === "pending"
-                          ? "Verification Pending"
-                          : "Not Verified"}
+                            ? "Verification Pending"
+                            : "Not Verified"}
                       </p>
                     </div>
                   </div>

@@ -39,7 +39,9 @@ export default function LoadingArt({
         </div>
 
         <div className="mt-6 text-center">
-          <div className="text-base font-semibold text-emerald-800">{label}</div>
+          <div className="text-base font-semibold text-emerald-800">
+            {label}
+          </div>
           {subLabel && (
             <div className="mt-1 text-sm text-emerald-700/80">{subLabel}</div>
           )}

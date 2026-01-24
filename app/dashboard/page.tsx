@@ -72,7 +72,7 @@ const normalizeText = (value: string | undefined | null) =>
 
 const sortListingsByLocation = (
   items: Listing[],
-  location: UserLocation | null
+  location: UserLocation | null,
 ) => {
   if (!location) return [...items];
 
@@ -122,7 +122,7 @@ interface SavedSearch {
 
 // Helper function to format relative time professionally
 const formatRelativeTime = (
-  dateString: string
+  dateString: string,
 ): { text: string; isNew: boolean } => {
   const now = new Date();
   const date = new Date(dateString);
@@ -230,7 +230,7 @@ export default function Dashboard() {
   const [locationError, setLocationError] = useState<string | null>(null);
   const [insightsOpen, setInsightsOpen] = useState(false);
   const [insightsTab, setInsightsTab] = useState<"analytics" | "top-sellers">(
-    "analytics"
+    "analytics",
   );
 
   // Filter states
@@ -309,7 +309,7 @@ export default function Dashboard() {
               `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
               {
                 headers: { "Accept-Language": "en" },
-              }
+              },
             );
             const data = await response.json();
             const address = data?.address || {};
@@ -329,7 +329,7 @@ export default function Dashboard() {
             setUserLocation(nextLocation);
             window.localStorage.setItem(
               cacheKey,
-              JSON.stringify({ data: nextLocation, timestamp: Date.now() })
+              JSON.stringify({ data: nextLocation, timestamp: Date.now() }),
             );
             setLocationError(null);
           } catch (error) {
@@ -348,7 +348,7 @@ export default function Dashboard() {
           enableHighAccuracy: true,
           timeout: 8000,
           maximumAge: 1000 * 60 * 10,
-        }
+        },
       );
     };
 
@@ -377,7 +377,7 @@ export default function Dashboard() {
     const checkOnboarding = async () => {
       try {
         const response = await Axios.get(
-          `${API_BASE}/api/preferences/onboarding-status`
+          `${API_BASE}/api/preferences/onboarding-status`,
         );
 
         if (!response.data.onboarding_complete) {
@@ -442,7 +442,7 @@ export default function Dashboard() {
         });
 
         const response = await Axios.get(
-          `${API_BASE}/api/listings?${params.toString()}`
+          `${API_BASE}/api/listings?${params.toString()}`,
         );
         setListings(sortListingsByLocation(response.data, userLocation));
         setIsPersonalized(false);
@@ -461,13 +461,13 @@ export default function Dashboard() {
       } else {
         // Use personalized listings
         const response = await Axios.get(
-          `${API_BASE}/api/personalized-listings`
+          `${API_BASE}/api/personalized-listings`,
         );
         setListings(
           sortListingsByLocation(
             response.data.listings || response.data,
-            userLocation
-          )
+            userLocation,
+          ),
         );
         setIsPersonalized(response.data.personalized || false);
       }
@@ -495,7 +495,7 @@ export default function Dashboard() {
   const fetchRecommendations = async () => {
     try {
       const response = await Axios.get(
-        `${API_BASE}/api/recommended-listings?limit=6`
+        `${API_BASE}/api/recommended-listings?limit=6`,
       );
       if (response.data.listings && response.data.listings.length > 0) {
         setRecommendedListings(response.data.listings);
@@ -515,7 +515,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (userLocation) {
       setListings((prev) =>
-        prev.length > 0 ? sortListingsByLocation(prev, userLocation) : prev
+        prev.length > 0 ? sortListingsByLocation(prev, userLocation) : prev,
       );
     }
   }, [userLocation]);
@@ -536,7 +536,7 @@ export default function Dashboard() {
     e: React.MouseEvent,
     type: "listing" | "user",
     id: number,
-    name: string
+    name: string,
   ) => {
     e.stopPropagation();
     setReportTarget({ type, id, name });
@@ -550,7 +550,7 @@ export default function Dashboard() {
   };
 
   const handleFilterChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -580,7 +580,7 @@ export default function Dashboard() {
   const fetchSavedSearches = async () => {
     try {
       const response = await Axios.get(
-        `${API_BASE}/api/preferences/saved-searches`
+        `${API_BASE}/api/preferences/saved-searches`,
       );
 
       setSavedSearches(response.data.savedSearches || []);
@@ -591,7 +591,7 @@ export default function Dashboard() {
 
   const openSaveSearchModal = () => {
     setSaveSearchName(
-      filters.search ? `Search: ${filters.search}` : "My Search"
+      filters.search ? `Search: ${filters.search}` : "My Search",
     );
     setSaveSearchNotify(true);
     setSaveSearchError(null);
@@ -616,7 +616,7 @@ export default function Dashboard() {
           name: saveSearchName.trim(),
           filters,
           notifyNewListings: saveSearchNotify,
-        }
+        },
       );
 
       setSavedSearches((prev) => [response.data.savedSearch, ...prev]);
@@ -624,7 +624,7 @@ export default function Dashboard() {
     } catch (error: unknown) {
       if (Axios.isAxiosError(error)) {
         setSaveSearchError(
-          error.response?.data?.error || "Failed to save search"
+          error.response?.data?.error || "Failed to save search",
         );
       } else {
         setSaveSearchError("Failed to save search");
@@ -640,21 +640,21 @@ export default function Dashboard() {
 
   const toggleSavedSearchAlerts = async (
     savedSearchId: number,
-    notify: boolean
+    notify: boolean,
   ) => {
     try {
       await Axios.put(
         `${API_BASE}/api/preferences/saved-searches/${savedSearchId}`,
         { notifyNewListings: notify },
-        {}
+        {},
       );
 
       setSavedSearches((prev) =>
         prev.map((saved) =>
           saved.id === savedSearchId
             ? { ...saved, notify_new_listings: notify }
-            : saved
-        )
+            : saved,
+        ),
       );
     } catch (error) {
       console.error("Error updating saved search alerts:", error);
@@ -664,11 +664,11 @@ export default function Dashboard() {
   const deleteSavedSearch = async (savedSearchId: number) => {
     try {
       await Axios.delete(
-        `${API_BASE}/api/preferences/saved-searches/${savedSearchId}`
+        `${API_BASE}/api/preferences/saved-searches/${savedSearchId}`,
       );
 
       setSavedSearches((prev) =>
-        prev.filter((saved) => saved.id !== savedSearchId)
+        prev.filter((saved) => saved.id !== savedSearchId),
       );
     } catch (error) {
       console.error("Error deleting saved search:", error);
@@ -733,7 +733,7 @@ export default function Dashboard() {
   // Mark listing as sold or available
   const toggleListingStatus = async (
     listingId: number,
-    currentStatus: string
+    currentStatus: string,
   ) => {
     try {
       setUpdatingListingStatus(listingId);
@@ -752,8 +752,8 @@ export default function Dashboard() {
                 ...listing,
                 status: currentStatus === "Available" ? "Sold" : "Available",
               }
-            : listing
-        )
+            : listing,
+        ),
       );
     } catch (error: unknown) {
       console.error("Error updating listing status:", error);
@@ -1023,7 +1023,7 @@ export default function Dashboard() {
                       {listing.createdat &&
                         (() => {
                           const timeInfo = formatRelativeTime(
-                            listing.createdat
+                            listing.createdat,
                           );
                           return (
                             <p
@@ -1201,7 +1201,7 @@ export default function Dashboard() {
                     onClick={() =>
                       toggleSavedSearchAlerts(
                         savedSearch.id,
-                        !savedSearch.notify_new_listings
+                        !savedSearch.notify_new_listings,
                       )
                     }
                     className={`px-3 py-1.5 text-sm rounded-lg border ${

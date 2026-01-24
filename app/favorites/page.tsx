@@ -94,7 +94,7 @@ export default function FavoritesPage() {
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<"users" | "listings" | "wishlist">(
-    "users"
+    "users",
   );
   const [removingId, setRemovingId] = useState<number | null>(null);
 
@@ -213,7 +213,7 @@ export default function FavoritesPage() {
 
   const togglePriceDropAlert = async (
     listingId: number,
-    currentValue: boolean
+    currentValue: boolean,
   ) => {
     try {
       await fetch(`${API_BASE}/api/wishlist/${listingId}/price-alert`, {
@@ -229,8 +229,8 @@ export default function FavoritesPage() {
         prev.map((item) =>
           item.id === listingId
             ? { ...item, notify_price_drop: !currentValue }
-            : item
-        )
+            : item,
+        ),
       );
     } catch (err) {
       console.error("Error toggling price drop alert:", err);
@@ -248,7 +248,7 @@ export default function FavoritesPage() {
 
       if (response.ok) {
         setFavorites((prev) =>
-          prev.filter((f) => f.favorite_user_id !== userId)
+          prev.filter((f) => f.favorite_user_id !== userId),
         );
         // Refresh listings too
         fetchFavoriteListings();
@@ -283,8 +283,8 @@ export default function FavoritesPage() {
         prev.map((f) =>
           f.favorite_user_id === userId
             ? { ...f, notify_new_listings: !currentValue }
-            : f
-        )
+            : f,
+        ),
       );
     } catch (err) {
       console.error("Error toggling notifications:", err);
@@ -541,7 +541,7 @@ export default function FavoritesPage() {
                             onClick={() =>
                               toggleNotifications(
                                 fav.favorite_user_id,
-                                fav.notify_new_listings
+                                fav.notify_new_listings,
                               )
                             }
                             className={`p-2 rounded-lg transition ${
@@ -578,7 +578,7 @@ export default function FavoritesPage() {
                           <button
                             onClick={() =>
                               router.push(
-                                `/chat?userId=${fav.favorite_user_id}`
+                                `/chat?userId=${fav.favorite_user_id}`,
                               )
                             }
                             className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition"
@@ -891,7 +891,7 @@ export default function FavoritesPage() {
                                   e.stopPropagation();
                                   togglePriceDropAlert(
                                     listing.id,
-                                    listing.notify_price_drop
+                                    listing.notify_price_drop,
                                   );
                                 }}
                                 className={`px-2 py-1 rounded-full border ${

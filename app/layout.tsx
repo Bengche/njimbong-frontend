@@ -35,6 +35,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/logo.svg", type: "image/svg+xml" },
       { url: "/logo njimbong.jpeg", sizes: "512x512", type: "image/jpeg" },
     ],
     apple: [

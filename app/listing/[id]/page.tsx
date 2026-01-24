@@ -51,7 +51,7 @@ interface Listing {
 
 // Helper function to format relative time professionally
 const formatRelativeTime = (
-  dateString: string
+  dateString: string,
 ): { text: string; isNew: boolean } => {
   const now = new Date();
   const date = new Date(dateString);
@@ -181,7 +181,7 @@ export default function ListingDetailPage() {
       if (!listing?.images || listing.images.length <= 1) return;
 
       const currentIndex = listing.images.findIndex(
-        (img) => getImageUrl(img.imageurl) === selectedImage
+        (img) => getImageUrl(img.imageurl) === selectedImage,
       );
 
       let newIndex;
@@ -195,7 +195,7 @@ export default function ListingDetailPage() {
 
       setSelectedImage(getImageUrl(listing.images[newIndex].imageurl) || "");
     },
-    [listing, selectedImage]
+    [listing, selectedImage],
   );
 
   // Keyboard navigation for image modal
@@ -239,7 +239,7 @@ export default function ListingDetailPage() {
         if (!listingId) return;
 
         const response = await Axios.get(
-          `${API_BASE}/api/wishlist/${listingId}/check`
+          `${API_BASE}/api/wishlist/${listingId}/check`,
         );
 
         setIsWishlisted(Boolean(response.data.isWishlisted));
@@ -317,7 +317,7 @@ export default function ListingDetailPage() {
     const fetchListing = async () => {
       try {
         const response = await Axios.get(
-          `${API_BASE}/api/listings/${listingId}`
+          `${API_BASE}/api/listings/${listingId}`,
         );
         setListing(response.data);
         if (response.data.images && response.data.images.length > 0) {
@@ -347,7 +347,7 @@ export default function ListingDetailPage() {
 
         // Fetch related listings
         const relatedResponse = await Axios.get(
-          `${API_BASE}/api/listings/related/${listingId}`
+          `${API_BASE}/api/listings/related/${listingId}`,
         );
         setRelatedListings(relatedResponse.data);
       } catch (error: unknown) {
@@ -1002,7 +1002,7 @@ export default function ListingDetailPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {relatedListings.map((relatedListing) => {
               const mainImage = relatedListing.images?.find(
-                (img) => img.is_main
+                (img) => img.is_main,
               );
               const relatedCurrencySymbol =
                 currencies.find((c) => c.code === relatedListing.currency)
@@ -1181,7 +1181,7 @@ export default function ListingDetailPage() {
               {/* Image counter */}
               <div className="text-center text-white/80 text-sm mb-3">
                 {listing.images.findIndex(
-                  (img) => getImageUrl(img.imageurl) === selectedImage
+                  (img) => getImageUrl(img.imageurl) === selectedImage,
                 ) + 1}{" "}
                 of {listing.images.length} images
               </div>

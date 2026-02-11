@@ -1,4 +1,4 @@
-// export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 import Axios from "axios";
@@ -204,7 +204,7 @@ export default async function Home() {
                         {listing.currency} {listing.price}
                       </span>
                       <a
-                        href={`/listings/${listing.id}`}
+                        href={`/login`}
                         className="rounded-md bg-gray-50 px-3 py-1 text-sm font-medium text-gray-600 hover:bg-emerald-50 hover:text-emerald-700"
                       >
                         Details

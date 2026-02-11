@@ -89,36 +89,6 @@ export default async function Home() {
 
           {/* 2. FIXED PART: Map over the fetched 'listings' array */}
 
-          {listings.map((listing: any) => (
-            <div
-              key={listing.id}
-              className="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
-            >
-              <h3 className="text-lg font-semibold">{listing.title}</h3>
-
-              {listing.imageurl ? (
-                <img
-                  src={listing.imageurl}
-                  alt={listing.title}
-                  className="w-full h-48 object-cover mt-2 rounded-lg"
-                />
-              ) : (
-                <div className="w-full h-48 mt-2 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
-                  No Image Available
-                </div>
-              )}
-
-              <p className="text-gray-600 text-sm mt-2 line-clamp-2">
-                {listing.description}
-              </p>
-
-              {/* Displaying Currency + Price together */}
-              <p className="mt-2 font-bold text-emerald-700">
-                {listing.currency} {listing.price}
-              </p>
-            </div>
-          ))}
-
           <div className="rounded-2xl bg-white/80 p-6 shadow-xl border border-emerald-100">
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Why Njimbong?</h2>
@@ -177,6 +147,70 @@ export default async function Home() {
               <p className="mt-2 text-sm text-gray-600">{card.text}</p>
             </div>
           ))}
+        </section>
+
+        {/* listings */}
+        {/* SECTION 2: NEW LISTINGS SECTION (Now below the hero!) */}
+        <section className="mt-20">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold">Featured Listings</h2>
+            <a
+              href="/dashboard"
+              className="text-emerald-700 font-semibold hover:underline"
+            >
+              View all
+            </a>
+          </div>
+
+          {listings.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {listings.map((listing: any) => (
+                <div
+                  key={listing.id}
+                  className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all hover:shadow-lg"
+                >
+                  <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+                    {listing.imageurl ? (
+                      <img
+                        src={listing.imageurl}
+                        alt={listing.title}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-gray-400">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-gray-900 truncate">
+                      {listing.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+                      {listing.description}
+                    </p>
+                    <div className="mt-4 flex items-center justify-between">
+                      <span className="text-xl font-bold text-emerald-700">
+                        {listing.currency} {listing.price}
+                      </span>
+                      <a
+                        href={`/listings/${listing.id}`}
+                        className="rounded-md bg-gray-50 px-3 py-1 text-sm font-medium text-gray-600 hover:bg-emerald-50 hover:text-emerald-700"
+                      >
+                        Details
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border-2 border-dashed border-gray-200 py-20 text-center">
+              <p className="text-gray-500 italic">
+                No featured listings available right now.
+              </p>
+            </div>
+          )}
         </section>
 
         <section

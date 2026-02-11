@@ -88,35 +88,36 @@ export default async function Home() {
           </div>
 
           {/* 2. FIXED PART: Map over the fetched 'listings' array */}
-          <div>
-            {listings.length > 0 ? (
-              listings.map((listing: any) => (
-                <div
-                  key={listing.id}
-                  className="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
-                >
-                  <h3 className="text-lg font-semibold">{listing.title}</h3>
-                  {listing.image && (
-                    <img
-                      src={listing.image}
-                      alt={listing.title}
-                      className="w-full h-48 object-cover mt-2 rounded"
-                    />
-                  )}
-                  <p className="text-gray-600 text-sm mt-1">
-                    {listing.description}
-                  </p>
-                  <p className="mt-2 font-bold text-emerald-700">
-                    ${listing.price}
-                  </p>
+
+          {listings.map((listing: any) => (
+            <div
+              key={listing.id}
+              className="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
+            >
+              <h3 className="text-lg font-semibold">{listing.title}</h3>
+
+              {listing.imageurl ? (
+                <img
+                  src={listing.imageurl}
+                  alt={listing.title}
+                  className="w-full h-48 object-cover mt-2 rounded-lg"
+                />
+              ) : (
+                <div className="w-full h-48 mt-2 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
+                  No Image Available
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-400 italic">
-                No featured listings available right now.
+              )}
+
+              <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+                {listing.description}
               </p>
-            )}
-          </div>
+
+              {/* Displaying Currency + Price together */}
+              <p className="mt-2 font-bold text-emerald-700">
+                {listing.currency} {listing.price}
+              </p>
+            </div>
+          ))}
 
           <div className="rounded-2xl bg-white/80 p-6 shadow-xl border border-emerald-100">
             <div className="space-y-4">

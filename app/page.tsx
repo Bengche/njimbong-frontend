@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Axios from "axios";
-import randomHomeListings from "..components/randomHomeListings";
+import randomHomeListings from "./components/randomHomeListings";
 
 export const metadata: Metadata = {
   title: "Njimbong Marketplace",

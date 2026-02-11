@@ -76,7 +76,7 @@ export default function Home() {
           </div>
 
           <div>
-            {randomHomeListings.map((listing: any) => (
+            {randomHomeListings.map((listing) => (
               <div
                 key={listing.id}
                 className="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm"

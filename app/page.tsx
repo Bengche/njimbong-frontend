@@ -1,3 +1,5 @@
+"use client";
+
 import type { Metadata } from "next";
 import Axios from "axios";
 import { useState } from "react";

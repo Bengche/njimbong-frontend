@@ -28,14 +28,21 @@ export default async function Home() {
   let listings = [];
 
   // 1. Fetch data directly inside the Server Component
+  // 1. Fetch data directly inside the Server Component
   try {
     const response = await Axios.get(
       `https://njimbong-backend-production.up.railway.app/home/listings`,
     );
+
+    // Axios puts the backend response in .data
+    // We ensure 'listings' is the array found in response.data
     listings = response.data || [];
-    console.log("Fetched listings:", listings);
+
+    // This will now show the items in your VS Code terminal
+    console.log("Success! Items found:", listings.length);
   } catch (error) {
     console.error("Error fetching listings:", error);
+    listings = []; // Keep it as an empty array on error so the map doesn't crash
   }
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-yellow-50 to-white text-gray-900">

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Axios from "axios";
-import randomHomeListings from "./components/randomHomeListings";
 
 export const metadata: Metadata = {
   title: "Njimbong Marketplace",
@@ -24,7 +23,17 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function Home() {
+export default async function Home() {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+  let listings = [];
+
+  // 1. Fetch data directly inside the Server Component
+  try {
+    const response = await Axios.get(`${API_BASE}/home/listings`);
+    listings = response.data.listings || [];
+  } catch (error) {
+    console.error("Error fetching listings:", error);
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-yellow-50 to-white text-gray-900">
       <script
@@ -75,24 +84,35 @@ export default function Home() {
             </p>
           </div>
 
+          {/* 2. FIXED PART: Map over the fetched 'listings' array */}
           <div>
-            {randomHomeListings.map((listing) => (
-              <div
-                key={listing.id}
-                className="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm"
-              >
-                <h3 className="text-lg font-semibold">{listing.title}</h3>
-                <img
-                  src={listing.image}
-                  alt={listing.title}
-                  className="w-full h-48 object-cover mt-2 rounded"
-                />
-                <p className="text-gray-600">{listing.description}</p>
-                <p className="mt-2 font-bold text-emerald-700">
-                  ${listing.price}
-                </p>
-              </div>
-            ))}
+            {listings.length > 0 ? (
+              listings.map((listing: any) => (
+                <div
+                  key={listing.id}
+                  className="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
+                >
+                  <h3 className="text-lg font-semibold">{listing.title}</h3>
+                  {listing.image && (
+                    <img
+                      src={listing.image}
+                      alt={listing.title}
+                      className="w-full h-48 object-cover mt-2 rounded"
+                    />
+                  )}
+                  <p className="text-gray-600 text-sm mt-1">
+                    {listing.description}
+                  </p>
+                  <p className="mt-2 font-bold text-emerald-700">
+                    ${listing.price}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-400 italic">
+                No featured listings available right now.
+              </p>
+            )}
           </div>
 
           <div className="rounded-2xl bg-white/80 p-6 shadow-xl border border-emerald-100">

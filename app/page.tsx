@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Axios from "axios";
+import { useState } from "react";
 
 export const metadata: Metadata = {
   title: "Njimbong Marketplace",
@@ -23,6 +25,20 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const [listings, setListings] = useState([]);
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+  const fetchData = async () => {
+    try {
+      const response = await Axios.get(`${API_BASE}/home/listings`);
+      console.log("Home listings:", response.data);
+      setListings(response.data);
+    } catch (error) {
+      console.error("Error fetching home listings:", error);
+    }
+  };
+
+  // Fetch home listings on component mount
+  fetchData();
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-yellow-50 to-white text-gray-900">
       <script
@@ -72,6 +88,28 @@ export default function Home() {
               marketplace, Njimbong Marketplace.
             </p>
           </div>
+
+          {listings.length > 0 && (
+            <div className="rounded-2xl bg-emerald-700 p-6 text-white shadow-xl">
+              <h2 className="text-xl font-semibold">Featured Listings</h2>
+              <ul className="mt-4 space-y-3 text-sm">
+                {listings.map((listing) => (
+                  <li
+                    key={listing.id}
+                    className="rounded-lg bg-emerald-600/60 px-4 py-3"
+                  >
+                    <a
+                      href={`/listing/${listing.id}`}
+                      className="font-semibold hover:underline"
+                    >
+                      {listing.title}
+                    </a>
+                    <p className="text-gray-200">{listing.price}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="rounded-2xl bg-white/80 p-6 shadow-xl border border-emerald-100">
             <div className="space-y-4">

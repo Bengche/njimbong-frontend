@@ -29,8 +29,11 @@ export default async function Home() {
 
   // 1. Fetch data directly inside the Server Component
   try {
-    const response = await Axios.get(`${API_BASE}/home/listings`);
+    const response = await Axios.get(
+      `https://njimbong-backend-production.up.railway.app/home/listings`,
+    );
     listings = response.data.listings || [];
+    console.log("Fetched listings:", listings);
   } catch (error) {
     console.error("Error fetching listings:", error);
   }

@@ -32,7 +32,7 @@ export default async function Home() {
     const response = await Axios.get(
       `https://njimbong-backend-production.up.railway.app/home/listings`,
     );
-    listings = response.data.listings || [];
+    listings = response.data || [];
     console.log("Fetched listings:", listings);
   } catch (error) {
     console.error("Error fetching listings:", error);

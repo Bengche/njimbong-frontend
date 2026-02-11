@@ -1,8 +1,5 @@
-"use client";
-
 import type { Metadata } from "next";
 import Axios from "axios";
-import { useState } from "react";
 
 export const metadata: Metadata = {
   title: "Njimbong Marketplace",
@@ -27,7 +24,6 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  const [listings, setListings] = useState([]);
   const API_BASE = process.env.NEXT_PUBLIC_API_URL;
   const fetchData = async () => {
     try {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Axios from "axios";
+import randomHomeListings from "..components/randomHomeListings";
 
 export const metadata: Metadata = {
   title: "Njimbong Marketplace",
@@ -24,19 +25,6 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL;
-  const fetchData = async () => {
-    try {
-      const response = await Axios.get(`${API_BASE}/home/listings`);
-      console.log("Home listings:", response.data);
-      setListings(response.data);
-    } catch (error) {
-      console.error("Error fetching home listings:", error);
-    }
-  };
-
-  // Fetch home listings on component mount
-  fetchData();
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-yellow-50 to-white text-gray-900">
       <script
@@ -87,27 +75,25 @@ export default function Home() {
             </p>
           </div>
 
-          {listings.length > 0 && (
-            <div className="rounded-2xl bg-emerald-700 p-6 text-white shadow-xl">
-              <h2 className="text-xl font-semibold">Featured Listings</h2>
-              <ul className="mt-4 space-y-3 text-sm">
-                {listings.map((listing) => (
-                  <li
-                    key={listing.id}
-                    className="rounded-lg bg-emerald-600/60 px-4 py-3"
-                  >
-                    <a
-                      href={`/listing/${listing.id}`}
-                      className="font-semibold hover:underline"
-                    >
-                      {listing.title}
-                    </a>
-                    <p className="text-gray-200">{listing.price}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <div>
+            {randomHomeListings.map((listing: any) => (
+              <div
+                key={listing.id}
+                className="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm"
+              >
+                <h3 className="text-lg font-semibold">{listing.title}</h3>
+                <img
+                  src={listing.image}
+                  alt={listing.title}
+                  className="w-full h-48 object-cover mt-2 rounded"
+                />
+                <p className="text-gray-600">{listing.description}</p>
+                <p className="mt-2 font-bold text-emerald-700">
+                  ${listing.price}
+                </p>
+              </div>
+            ))}
+          </div>
 
           <div className="rounded-2xl bg-white/80 p-6 shadow-xl border border-emerald-100">
             <div className="space-y-4">

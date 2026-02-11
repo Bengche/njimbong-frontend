@@ -1,3 +1,5 @@
+// export const dynamic = 'force-dynamic';
+
 import type { Metadata } from "next";
 import Axios from "axios";
 
@@ -32,6 +34,7 @@ export default async function Home() {
   try {
     const response = await Axios.get(
       `https://njimbong-backend-production.up.railway.app/home/listings`,
+      { headers: { "Cache-Control": "no-cache" } },
     );
 
     // Axios puts the backend response in .data

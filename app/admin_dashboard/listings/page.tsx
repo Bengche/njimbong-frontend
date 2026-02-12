@@ -90,12 +90,12 @@ export default function AdminListingsPage() {
           return;
         }
         router.push(
-          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin",
         );
       } catch (error: any) {
         if (error.response?.status === 401 || error.response?.status === 403) {
           router.push(
-            process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+            process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin",
           );
           return;
         }
@@ -134,7 +134,7 @@ export default function AdminListingsPage() {
     try {
       const response = await Axios.get(
         `${API_BASE}/api/admin/listings/stats`,
-        {}
+        {},
       );
       setStats(response.data);
     } catch (error: unknown) {
@@ -167,7 +167,7 @@ export default function AdminListingsPage() {
 
         const response = await Axios.get(
           `${API_BASE}/api/admin/listings/all?${params.toString()}`,
-          {}
+          {},
         );
 
         setListings(response.data.listings);
@@ -185,7 +185,7 @@ export default function AdminListingsPage() {
         setLoading(false);
       }
     },
-    [pagination.limit, searchQuery, router]
+    [pagination.limit, searchQuery, router],
   );
 
   const approveListing = async (id: number) => {
@@ -205,7 +205,7 @@ export default function AdminListingsPage() {
       console.error("Error approving listing:", error);
       showNotification(
         "error",
-        axiosError.response?.data?.error || "Failed to approve listing"
+        axiosError.response?.data?.error || "Failed to approve listing",
       );
     } finally {
       setActionLoading(false);
@@ -223,7 +223,7 @@ export default function AdminListingsPage() {
       await Axios.put(
         `${API_BASE}/api/admin/listings/${id}/reject`,
         { reason: rejectionReason },
-        {}
+        {},
       );
 
       showNotification("success", "Listing rejected");
@@ -240,7 +240,7 @@ export default function AdminListingsPage() {
       console.error("Error rejecting listing:", error);
       showNotification(
         "error",
-        axiosError.response?.data?.error || "Failed to reject listing"
+        axiosError.response?.data?.error || "Failed to reject listing",
       );
     } finally {
       setActionLoading(false);
@@ -269,7 +269,7 @@ export default function AdminListingsPage() {
   const formatPrice = (price: number, currency: string) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: currency || "USD",
+      currency: currency || "XAF",
     }).format(price);
   };
 
@@ -879,7 +879,7 @@ export default function AdminListingsPage() {
                   Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
                   {Math.min(
                     pagination.page * pagination.limit,
-                    pagination.total
+                    pagination.total,
                   )}{" "}
                   of {pagination.total} listings
                 </p>
@@ -951,8 +951,8 @@ export default function AdminListingsPage() {
                   selectedListing.moderation_status === "pending"
                     ? "bg-yellow-50 border border-yellow-200"
                     : selectedListing.moderation_status === "approved"
-                    ? "bg-green-50 border border-green-200"
-                    : "bg-red-50 border border-red-200"
+                      ? "bg-green-50 border border-green-200"
+                      : "bg-red-50 border border-red-200"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -1034,7 +1034,7 @@ export default function AdminListingsPage() {
                         <p className="font-semibold text-gray-800">
                           {formatPrice(
                             selectedListing.price,
-                            selectedListing.currency
+                            selectedListing.currency,
                           )}
                         </p>
                       </div>

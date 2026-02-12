@@ -35,7 +35,7 @@ export default function SellModal({
     title: "",
     description: "",
     price: "",
-    currency: "USD",
+    currency: "XAF",
     categoryId: "",
     location: "",
     country: "",
@@ -70,7 +70,7 @@ export default function SellModal({
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -132,7 +132,7 @@ export default function SellModal({
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       console.log("Listing created successfully");
@@ -143,7 +143,7 @@ export default function SellModal({
         title: "",
         description: "",
         price: "",
-        currency: "USD",
+        currency: "XAF",
         categoryId: "",
         location: "",
         country: "",
@@ -172,7 +172,7 @@ export default function SellModal({
           process.env.NEXT_PUBLIC_LOGIN_ENDPOINT || "/login";
       } else if (error.response?.status === 403) {
         setSubmitError(
-          "Your account is suspended. You cannot create listings."
+          "Your account is suspended. You cannot create listings.",
         );
       } else if (error.response?.data?.error) {
         setSubmitError(error.response.data.error);
@@ -375,7 +375,7 @@ export default function SellModal({
                         .includes(currencySearch.toLowerCase()) ||
                       c.name
                         .toLowerCase()
-                        .includes(currencySearch.toLowerCase())
+                        .includes(currencySearch.toLowerCase()),
                   )
                   .map((currency) => (
                     <option key={currency.code} value={currency.code}>
@@ -464,7 +464,7 @@ export default function SellModal({
                 <datalist id="country-list">
                   {countries
                     .filter((c) =>
-                      c.toLowerCase().includes(countrySearch.toLowerCase())
+                      c.toLowerCase().includes(countrySearch.toLowerCase()),
                     )
                     .map((country) => (
                       <option key={country} value={country} />

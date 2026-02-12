@@ -6,19 +6,25 @@ import Axios from "axios";
 export const metadata: Metadata = {
   title: "Njimbong Marketplace",
   description:
-    "Njimbong: The Trusted Marketplace to Buy and Sell Online. Discover local deals, verified sellers, and secure messaging for a safer buying and selling experience.",
+    "Njimbong: The Trusted Marketplace for Cameroonians to Buy and Sell Online. Discover local deals, verified sellers, and secure messaging for a safer buying and selling experience in Cameroon.",
   keywords: [
     "Njimbong",
     "Njimbong Marketplace",
     "marketplace",
     "buy and sell",
+    "buy and sell in Cameroon",
     "buy and sell online",
+    "buy and sell online in Cameroon",
     "online marketplace",
+    "Cameroon online marketplace",
+    "Marketplace for Cameroonians",
     "local marketplace",
     "trusted marketplace",
     "safe marketplace",
     "sell items online",
     "buy used items",
+    "buy used items in Cameroon",
+    "buy used items in Cameroon",
     "local deals",
     "classifieds",
     "buy sell near me",
@@ -69,10 +75,11 @@ export default async function Home() {
               Njimbong Marketplace
             </p>
             <h1 className="text-4xl font-bold leading-tight md:text-5xl">
-              Njimbong: The Trusted Marketplace to Buy and Sell Online
+              Njimbong: The Trusted Marketplace to Buy and Sell Online in
+              Cameroon
             </h1>
             <p className="text-lg text-gray-600">
-              Njimbong Marketplace helps people buy and sell online with
+              Njimbong Marketplace helps Cameroonians buy and sell online with
               confidence. Discover trusted listings, connect with real buyers
               and sellers, and manage your marketplace activity in one
               professional place.
@@ -303,8 +310,8 @@ export default async function Home() {
               How Njimbong Marketplace Works
             </h2>
             <p className="mt-2 text-gray-600">
-              Buy and sell online in three simple steps designed for speed and
-              trust.
+              Buy and sell online within Cameroon in three simple steps designed
+              for speed and trust.
             </p>
           </div>
           {[

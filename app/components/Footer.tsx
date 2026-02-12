@@ -7,7 +7,8 @@ export default function Footer() {
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-emerald-700">Njimbong</h3>
             <p className="text-sm text-gray-600">
-              Njimbong: The Trusted Marketplace to Buy and Sell Online.
+              Njimbong: The Trusted Marketplace to Buy and Sell Online in
+              Cameroon.
             </p>
             <a
               href="/dashboard"
@@ -91,7 +92,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 flex flex-col gap-3 border-t border-emerald-100/70 pt-6 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 Njimbong Marketplace. All rights reserved.</span>
+          <span>© 2025 - 2026 Njimbong Marketplace. All rights reserved.</span>
           <span className="inline-flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
             Need help? Contact support@njimbong.com

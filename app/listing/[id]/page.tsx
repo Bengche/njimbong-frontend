@@ -7,6 +7,7 @@ import { currencies } from "../../constants/currencies";
 import ReportModal from "../../components/ReportModal";
 import PageHeader from "../../components/PageHeader";
 import LoadingArt from "../../components/LoadingArt";
+import FonlokCheckoutModal from "../../components/FonlokCheckoutModal";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -130,6 +131,7 @@ export default function ListingDetailPage() {
   const [showFullImage, setShowFullImage] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
   const [reportType, setReportType] = useState<"listing" | "user">("listing");
   const [startingChat, setStartingChat] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
@@ -789,6 +791,32 @@ export default function ListingDetailPage() {
               )}
             </div>
 
+            {/* Buy Securely via Fonlok — only for XAF listings, available, not own listing */}
+            {currentUserId &&
+              currentUserId !== listing.user_id &&
+              listing.status === "Available" &&
+              listing.currency === "XAF" && (
+                <button
+                  onClick={() => setShowCheckout(true)}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold mb-3"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                  Buy Securely via Fonlok Escrow
+                </button>
+              )}
+
             {/* Message Seller Button in Seller Section */}
             {currentUserId &&
               currentUserId !== listing.user_id &&
@@ -1220,6 +1248,19 @@ export default function ListingDetailPage() {
             Press ESC to close • Use arrow keys to navigate
           </div>
         </div>
+      )}
+
+      {/* Fonlok Checkout Modal */}
+      {showCheckout && listing && (
+        <FonlokCheckoutModal
+          listing={{
+            id: listing.id,
+            title: listing.title,
+            price: listing.price,
+            currency: listing.currency,
+          }}
+          onClose={() => setShowCheckout(false)}
+        />
       )}
 
       {/* Report Modal */}

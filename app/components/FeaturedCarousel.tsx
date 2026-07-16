@@ -70,10 +70,6 @@ export default function FeaturedCarousel({ listings }: Props) {
         </svg>
       </button>
 
-      {/* Fade edges */}
-      <div className="absolute left-0 top-0 bottom-3 w-8 bg-gradient-to-r from-[#f0fdf4] via-[#f0fdf4]/60 to-transparent z-[5] pointer-events-none rounded-l-2xl md:hidden" />
-      <div className="absolute right-0 top-0 bottom-3 w-12 bg-gradient-to-l from-white via-white/80 to-transparent z-[5] pointer-events-none rounded-r-2xl" />
-
       {/* Scroll track */}
       <div
         ref={trackRef}

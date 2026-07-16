@@ -1341,7 +1341,6 @@ export default function Dashboard() {
               const isWishlisted = wishlistIds.includes(listing.id);
               const isOwnListing = currentUserId === listing.user_id;
               const canEscrow =
-                listing.currency === "XAF" &&
                 listing.status === "Available" &&
                 !isOwnListing;
               return (

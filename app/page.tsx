@@ -338,13 +338,51 @@ export default async function Home() {
               {/* Right — visual steps */}
               <div className="mt-10 md:mt-0 space-y-4">
                 {[
-                  { n: "01", title: "Buyer pays into escrow", body: "Your payment is locked securely via Fonlok. The seller is notified but cannot touch the funds.", icon: "💳" },
-                  { n: "02", title: "Seller prepares & delivers", body: "With payment guaranteed, the seller ships or arranges handover. Both parties are protected.", icon: "📦" },
-                  { n: "03", title: "You inspect & confirm", body: "Inspect the item carefully. If satisfied, confirm delivery and the funds are instantly released.", icon: "✅" },
-                  { n: "04", title: "Dispute? We step in.", body: "If something is wrong, open a dispute. Our team reviews evidence and resolves it fairly.", icon: "🛡️" },
+                  {
+                    n: "01",
+                    title: "Buyer pays into escrow",
+                    body: "Your payment is locked securely via Fonlok. The seller is notified but cannot touch the funds.",
+                    icon: (
+                      <svg className="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    n: "02",
+                    title: "Seller prepares & delivers",
+                    body: "With payment guaranteed, the seller ships or arranges handover. Both parties are protected.",
+                    icon: (
+                      <svg className="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    n: "03",
+                    title: "You inspect & confirm",
+                    body: "Inspect the item carefully. If satisfied, confirm delivery and the funds are instantly released.",
+                    icon: (
+                      <svg className="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    n: "04",
+                    title: "Dispute? We step in.",
+                    body: "If something is wrong, open a dispute. Our team reviews evidence and resolves it fairly.",
+                    icon: (
+                      <svg className="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                    ),
+                  },
                 ].map((step) => (
                   <div key={step.n} className="flex gap-4 items-start rounded-2xl bg-white/10 border border-white/10 px-5 py-4">
-                    <div className="text-2xl flex-shrink-0 leading-none">{step.icon}</div>
+                    <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                      {step.icon}
+                    </div>
                     <div>
                       <p className="text-xs font-bold text-emerald-300 mb-0.5">Step {step.n}</p>
                       <p className="text-sm font-semibold text-white">{step.title}</p>
@@ -424,13 +462,26 @@ export default async function Home() {
             </p>
             <div className="mt-6 grid gap-3 text-sm">
               {[
-                "🔒  Fonlok escrow — every XAF transaction",
-                "✅  KYC identity verification for sellers",
-                "🛡️  Admin-mediated dispute resolution",
-                "🚨  One-tap listing & user reporting",
+                {
+                  label: "Fonlok escrow — every XAF transaction",
+                  icon: <svg className="w-4 h-4 text-emerald-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>,
+                },
+                {
+                  label: "KYC identity verification for sellers",
+                  icon: <svg className="w-4 h-4 text-emerald-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>,
+                },
+                {
+                  label: "Admin-mediated dispute resolution",
+                  icon: <svg className="w-4 h-4 text-emerald-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>,
+                },
+                {
+                  label: "One-tap listing & user reporting",
+                  icon: <svg className="w-4 h-4 text-emerald-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>,
+                },
               ].map((item) => (
-                <div key={item} className="rounded-xl bg-white/10 border border-white/10 px-4 py-3 text-emerald-50">
-                  {item}
+                <div key={item.label} className="flex items-center gap-3 rounded-xl bg-white/10 border border-white/10 px-4 py-3 text-emerald-50">
+                  {item.icon}
+                  {item.label}
                 </div>
               ))}
             </div>

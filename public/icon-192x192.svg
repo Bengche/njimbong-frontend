@@ -1,4 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-  <rect width="192" height="192" fill="#16a34a" rx="24"/>
-  <text x="96" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="white">M</text>
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Njimbong">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16A34A"/>
+      <stop offset="100%" stop-color="#065F46"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="42" fill="url(#bg)"/>
+  <rect x="42" y="50" width="17" height="92" rx="4" fill="white"/>
+  <polygon points="42,50 59,50 117,130 100,130" fill="white"/>
+  <rect x="100" y="50" width="17" height="92" rx="4" fill="white"/>
+  <circle cx="129" cy="58" r="9" fill="white"/>
+  <rect x="120" y="73" width="17" height="69" rx="4" fill="white"/>
+  <path d="M137 138 Q137 154 122 154 Q112 154 107 147 L118 139 Q120 145 124 145 Q129 145 129 138 Z" fill="white"/>
+  <rect x="120" y="134" width="17" height="8" fill="url(#bg)"/>
 </svg>
+

@@ -79,6 +79,13 @@ export default function SellModal({
     }));
   };
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, "");
+    const local = digits.startsWith("237") ? digits.slice(3) : digits;
+    const capped = local.slice(0, 9);
+    setFormData((prev) => ({ ...prev, phone: capped ? "237" + capped : "" }));
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -518,18 +525,32 @@ export default function SellModal({
                 htmlFor="phone"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                Phone Number <span className="text-red-500">*</span>
+                Mobile Money Number <span className="text-red-500">*</span>
               </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                required
-                placeholder="+237 6XX XXX XXX"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
-              />
+              <div className="flex rounded-lg border border-gray-300 focus-within:ring-2 focus-within:ring-green-500 focus-within:border-green-500 overflow-hidden">
+                <span className="flex items-center px-3 bg-gray-50 border-r border-gray-300 text-gray-600 text-sm font-medium select-none">
+                  +237
+                </span>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={
+                    formData.phone.startsWith("237")
+                      ? formData.phone.slice(3)
+                      : formData.phone
+                  }
+                  onChange={handlePhoneChange}
+                  required
+                  placeholder="6XX XXX XXX"
+                  maxLength={9}
+                  className="flex-1 px-4 py-3 outline-none bg-white"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Enter your MTN or Orange Cameroon MoMo number. When a buyer pays
+                through escrow, funds are released to this number.
+              </p>
             </div>
 
             <div>

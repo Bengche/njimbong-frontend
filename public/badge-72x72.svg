@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72">
-  <rect width="72" height="72" fill="#16a34a" rx="12"/>
-  <text x="36" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="white">M</text>
+<!-- Notification badge: monochrome white-on-transparent for Android masking -->
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" role="img" aria-label="Njimbong notification">
+  <rect width="72" height="72" rx="16" fill="#16A34A"/>
+  <!-- Simplified N mark at small size -->
+  <rect x="13" y="16" width="8" height="40" rx="2" fill="white"/>
+  <polygon points="13,16 21,16 51,56 43,56" fill="white"/>
+  <rect x="43" y="16" width="8" height="40" rx="2" fill="white"/>
 </svg>
+

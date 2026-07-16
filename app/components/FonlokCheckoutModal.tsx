@@ -78,7 +78,7 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
 
     if (!/^237[62]\d{8}$/.test(phoneNumber)) {
       setError(
-        "Enter a valid Cameroonian MoMo number — MTN (2376...) or Orange (2372...). Format: 237 + 9 digits.",
+        "Enter a valid Cameroonian MoMo number. MTN numbers start with 6 or 7, Orange with 9 (e.g. 650000000).",
       );
       return;
     }
@@ -228,8 +228,12 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               A Mobile Money payment request has been sent to{" "}
-              <strong>{phoneNumber}</strong>. Approve it on your phone to
-              complete the purchase.
+              <strong>
+                {phoneNumber.startsWith("237")
+                  ? "+" + phoneNumber
+                  : phoneNumber}
+              </strong>
+              . Approve it on your phone to complete the purchase.
             </p>
             {paymentUrl && (
               <a

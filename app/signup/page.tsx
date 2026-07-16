@@ -39,6 +39,16 @@ export default function Signup() {
     }));
   };
 
+  const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Strip everything except digits, then prepend 237 always
+    const digits = event.target.value.replace(/\D/g, "");
+    // If user typed the 237 prefix themselves, don't double it
+    const local = digits.startsWith("237") ? digits.slice(3) : digits;
+    // Cap at 9 local digits (Cameroon format)
+    const capped = local.slice(0, 9);
+    setFormData((prev) => ({ ...prev, phone: capped ? "237" + capped : "" }));
+  };
+
   const [showPopup, setShowPopup] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,7 +84,7 @@ export default function Signup() {
     event.preventDefault();
     if (!canSubmit) {
       setError(
-        "Password must meet all requirements and match the confirmation."
+        "Password must meet all requirements and match the confirmation.",
       );
       return;
     }
@@ -295,16 +305,29 @@ export default function Signup() {
                   >
                     Phone Number <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    onChange={handleInputChange}
-                    value={formData.phone}
-                    placeholder="+1 (555) 000-0000"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 outline-none hover:border-green-300"
-                  />
+                  <div className="flex rounded-lg border border-gray-300 focus-within:ring-2 focus-within:ring-green-500 focus-within:border-green-500 hover:border-green-300 transition duration-200 overflow-hidden">
+                    <span className="flex items-center px-3 bg-gray-50 border-r border-gray-300 text-gray-600 text-sm font-medium select-none">
+                      +237
+                    </span>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      required
+                      onChange={handlePhoneChange}
+                      value={
+                        formData.phone.startsWith("237")
+                          ? formData.phone.slice(3)
+                          : formData.phone
+                      }
+                      placeholder="6XX XXX XXX"
+                      maxLength={9}
+                      className="flex-1 px-4 py-3 outline-none bg-white"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Enter your Cameroonian Mobile Money number (MTN or Orange).
+                  </p>
                 </div>
               </div>
 
@@ -400,8 +423,8 @@ export default function Signup() {
                         passwordStrength >= 80
                           ? "bg-green-500"
                           : passwordStrength >= 60
-                          ? "bg-yellow-500"
-                          : "bg-red-500"
+                            ? "bg-yellow-500"
+                            : "bg-red-500"
                       }`}
                       style={{ width: `${passwordStrength}%` }}
                     />

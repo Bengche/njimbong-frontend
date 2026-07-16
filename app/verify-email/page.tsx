@@ -34,7 +34,9 @@ export default function VerifyEmailPage() {
       })
       .catch(() => {
         setStatus("error");
-        setMessage("Network error. Please check your connection and try again.");
+        setMessage(
+          "Network error. Please check your connection and try again.",
+        );
       });
   }, [token]);
 
@@ -50,7 +52,9 @@ export default function VerifyEmailPage() {
 
         {status === "loading" && (
           <>
-            <h1 className="text-xl font-semibold text-gray-800 mb-2">Verifying your email…</h1>
+            <h1 className="text-xl font-semibold text-gray-800 mb-2">
+              Verifying your email…
+            </h1>
             <p className="text-gray-500 text-sm">Please wait a moment.</p>
             <div className="mt-6 flex justify-center">
               <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
@@ -62,12 +66,24 @@ export default function VerifyEmailPage() {
           <>
             <div className="flex justify-center mb-4">
               <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-6 h-6 text-emerald-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
             </div>
-            <h1 className="text-xl font-semibold text-gray-800 mb-2">Email Verified</h1>
+            <h1 className="text-xl font-semibold text-gray-800 mb-2">
+              Email Verified
+            </h1>
             <p className="text-gray-600 text-sm mb-6">{message}</p>
             <Link
               href="/login"
@@ -82,12 +98,24 @@ export default function VerifyEmailPage() {
           <>
             <div className="flex justify-center mb-4">
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-6 h-6 text-red-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </div>
             </div>
-            <h1 className="text-xl font-semibold text-gray-800 mb-2">Verification Failed</h1>
+            <h1 className="text-xl font-semibold text-gray-800 mb-2">
+              Verification Failed
+            </h1>
             <p className="text-gray-600 text-sm mb-6">{message}</p>
             <Link
               href="/signup"

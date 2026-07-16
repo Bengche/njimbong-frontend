@@ -5,11 +5,16 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import sharp from "sharp";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 
-const src = fs.readFileSync(path.join(root, "public", "logs.png"));
+// Trim white borders from source so the SVG shows no excess whitespace
+const src = await sharp(path.join(root, "public", "logs.png"))
+  .trim({ background: "#ffffff", threshold: 20 })
+  .png()
+  .toBuffer();
 const dataUri = "data:image/png;base64," + src.toString("base64");
 
 const svg200 = `<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Njimbong">

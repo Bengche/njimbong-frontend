@@ -25,12 +25,15 @@ const sizes = [
   { name: "apple-touch-icon.png", size: 180 },
 ];
 
+// Trim white edges from source first, keep as buffer for reuse
+const trimmedBuf = await sharp(source)
+  .trim({ background: "#ffffff", threshold: 20 })
+  .png()
+  .toBuffer();
+
 for (const { name, size } of sizes) {
-  await sharp(source)
-    .resize(size, size, {
-      fit: "contain",
-      background: { r: 255, g: 255, b: 255, alpha: 1 },
-    })
+  await sharp(trimmedBuf)
+    .resize(size, size, { fit: "cover" })
     .png()
     .toFile(path.join(publicDir, name));
   console.log(`✓  ${name} (${size}x${size})`);

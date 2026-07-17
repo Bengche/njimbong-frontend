@@ -12,17 +12,20 @@ const publicDir = path.join(__dirname, "..", "public");
 const source = path.join(publicDir, "logs.png");
 
 const sizes = [
-  { name: "icon-16x16.png", size: 16 },
-  { name: "icon-32x32.png", size: 32 },
-  { name: "icon-72x72.png", size: 72 },
-  { name: "icon-96x96.png", size: 96 },
-  { name: "icon-128x128.png", size: 128 },
-  { name: "icon-144x144.png", size: 144 },
-  { name: "icon-152x152.png", size: 152 },
-  { name: "icon-192x192.png", size: 192 },
-  { name: "icon-384x384.png", size: 384 },
-  { name: "icon-512x512.png", size: 512 },
-  { name: "apple-touch-icon.png", size: 180 },
+  { name: "icon-16x16.png", size: 16, format: "png" },
+  { name: "icon-32x32.png", size: 32, format: "png" },
+  { name: "icon-72x72.png", size: 72, format: "png" },
+  { name: "icon-96x96.png", size: 96, format: "png" },
+  { name: "icon-128x128.png", size: 128, format: "png" },
+  { name: "icon-144x144.png", size: 144, format: "png" },
+  { name: "icon-152x152.png", size: 152, format: "png" },
+  { name: "icon-192x192.png", size: 192, format: "png" },
+  { name: "icon-384x384.png", size: 384, format: "png" },
+  { name: "icon-512x512.png", size: 512, format: "png" },
+  { name: "apple-touch-icon.png", size: 180, format: "png" },
+  // Legacy filenames — kept in sync so nothing is ever stale
+  { name: "logo njimbong.jpeg", size: 512, format: "jpeg" },
+  { name: "iphone logo njimbong.PNG", size: 180, format: "png" },
 ];
 
 // Trim white edges from source first, keep as buffer for reuse
@@ -31,7 +34,7 @@ const trimmedBuf = await sharp(source)
   .png()
   .toBuffer();
 
-for (const { name, size } of sizes) {
+for (const { name, size, format } of sizes) {
   // Fit logo inside 80% of canvas so each side has exactly 10% padding
   const innerSize = Math.round(size * 0.8);
   const pad = Math.round((size - innerSize) / 2);
@@ -44,17 +47,20 @@ for (const { name, size } of sizes) {
     .png()
     .toBuffer();
 
-  await sharp({
+  const pipeline = sharp({
     create: {
       width: size,
       height: size,
       channels: 4,
       background: { r: 255, g: 255, b: 255, alpha: 1 },
     },
-  })
-    .composite([{ input: logoBuf, top: pad, left: pad }])
-    .png()
-    .toFile(path.join(publicDir, name));
+  }).composite([{ input: logoBuf, top: pad, left: pad }]);
+
+  if (format === "jpeg") {
+    await pipeline.jpeg({ quality: 95 }).toFile(path.join(publicDir, name));
+  } else {
+    await pipeline.png().toFile(path.join(publicDir, name));
+  }
 
   console.log(`✓  ${name} (${size}x${size})`);
 }

@@ -148,7 +148,7 @@ export function useBrowserNotifications() {
         if (swRegistration) {
           await swRegistration.showNotification(options.title, {
             body: options.body,
-            icon: options.icon || "/logo njimbong.jpeg",
+            icon: options.icon || "/icon-192x192.png",
             badge: "/badge-72x72.svg",
             tag: options.tag || "marketplace-notification",
             requireInteraction: options.requireInteraction || false,
@@ -158,7 +158,7 @@ export function useBrowserNotifications() {
           // Fallback to basic notification
           const notification = new Notification(options.title, {
             body: options.body,
-            icon: options.icon || "/logo njimbong.jpeg",
+            icon: options.icon || "/icon-192x192.png",
             badge: "/badge-72x72.svg",
             tag: options.tag || "marketplace-notification",
             requireInteraction: options.requireInteraction || false,

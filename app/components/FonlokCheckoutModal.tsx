@@ -4,7 +4,7 @@ import Axios from "axios";
 
 Axios.defaults.withCredentials = true;
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+const API_BASE = "https://fonlok-backend-production.up.railway.app/";
 
 interface Props {
   listing: {

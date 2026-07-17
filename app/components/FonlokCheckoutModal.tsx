@@ -23,7 +23,7 @@ const POLL_DELAYS = [3000, 5000, 8000, 10000, 15000, 30000];
 
 export default function FonlokCheckoutModal({ listing, onClose }: Props) {
   const [step, setStep] = useState<CheckoutStep>("form");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneInput, setPhoneInput] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
@@ -76,9 +76,10 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
     e.preventDefault();
     setError("");
 
-    if (!/^237[62]\d{8}$/.test(phoneNumber)) {
+    const fullNumber = "237" + phoneInput;
+    if (!/^237[6789]\d{8}$/.test(fullNumber)) {
       setError(
-        "Enter a valid Cameroonian MoMo number. MTN numbers start with 6 or 7, Orange with 9 (e.g. 650000000).",
+        "Enter a valid Cameroonian MoMo number starting with 6, 7, 8, or 9 (e.g. 670000000).",
       );
       return;
     }
@@ -87,7 +88,7 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
     try {
       const res = await Axios.post(`${API_BASE}/api/payments/initiate`, {
         listing_id: listing.id,
-        phone_number: phoneNumber,
+        phone_number: fullNumber,
       });
       setPaymentUrl(res.data.payment_url);
       setStep("pending");
@@ -158,19 +159,25 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Mobile Money number
               </label>
-              <input
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) =>
-                  setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 12))
-                }
-                placeholder="237670000000"
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-white dark:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-                required
-                disabled={loading}
-              />
+              <div className="flex">
+                <span className="inline-flex items-center px-3 py-3 rounded-l-lg border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm font-medium select-none">
+                  +237
+                </span>
+                <input
+                  type="tel"
+                  value={phoneInput}
+                  onChange={(e) =>
+                    setPhoneInput(e.target.value.replace(/\D/g, "").slice(0, 9))
+                  }
+                  placeholder="670000000"
+                  className="flex-1 border border-gray-300 dark:border-gray-600 rounded-r-lg px-4 py-3 text-gray-900 dark:text-white dark:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                  required
+                  disabled={loading}
+                />
+              </div>
               <p className="text-xs text-gray-400 mt-1">
-                MTN or Orange Cameroon. Format: 237 followed by 9 digits.
+                MTN or Orange Cameroon. Enter 9 digits starting with 6, 7, 8, or
+                9.
               </p>
             </div>
 
@@ -228,12 +235,8 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               A Mobile Money payment request has been sent to{" "}
-              <strong>
-                {phoneNumber.startsWith("237")
-                  ? "+" + phoneNumber
-                  : phoneNumber}
-              </strong>
-              . Approve it on your phone to complete the purchase.
+              <strong>+237{phoneInput}</strong>. Approve it on your phone to
+              complete the purchase.
             </p>
             {paymentUrl && (
               <a

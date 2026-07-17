@@ -75,11 +75,7 @@ export default async function Home() {
         <section className="grid gap-10 md:grid-cols-2 md:items-center">
           <div className="space-y-6">
             <p className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-semibold text-emerald-700">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
-              </span>
-              Njimbong Marketplace — Live
+              Njimbong Marketplace
             </p>
             <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl">
               Buy &amp; Sell Online in Cameroon.{" "}

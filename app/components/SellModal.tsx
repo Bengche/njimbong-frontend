@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import Axios from "axios";
-import { currencies } from "../constants/currencies";
-import { countries } from "../constants/countries";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -24,8 +22,6 @@ export default function SellModal({
   onSuccess,
 }: SellModalProps) {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [currencySearch, setCurrencySearch] = useState("");
-  const [countrySearch, setCountrySearch] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,7 +34,7 @@ export default function SellModal({
     currency: "XAF",
     categoryId: "",
     location: "",
-    country: "",
+    country: "Cameroon",
     city: "",
     condition: "new",
     phone: "",
@@ -153,7 +149,7 @@ export default function SellModal({
         currency: "XAF",
         categoryId: "",
         location: "",
-        country: "",
+        country: "Cameroon",
         city: "",
         condition: "new",
         phone: "",
@@ -357,39 +353,12 @@ export default function SellModal({
                 htmlFor="currency"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                Currency <span className="text-red-500">*</span>
+                Currency
               </label>
-              <input
-                type="text"
-                id="currency"
-                name="currency"
-                value={formData.currency}
-                onChange={(e) => {
-                  handleInputChange(e);
-                  setCurrencySearch(e.target.value);
-                }}
-                list="currency-list"
-                required
-                placeholder="Search currency..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
-              />
-              <datalist id="currency-list">
-                {currencies
-                  .filter(
-                    (c) =>
-                      c.code
-                        .toLowerCase()
-                        .includes(currencySearch.toLowerCase()) ||
-                      c.name
-                        .toLowerCase()
-                        .includes(currencySearch.toLowerCase()),
-                  )
-                  .map((currency) => (
-                    <option key={currency.code} value={currency.code}>
-                      {currency.name} ({currency.symbol})
-                    </option>
-                  ))}
-              </datalist>
+              <div className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-medium flex items-center gap-2">
+                <span>XAF</span>
+                <span className="text-xs text-gray-400">(Central African Franc)</span>
+              </div>
             </div>
           </div>
 
@@ -452,31 +421,12 @@ export default function SellModal({
                   htmlFor="country"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
-                  Country <span className="text-red-500">*</span>
+                  Country
                 </label>
-                <input
-                  type="text"
-                  id="country"
-                  name="country"
-                  value={formData.country}
-                  onChange={(e) => {
-                    handleInputChange(e);
-                    setCountrySearch(e.target.value);
-                  }}
-                  list="country-list"
-                  required
-                  placeholder="Search country..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
-                />
-                <datalist id="country-list">
-                  {countries
-                    .filter((c) =>
-                      c.toLowerCase().includes(countrySearch.toLowerCase()),
-                    )
-                    .map((country) => (
-                      <option key={country} value={country} />
-                    ))}
-                </datalist>
+                <div className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-medium flex items-center gap-2">
+                  <span>🇨🇲</span>
+                  <span>Cameroon</span>
+                </div>
               </div>
 
               <div>

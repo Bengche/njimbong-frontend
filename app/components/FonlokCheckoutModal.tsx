@@ -42,7 +42,7 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
       if (index >= POLL_DELAYS.length) return; // Max attempts reached — user can use Fonlok link
       try {
         const res = await Axios.get(
-          `${API_BASE}/api/payments/${reference}/status`,
+          `${API_BASE}/v1/payments/${reference}/status`,
         );
         const { status } = res.data;
 
@@ -85,7 +85,7 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
 
     setLoading(true);
     try {
-      const res = await Axios.post(`${API_BASE}/api/payments/initiate`, {
+      const res = await Axios.post(`${API_BASE}/v1/payments/initiate`, {
         listing_id: listing.id,
         phone_number: phoneNumber,
       });

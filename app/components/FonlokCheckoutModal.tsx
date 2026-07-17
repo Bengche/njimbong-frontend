@@ -159,7 +159,10 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Your email <span className="text-gray-400 text-xs">(optional — for receipt)</span>
+                Your email{" "}
+                <span className="text-gray-400 text-xs">
+                  (optional — for receipt)
+                </span>
               </label>
               <input
                 type="email"

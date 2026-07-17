@@ -32,10 +32,30 @@ const trimmedBuf = await sharp(source)
   .toBuffer();
 
 for (const { name, size } of sizes) {
-  await sharp(trimmedBuf)
-    .resize(size, size, { fit: "cover" })
+  // Fit logo inside 80% of canvas so each side has exactly 10% padding
+  const innerSize = Math.round(size * 0.8);
+  const pad = Math.round((size - innerSize) / 2);
+
+  const logoBuf = await sharp(trimmedBuf)
+    .resize(innerSize, innerSize, {
+      fit: "contain",
+      background: { r: 255, g: 255, b: 255, alpha: 1 },
+    })
+    .png()
+    .toBuffer();
+
+  await sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background: { r: 255, g: 255, b: 255, alpha: 1 },
+    },
+  })
+    .composite([{ input: logoBuf, top: pad, left: pad }])
     .png()
     .toFile(path.join(publicDir, name));
+
   console.log(`✓  ${name} (${size}x${size})`);
 }
 

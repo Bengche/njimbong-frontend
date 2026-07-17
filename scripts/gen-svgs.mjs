@@ -19,12 +19,12 @@ const dataUri = "data:image/png;base64," + src.toString("base64");
 
 const svg200 = `<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Njimbong">
   <rect width="200" height="200" fill="white"/>
-  <image href="${dataUri}" x="0" y="0" width="200" height="200" preserveAspectRatio="xMidYMid meet"/>
+  <image href="${dataUri}" x="20" y="20" width="160" height="160" preserveAspectRatio="xMidYMid meet"/>
 </svg>`;
 
 const svg192 = `<svg width="192" height="192" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Njimbong">
   <rect width="200" height="200" fill="white"/>
-  <image href="${dataUri}" x="0" y="0" width="200" height="200" preserveAspectRatio="xMidYMid meet"/>
+  <image href="${dataUri}" x="20" y="20" width="160" height="160" preserveAspectRatio="xMidYMid meet"/>
 </svg>`;
 
 fs.writeFileSync(path.join(root, "public", "logo.svg"), svg200);

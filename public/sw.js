@@ -6,7 +6,7 @@ const PRECACHE_URLS = [
   "/",
   "/manifest.webmanifest",
   "/logo.svg",
-  "/logo njimbong.jpeg",
+  "/icon-192x192.png",
   "/apple-touch-icon.png",
   "/badge-72x72.svg",
 ];
@@ -57,7 +57,7 @@ self.addEventListener("fetch", (event) => {
     (isNextStatic ||
       url.pathname === "/manifest.webmanifest" ||
       url.pathname === "/logo.svg" ||
-      url.pathname === "/logo njimbong.jpeg" ||
+      url.pathname === "/icon-192x192.png" ||
       url.pathname === "/apple-touch-icon.png" ||
       url.pathname === "/badge-72x72.svg");
 
@@ -113,7 +113,7 @@ self.addEventListener("push", (event) => {
   let notificationData = {
     title: "Marketplace Notification",
     body: "You have a new notification",
-    icon: "/logo njimbong.jpeg",
+    icon: "/icon-192x192.png",
     badge: "/badge-72x72.svg",
     tag: "marketplace-notification",
     requireInteraction: false,

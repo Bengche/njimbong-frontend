@@ -1,7 +1,6 @@
 <!-- Notification badge: monochrome white-on-transparent for Android masking -->
 <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" role="img" aria-label="Njimbong notification">
-  <rect width="72" height="72" rx="16" fill="#16A34A"/>
-  <!-- Simplified N mark at small size -->
+  <!-- Simplified N mark at small size — white on transparent so Android can apply its own badge colour -->
   <rect x="13" y="16" width="8" height="40" rx="2" fill="white"/>
   <polygon points="13,16 21,16 51,56 43,56" fill="white"/>
   <rect x="43" y="16" width="8" height="40" rx="2" fill="white"/>

@@ -38,6 +38,7 @@ export default function SellModal({
     city: "",
     condition: "new",
     phone: "",
+    seller_email: "",
     tags: "",
     status: "Available",
   });
@@ -153,6 +154,7 @@ export default function SellModal({
         city: "",
         condition: "new",
         phone: "",
+        seller_email: "",
         tags: "",
         status: "Available",
       });
@@ -357,7 +359,9 @@ export default function SellModal({
               </label>
               <div className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-700 font-medium flex items-center gap-2">
                 <span>XAF</span>
-                <span className="text-xs text-gray-400">(Central African Franc)</span>
+                <span className="text-xs text-gray-400">
+                  (Central African Franc)
+                </span>
               </div>
             </div>
           </div>
@@ -505,11 +509,27 @@ export default function SellModal({
 
             <div>
               <label
-                htmlFor="status"
+                htmlFor="seller_email"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                Status <span className="text-red-500">*</span>
+                Contact Email <span className="text-red-500">*</span>
               </label>
+              <input
+                type="email"
+                id="seller_email"
+                name="seller_email"
+                value={formData.seller_email}
+                onChange={handleInputChange}
+                required
+                placeholder="your@email.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Used for payment receipts and escrow notifications.
+              </p>
+            </div>
+
+            <div>
               <input
                 type="text"
                 id="status"

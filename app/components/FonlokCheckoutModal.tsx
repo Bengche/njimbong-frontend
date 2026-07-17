@@ -24,6 +24,7 @@ const POLL_DELAYS = [3000, 5000, 8000, 10000, 15000, 30000];
 export default function FonlokCheckoutModal({ listing, onClose }: Props) {
   const [step, setStep] = useState<CheckoutStep>("form");
   const [phoneInput, setPhoneInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
@@ -89,6 +90,7 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
       const res = await Axios.post(`${API_BASE}/api/payments/initiate`, {
         listing_id: listing.id,
         phone_number: fullNumber,
+        buyer_email: emailInput.trim() || undefined,
       });
       setPaymentUrl(res.data.payment_url);
       setStep("pending");
@@ -155,6 +157,20 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
         {/* Step: form */}
         {step === "form" && (
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Your email <span className="text-gray-400 text-xs">(optional — for receipt)</span>
+              </label>
+              <input
+                type="email"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-white dark:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                disabled={loading}
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Mobile Money number

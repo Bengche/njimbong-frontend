@@ -77,9 +77,9 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
     setError("");
 
     const fullNumber = "237" + phoneInput;
-    if (!/^237[6789]\d{8}$/.test(fullNumber)) {
+    if (!/^237[62]\d{8}$/.test(fullNumber)) {
       setError(
-        "Enter a valid Cameroonian MoMo number starting with 6, 7, 8, or 9 (e.g. 670000000).",
+        "Enter a valid Cameroonian MoMo number. MTN numbers start with 6, Orange with 2 (e.g. 670000000).",
       );
       return;
     }
@@ -176,8 +176,8 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
                 />
               </div>
               <p className="text-xs text-gray-400 mt-1">
-                MTN or Orange Cameroon. Enter 9 digits starting with 6, 7, 8, or
-                9.
+                MTN or Orange Cameroon. Enter 9 digits starting with 6 (MTN) or
+                2 (Orange).
               </p>
             </div>
 

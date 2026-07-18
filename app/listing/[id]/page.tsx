@@ -8,6 +8,7 @@ import ReportModal from "../../components/ReportModal";
 import PageHeader from "../../components/PageHeader";
 import LoadingArt from "../../components/LoadingArt";
 import FonlokCheckoutModal from "../../components/FonlokCheckoutModal";
+import MakeOfferModal from "../../components/MakeOfferModal";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -137,6 +138,8 @@ export default function ListingDetailPage() {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [offerSent, setOfferSent] = useState(false);
 
   // Compute the display image URL with proper fallback
   // Always ensure we show an image if one exists
@@ -398,6 +401,17 @@ export default function ListingDetailPage() {
 
   const currencySymbol =
     currencies.find((c) => c.code === listing.currency)?.symbol || "$";
+
+  const handleShare = () => {
+    const url = window.location.href;
+    const text = `Check this out: ${listing.title} — ${currencySymbol}${Number(listing.price).toLocaleString()} on Njimbong`;
+    if (navigator.share) {
+      navigator.share({ title: listing.title, text, url }).catch(() => {});
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard!")).catch(() => {});
+    }
+  };
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:py-10">
@@ -808,25 +822,47 @@ export default function ListingDetailPage() {
               currentUserId !== listing.user_id &&
               listing.status === "Available" &&
               listing.currency === "XAF" && (
-                <button
-                  onClick={() => setShowCheckout(true)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold mb-3"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                <>
+                  <button
+                    onClick={() => setShowCheckout(true)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold mb-2"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                  Buy Securely via Fonlok Escrow
-                </button>
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                    Buy Securely via Fonlok Escrow
+                  </button>
+                  {/* Make Offer button */}
+                  {!offerSent ? (
+                    <button
+                      onClick={() => setShowOfferModal(true)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-amber-500 text-amber-600 rounded-xl hover:bg-amber-50 transition font-semibold mb-3 text-sm"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                          d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                      </svg>
+                      Make an Offer
+                    </button>
+                  ) : (
+                    <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-50 border border-amber-200 text-amber-700 rounded-xl text-sm font-semibold mb-3">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Offer sent — awaiting seller response
+                    </div>
+                  )}
+                </>
               )}
 
             {/* Visitor escrow CTA — not logged in, XAF listing, available */}
@@ -1015,6 +1051,18 @@ export default function ListingDetailPage() {
                 Report this user
               </button>
             )}
+
+            {/* Share Listing Button */}
+            <button
+              onClick={handleShare}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-green-200 text-green-700 rounded-lg hover:bg-green-50 transition text-sm mt-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+              Share this listing
+            </button>
           </div>
 
           {/* Contact Information */}
@@ -1116,11 +1164,11 @@ export default function ListingDetailPage() {
         )}
       </div>
 
-      {/* Related Products */}
+      {/* You May Also Like */}
       {relatedListings.length > 0 && (
         <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Related Products
+            You May Also Like
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {relatedListings.map((relatedListing) => {
@@ -1368,6 +1416,23 @@ export default function ListingDetailPage() {
           targetName={
             reportType === "listing" ? listing.title : listing.username
           }
+        />
+      )}
+
+      {/* Make Offer Modal */}
+      {listing && showOfferModal && (
+        <MakeOfferModal
+          isOpen={showOfferModal}
+          onClose={() => setShowOfferModal(false)}
+          listingId={listing.id}
+          listingTitle={listing.title}
+          askingPrice={listing.price}
+          currency={listing.currency}
+          currencySymbol={currencies.find((c) => c.code === listing.currency)?.symbol || ""}
+          onOfferSent={() => {
+            setShowOfferModal(false);
+            setOfferSent(true);
+          }}
         />
       )}
     </main>

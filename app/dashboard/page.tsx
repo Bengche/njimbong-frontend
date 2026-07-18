@@ -218,6 +218,7 @@ export default function Dashboard() {
   const [updatingListingStatus, setUpdatingListingStatus] = useState<
     number | null
   >(null);
+  const [renewingListing, setRenewingListing] = useState<number | null>(null);
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
   const [showSaveSearchModal, setShowSaveSearchModal] = useState(false);
   const [saveSearchName, setSaveSearchName] = useState("");
@@ -771,6 +772,26 @@ export default function Dashboard() {
     }
   };
 
+  // Renew an expired listing
+  const renewListing = async (listingId: number) => {
+    try {
+      setRenewingListing(listingId);
+      await Axios.put(`${API_BASE}/api/listings/${listingId}/renew`, {});
+      setMyListings((prev) =>
+        prev.map((listing) =>
+          listing.id === listingId
+            ? { ...listing, status: "Available", moderation_status: "pending" }
+            : listing,
+        ),
+      );
+    } catch (error: unknown) {
+      console.error("Error renewing listing:", error);
+      alert("Failed to renew listing. Please try again.");
+    } finally {
+      setRenewingListing(null);
+    }
+  };
+
   if (!authChecked) {
     return (
       <LoadingArt
@@ -1064,13 +1085,23 @@ export default function Dashboard() {
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
                           listing.status === "Available"
                             ? "bg-emerald-100 text-emerald-700"
-                            : "bg-gray-100 text-gray-500"
+                            : listing.status === "Expired"
+                              ? "bg-orange-100 text-orange-700"
+                              : "bg-gray-100 text-gray-500"
                         }`}
                       >
                         {listing.status === "Available" ? (
                           <>
                             <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                             Available
+                          </>
+                        ) : listing.status === "Expired" ? (
+                          <>
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Expired
                           </>
                         ) : (
                           <>
@@ -1092,7 +1123,18 @@ export default function Dashboard() {
                         )}
                       </span>
 
-                      {listing.moderation_status === "approved" && (
+                      {listing.status === "Expired" ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            renewListing(listing.id);
+                          }}
+                          disabled={renewingListing === listing.id}
+                          className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 bg-orange-100 text-orange-700 hover:bg-orange-200"
+                        >
+                          {renewingListing === listing.id ? "Renewing…" : "Renew Listing"}
+                        </button>
+                      ) : listing.moderation_status === "approved" ? (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1134,7 +1176,7 @@ export default function Dashboard() {
                             "Mark as Available"
                           )}
                         </button>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </div>

@@ -783,8 +783,6 @@ export default function Dashboard() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:py-10">
-
-
       {/* Action Buttons — hidden on mobile (use bottom nav instead) */}
       <div className="hidden md:flex flex-row flex-wrap gap-4 mb-8">
         <button
@@ -1325,7 +1323,10 @@ export default function Dashboard() {
       {/* Personalized Section Header */}
       {isPersonalized && (
         <div className="mb-4 flex items-center gap-2 text-green-600">
-          <span className="text-xl">🎯</span>
+          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
           <span className="font-medium">
             Personalized for you based on your interests
           </span>
@@ -1336,7 +1337,9 @@ export default function Dashboard() {
       {recommendedListings.length > 0 && !showFilters && (
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-xl">🔍</span>
+            <svg className="w-5 h-5 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
             <h3 className="text-lg font-semibold text-gray-700">
               Based on your recent searches
             </h3>
@@ -1386,7 +1389,6 @@ export default function Dashboard() {
           <>
             {isPersonalized ? (
               <>
-                <span className="text-2xl">✨</span>
                 {`${listings.length} Listings For You`}
               </>
             ) : (

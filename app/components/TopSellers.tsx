@@ -213,7 +213,7 @@ export default function TopSellers({ className = "" }: TopSellersProps) {
                     {listing.isHot && (
                       <div className="absolute top-1 left-1 z-10">
                         <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] font-bold rounded-full shadow-sm">
-                          🔥 HOT
+                          HOT
                         </span>
                       </div>
                     )}

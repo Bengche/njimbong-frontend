@@ -753,9 +753,9 @@ export default function ChatWindow({
   }
 
   return (
-    <div className={`flex flex-col bg-white ${className}`}>
+    <div className={`flex flex-col bg-white overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white shadow-sm">
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white shadow-sm">
         <div className="flex items-center space-x-3">
           <a
             href={`/profile/${conversation?.participant?.id}`}
@@ -850,7 +850,7 @@ export default function ChatWindow({
       {conversation?.listing && (
         <a
           href={`/listing/${conversation.listing.id}`}
-          className="flex items-center space-x-3 px-4 py-2 bg-gray-50 border-b border-gray-200 hover:bg-gray-100 transition-colors"
+          className="flex-shrink-0 flex items-center space-x-3 px-4 py-2 bg-gray-50 border-b border-gray-200 hover:bg-gray-100 transition-colors"
         >
           {conversation.listing.image ? (
             <img
@@ -902,7 +902,7 @@ export default function ChatWindow({
 
       {/* Error Banner */}
       {error && (
-        <div className="px-4 py-2 bg-red-50 border-b border-red-100 text-red-600 text-sm flex items-center justify-between">
+        <div className="flex-shrink-0 px-4 py-2 bg-red-50 border-b border-red-100 text-red-600 text-sm flex items-center justify-between">
           <span>{error}</span>
           <button
             onClick={() => setError("")}
@@ -927,7 +927,7 @@ export default function ChatWindow({
 
       {/* Blocked Banner */}
       {isBlocked && (
-        <div className="px-4 py-2 bg-yellow-50 border-b border-yellow-100 text-yellow-800 text-sm text-center">
+        <div className="flex-shrink-0 px-4 py-2 bg-yellow-50 border-b border-yellow-100 text-yellow-800 text-sm text-center">
           {conversation?.is_blocked_by_me
             ? "You have blocked this user. Unblock to send messages."
             : "You cannot reply to this conversation."}
@@ -1356,7 +1356,7 @@ export default function ChatWindow({
 
       {/* Reply Preview */}
       {replyingTo && (
-        <div className="px-4 py-2 bg-gray-100 border-t border-gray-200 flex items-center justify-between">
+        <div className="flex-shrink-0 px-4 py-2 bg-gray-100 border-t border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-1 h-10 bg-green-600 rounded-full flex-shrink-0"></div>
             <div className="min-w-0">
@@ -1395,7 +1395,7 @@ export default function ChatWindow({
       {!isBlocked && (
         <form
           onSubmit={sendMessage}
-          className="px-4 py-3 border-t border-gray-200 bg-white"
+          className="flex-shrink-0 px-4 py-3 border-t border-gray-200 bg-white"
         >
           <div className="flex items-end space-x-2">
             <input

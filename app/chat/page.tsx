@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ChatList from "../components/ChatList";
 import ChatWindow from "../components/ChatWindow";
-import PageHeader from "../components/PageHeader";
 
 function ChatPageContent() {
   const router = useRouter();
@@ -19,7 +18,7 @@ function ChatPageContent() {
   >(initialConversationId ? parseInt(initialConversationId) : null);
   const [isMobileView, setIsMobileView] = useState<boolean | null>(null);
   const [showConversation, setShowConversation] = useState(
-    !!initialConversationId
+    !!initialConversationId,
   );
   const [startingChat, setStartingChat] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -84,7 +83,7 @@ function ChatPageContent() {
           const errData = await response.json();
           console.error(
             "Failed to start conversation:",
-            errData.error || errData.message
+            errData.error || errData.message,
           );
           // If it's a "can't chat with yourself" error, redirect back
           if (errData.error?.includes("yourself")) {
@@ -158,103 +157,42 @@ function ChatPageContent() {
   }
 
   return (
-    <main className="flex flex-col w-full h-[calc(100dvh-4rem-4rem)] md:h-[calc(100dvh-4rem)] overflow-hidden">
-      <div className="flex-shrink-0 px-4 pt-4 pb-2 sm:px-6">
-      <PageHeader
-        title="Messages"
-        description="Stay connected with buyers and sellers."
-        actions={
-          <div className="flex items-center gap-3">
-            {isMobileView && showConversation ? (
-              <button
-                onClick={handleBackToList}
-                className="flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-                Back
-              </button>
-            ) : (
-              <a
-                href="/dashboard"
-                className="flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-                Dashboard
-              </a>
-            )}
+    <main className="flex w-full h-[calc(100dvh-4rem-4rem)] md:h-[calc(100dvh-4rem)] overflow-hidden">
+      {/* Desktop: conversations list + chat window side by side */}
+      {!isMobileView && (
+        <>
+          <div className="w-80 flex-shrink-0 border-r border-gray-200 overflow-hidden">
+            <ChatList
+              selectedConversationId={selectedConversationId}
+              onSelectConversation={handleSelectConversation}
+              className="h-full"
+            />
           </div>
-        }
-      />
+          <div className="flex-1 overflow-hidden">
+            <ChatWindow
+              conversationId={selectedConversationId}
+              className="h-full"
+            />
+          </div>
+        </>
+      )}
 
-      </div>
-
-      {/* Main Content */}
-      <div className="flex flex-1 min-h-0 overflow-hidden">
-        {/* Desktop Layout */}
-        {!isMobileView && (
-          <>
-            {/* Conversations List */}
-            <div className="w-80 border-r border-gray-200 flex-shrink-0">
-              <ChatList
-                selectedConversationId={selectedConversationId}
-                onSelectConversation={handleSelectConversation}
-                className="h-full"
-              />
-            </div>
-
-            {/* Chat Window */}
-            <div className="flex-1">
-              <ChatWindow
-                conversationId={selectedConversationId}
-                className="h-full"
-              />
-            </div>
-          </>
-        )}
-
-        {/* Mobile Layout */}
-        {isMobileView && (
-          <>
-            {!showConversation ? (
-              <ChatList
-                selectedConversationId={selectedConversationId}
-                onSelectConversation={handleSelectConversation}
-                className="w-full h-full"
-              />
-            ) : (
-              <ChatWindow
-                conversationId={selectedConversationId}
-                onClose={handleBackToList}
-                className="w-full h-full"
-              />
-            )}
-          </>
-        )}
-      </div>
+      {/* Mobile: list or window, full screen */}
+      {isMobileView && (
+        !showConversation ? (
+          <ChatList
+            selectedConversationId={selectedConversationId}
+            onSelectConversation={handleSelectConversation}
+            className="flex-1 w-full"
+          />
+        ) : (
+          <ChatWindow
+            conversationId={selectedConversationId}
+            onClose={handleBackToList}
+            className="flex-1 w-full"
+          />
+        )
+      )}
     </main>
   );
 }

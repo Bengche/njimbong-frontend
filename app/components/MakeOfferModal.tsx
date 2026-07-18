@@ -63,8 +63,9 @@ export default function MakeOfferModal({
       setSuccess(true);
       onOfferSent?.();
     } catch (err: unknown) {
-      const msg =
-        Axios.isAxiosError(err) ? err.response?.data?.error : undefined;
+      const msg = Axios.isAxiosError(err)
+        ? err.response?.data?.error
+        : undefined;
       setError(msg || "Failed to send offer. Please try again.");
     } finally {
       setSubmitting(false);
@@ -81,7 +82,10 @@ export default function MakeOfferModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={handleClose}
+      />
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
         {/* Header */}
         <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-5 text-white">
@@ -96,8 +100,18 @@ export default function MakeOfferModal({
               onClick={handleClose}
               className="p-1 rounded-full hover:bg-white/20 transition"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -107,11 +121,23 @@ export default function MakeOfferModal({
           {success ? (
             <div className="text-center py-6">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-8 h-8 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Offer Sent!</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">
+                Offer Sent!
+              </h3>
               <p className="text-gray-600 text-sm mb-6">
                 The seller has been notified and will respond within 48 hours.
               </p>
@@ -128,7 +154,8 @@ export default function MakeOfferModal({
               <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center">
                 <span className="text-sm text-gray-600">Asking price</span>
                 <span className="font-bold text-gray-800 text-lg">
-                  {currencySymbol}{askingPrice.toLocaleString()} {currency}
+                  {currencySymbol}
+                  {askingPrice.toLocaleString()} {currency}
                 </span>
               </div>
 
@@ -146,7 +173,10 @@ export default function MakeOfferModal({
                     min="1"
                     step="1"
                     value={amount}
-                    onChange={(e) => { setAmount(e.target.value); setError(""); }}
+                    onChange={(e) => {
+                      setAmount(e.target.value);
+                      setError("");
+                    }}
                     placeholder={`e.g. ${Math.round(askingPrice * 0.85).toLocaleString()}`}
                     className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-lg font-semibold"
                     required
@@ -154,7 +184,8 @@ export default function MakeOfferModal({
                 </div>
                 {amount && !isNaN(parseFloat(amount)) && (
                   <p className="text-xs text-gray-500 mt-1">
-                    {((1 - parseFloat(amount) / askingPrice) * 100).toFixed(0)}% below asking price
+                    {((1 - parseFloat(amount) / askingPrice) * 100).toFixed(0)}%
+                    below asking price
                   </p>
                 )}
               </div>
@@ -206,7 +237,8 @@ export default function MakeOfferModal({
               </div>
 
               <p className="text-xs text-gray-400 text-center">
-                Offers expire after 48 hours. The seller can accept, counter, or decline.
+                Offers expire after 48 hours. The seller can accept, counter, or
+                decline.
               </p>
             </form>
           )}

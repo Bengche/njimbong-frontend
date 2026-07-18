@@ -57,7 +57,9 @@ export default function ForgotPasswordPage() {
                 />
               </svg>
             </div>
-            <h1 className="text-xl font-bold text-gray-900">Check your email</h1>
+            <h1 className="text-xl font-bold text-gray-900">
+              Check your email
+            </h1>
             <p className="text-gray-600 text-sm">
               If <strong>{email}</strong> is registered with Njimbong, a
               password reset link has been sent. Check your inbox and spam

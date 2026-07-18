@@ -302,7 +302,10 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               to confirm receipt and release funds to the seller.
             </p>
             <button
-              onClick={() => { onClose(); router.push("/orders"); }}
+              onClick={() => {
+                onClose();
+                router.push("/orders");
+              }}
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-colors"
             >
               View My Orders

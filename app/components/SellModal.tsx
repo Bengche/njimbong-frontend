@@ -357,7 +357,9 @@ export default function SellModal({
             {/* Existing images in edit mode */}
             {existingImages.length > 0 && (
               <div className="mt-3">
-                <p className="text-xs text-gray-500 mb-2">Current images (click × to remove):</p>
+                <p className="text-xs text-gray-500 mb-2">
+                  Current images (click × to remove):
+                </p>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
                   {existingImages.map((img) => (
                     <div key={img.id} className="relative group">

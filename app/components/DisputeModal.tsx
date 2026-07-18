@@ -64,7 +64,9 @@ export default function DisputeModal({
       setSuccess(true);
       onDisputeFiled?.();
     } catch (err: unknown) {
-      const msg = Axios.isAxiosError(err) ? err.response?.data?.error : undefined;
+      const msg = Axios.isAxiosError(err)
+        ? err.response?.data?.error
+        : undefined;
       setError(msg || "Failed to file dispute. Please try again.");
     } finally {
       setSubmitting(false);
@@ -82,18 +84,36 @@ export default function DisputeModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={handleClose}
+      />
       <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-red-600 to-red-500 px-6 py-5 text-white flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-bold">File a Dispute</h2>
-              <p className="text-white/80 text-sm mt-0.5">Order #{orderReference}</p>
+              <p className="text-white/80 text-sm mt-0.5">
+                Order #{orderReference}
+              </p>
             </div>
-            <button onClick={handleClose} className="p-1 rounded-full hover:bg-white/20 transition">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <button
+              onClick={handleClose}
+              className="p-1 rounded-full hover:bg-white/20 transition"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -103,16 +123,30 @@ export default function DisputeModal({
           {success ? (
             <div className="text-center py-6">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-8 h-8 text-red-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Dispute Filed</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">
+                Dispute Filed
+              </h3>
               <p className="text-gray-600 text-sm mb-2">
-                Our team has been notified. The funds held in escrow are frozen pending review.
+                Our team has been notified. The funds held in escrow are frozen
+                pending review.
               </p>
               <p className="text-gray-500 text-xs mb-6">
-                We will review within 24–48 business hours and contact both parties.
+                We will review within 24–48 business hours and contact both
+                parties.
               </p>
               <button
                 onClick={handleClose}
@@ -125,7 +159,9 @@ export default function DisputeModal({
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Warning */}
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <p className="text-sm text-amber-800 font-semibold mb-1">Before you file a dispute</p>
+                <p className="text-sm text-amber-800 font-semibold mb-1">
+                  Before you file a dispute
+                </p>
                 <p className="text-xs text-amber-700 leading-relaxed">
                   {myRole === "buyer"
                     ? "Have you contacted the seller? Most issues can be resolved through chat. Filing a dispute freezes the escrow funds for both parties until our team reviews the case."
@@ -136,7 +172,9 @@ export default function DisputeModal({
               {/* Listing reference */}
               <div className="bg-gray-50 rounded-xl p-3">
                 <p className="text-xs text-gray-500">Item in dispute</p>
-                <p className="font-semibold text-gray-800 text-sm truncate">{listingTitle}</p>
+                <p className="font-semibold text-gray-800 text-sm truncate">
+                  {listingTitle}
+                </p>
               </div>
 
               {/* Description */}
@@ -146,7 +184,10 @@ export default function DisputeModal({
                 </label>
                 <textarea
                   value={description}
-                  onChange={(e) => { setDescription(e.target.value); setError(""); }}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    setError("");
+                  }}
                   placeholder={
                     myRole === "buyer"
                       ? "e.g. Item received does not match the description. The phone had a cracked screen not shown in the photos."
@@ -157,21 +198,32 @@ export default function DisputeModal({
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
                   required
                 />
-                <p className="text-xs text-gray-400 mt-1">{description.length}/1000</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {description.length}/1000
+                </p>
               </div>
 
               {/* Evidence images */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                   Evidence photos{" "}
-                  <span className="text-gray-400 font-normal">(optional, max 5)</span>
+                  <span className="text-gray-400 font-normal">
+                    (optional, max 5)
+                  </span>
                 </label>
                 {previews.length > 0 && (
                   <div className="grid grid-cols-3 gap-2 mb-3">
                     {previews.map((src, idx) => (
-                      <div key={idx} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+                      <div
+                        key={idx}
+                        className="relative aspect-square rounded-lg overflow-hidden bg-gray-100"
+                      >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={src} alt="evidence" className="w-full h-full object-cover" />
+                        <img
+                          src={src}
+                          alt="evidence"
+                          className="w-full h-full object-cover"
+                        />
                         <button
                           type="button"
                           onClick={() => removeImage(idx)}
@@ -185,8 +237,18 @@ export default function DisputeModal({
                 )}
                 {previews.length < 5 && (
                   <label className="flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-red-400 hover:bg-red-50 transition text-sm text-gray-500">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
                     </svg>
                     Add photos
                     <input

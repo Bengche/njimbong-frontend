@@ -229,7 +229,9 @@ export default function Dashboard() {
   const [publishingListing, setPublishingListing] = useState<number | null>(
     null,
   );
-  const [editingListing, setEditingListing] = useState<EditListingData | null>(null);
+  const [editingListing, setEditingListing] = useState<EditListingData | null>(
+    null,
+  );
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [deletingListing, setDeletingListing] = useState<number | null>(null);
   const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
@@ -825,7 +827,8 @@ export default function Dashboard() {
       setDeleteConfirmId(null);
     } catch (err: any) {
       alert(
-        err.response?.data?.error || "Failed to delete listing. Please try again.",
+        err.response?.data?.error ||
+          "Failed to delete listing. Please try again.",
       );
     } finally {
       setDeletingListing(null);
@@ -1318,7 +1321,9 @@ export default function Dashboard() {
                           disabled={deletingListing === listing.id}
                           className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition disabled:opacity-50"
                         >
-                          {deletingListing === listing.id ? "Deleting…" : "Yes, delete"}
+                          {deletingListing === listing.id
+                            ? "Deleting…"
+                            : "Yes, delete"}
                         </button>
                         <button
                           onClick={() => setDeleteConfirmId(null)}

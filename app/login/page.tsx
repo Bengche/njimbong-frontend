@@ -282,7 +282,7 @@ export default function Login() {
 
               <div className="text-sm">
                 <a
-                  href="#"
+                  href="/forgot-password"
                   className="font-medium text-green-600 hover:text-yellow-600 transition-colors"
                 >
                   Forgot password?

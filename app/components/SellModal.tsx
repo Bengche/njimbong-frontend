@@ -10,20 +10,50 @@ interface Category {
   name: string;
 }
 
+interface ExistingImage {
+  id: number;
+  imageurl: string;
+  is_main: boolean;
+}
+
+export interface EditListingData {
+  id: number;
+  title: string;
+  description: string;
+  price: number | string;
+  currency?: string;
+  category_id?: number;
+  categoryId?: number | string;
+  location?: string;
+  country?: string;
+  city?: string;
+  condition?: string;
+  phone?: string;
+  seller_email?: string;
+  tags?: string[] | string;
+  delivery_type?: string;
+  delivery_notes?: string;
+  images?: ExistingImage[];
+}
+
 interface SellModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  editListing?: EditListingData | null;
 }
 
 export default function SellModal({
   isOpen,
   onClose,
   onSuccess,
+  editListing,
 }: SellModalProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<ExistingImage[]>([]);
+  const [removedImageIds, setRemovedImageIds] = useState<number[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -45,6 +75,42 @@ export default function SellModal({
     delivery_type: "pickup",
     delivery_notes: "",
   });
+
+  // Pre-fill form when opening in edit mode
+  useEffect(() => {
+    if (isOpen && editListing) {
+      setFormData({
+        title: editListing.title || "",
+        description: editListing.description || "",
+        price: String(editListing.price || ""),
+        currency: editListing.currency || "XAF",
+        categoryId: String(
+          editListing.categoryId ?? editListing.category_id ?? "",
+        ),
+        location: editListing.location || "",
+        country: editListing.country || "Cameroon",
+        city: editListing.city || "",
+        condition: editListing.condition || "new",
+        phone: editListing.phone || "",
+        seller_email: editListing.seller_email || "",
+        tags: Array.isArray(editListing.tags)
+          ? editListing.tags.join(", ")
+          : editListing.tags || "",
+        status: "Available",
+        delivery_type: editListing.delivery_type || "pickup",
+        delivery_notes: editListing.delivery_notes || "",
+      });
+      setExistingImages(editListing.images || []);
+      setRemovedImageIds([]);
+      setImages([]);
+      setImagePreviews([]);
+      setDuplicateWarning([]);
+      setSubmitError("");
+    } else if (isOpen && !editListing) {
+      setExistingImages([]);
+      setRemovedImageIds([]);
+    }
+  }, [isOpen, editListing]);
 
   // Fetch categories when modal opens
   useEffect(() => {
@@ -81,11 +147,18 @@ export default function SellModal({
 
   const handleTitleBlur = async () => {
     const title = formData.title.trim();
-    if (title.length < 4) { setDuplicateWarning([]); return; }
+    if (title.length < 4) {
+      setDuplicateWarning([]);
+      return;
+    }
     try {
-      const res = await Axios.get(`${API_BASE}/api/listings/check-duplicate?title=${encodeURIComponent(title)}`);
+      const res = await Axios.get(
+        `${API_BASE}/api/listings/check-duplicate?title=${encodeURIComponent(title)}`,
+      );
       setDuplicateWarning((res.data.duplicates || []).map((d: any) => d.title));
-    } catch { setDuplicateWarning([]); }
+    } catch {
+      setDuplicateWarning([]);
+    }
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,69 +193,66 @@ export default function SellModal({
 
   const handleSubmit = async (e: React.FormEvent, isDraft = false) => {
     e.preventDefault();
-
-    // Prevent double submission
     if (isSubmitting) return;
-
     setIsSubmitting(true);
     setSubmitError("");
     setSubmitSuccess(false);
 
     try {
       const formDataToSend = new FormData();
-
-      // Append all form fields
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
-      if (isDraft) formDataToSend.append("is_draft", "true");
-
-      // Append all images
       images.forEach((image) => {
         formDataToSend.append("images", image);
       });
 
-      const response = await Axios.post(
-        `${API_BASE}/api/listings`,
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      console.log("Listing created successfully");
-      setSubmitSuccess(true);
-
-      // Reset form and images
-      setFormData({
-        title: "",
-        description: "",
-        price: "",
-        currency: "XAF",
-        categoryId: "",
-        location: "",
-        country: "Cameroon",
-        city: "",
-        condition: "new",
-        phone: "",
-        seller_email: "",
-        tags: "",
-        status: "Available",
-        delivery_type: "pickup",
-        delivery_notes: "",
-      });
-      setImages([]);
-      setImagePreviews([]);
-      setDuplicateWarning([]);
-
-      // Call onSuccess callback if provided
-      if (onSuccess) {
-        onSuccess();
+      if (editListing) {
+        // ── Edit mode: PUT existing listing ──────────────────────────────────
+        removedImageIds.forEach((id) => {
+          formDataToSend.append("removed_image_ids", String(id));
+        });
+        await Axios.put(
+          `${API_BASE}/api/listings/${editListing.id}`,
+          formDataToSend,
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+      } else {
+        // ── Create mode: POST new listing ────────────────────────────────────
+        if (isDraft) formDataToSend.append("is_draft", "true");
+        await Axios.post(`${API_BASE}/api/listings`, formDataToSend, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
 
-      // Close modal after short delay to show success message
+      setSubmitSuccess(true);
+
+      if (!editListing) {
+        // Reset form only on create
+        setFormData({
+          title: "",
+          description: "",
+          price: "",
+          currency: "XAF",
+          categoryId: "",
+          location: "",
+          country: "Cameroon",
+          city: "",
+          condition: "new",
+          phone: "",
+          seller_email: "",
+          tags: "",
+          status: "Available",
+          delivery_type: "pickup",
+          delivery_notes: "",
+        });
+        setImages([]);
+        setImagePreviews([]);
+        setDuplicateWarning([]);
+      }
+
+      if (onSuccess) onSuccess();
+
       setTimeout(() => {
         setSubmitSuccess(false);
         onClose();
@@ -193,14 +263,19 @@ export default function SellModal({
           process.env.NEXT_PUBLIC_LOGIN_ENDPOINT || "/login";
       } else if (error.response?.status === 403) {
         setSubmitError(
-          "Your account is suspended. You cannot create listings.",
+          editListing
+            ? error.response.data?.error || "You cannot edit this listing."
+            : "Your account is suspended. You cannot create listings.",
         );
       } else if (error.response?.data?.error) {
         setSubmitError(error.response.data.error);
       } else {
-        setSubmitError("Failed to create listing. Please try again.");
+        setSubmitError(
+          editListing
+            ? "Failed to update listing. Please try again."
+            : "Failed to create listing. Please try again.",
+        );
       }
-      console.error("Error creating listing:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -213,7 +288,9 @@ export default function SellModal({
       <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
         <div className="sticky top-0 bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white p-4 sm:p-6 rounded-t-2xl flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Create New Listing</h2>
+          <h2 className="text-2xl font-bold">
+            {editListing ? "Edit Listing" : "Create New Listing"}
+          </h2>
           <button
             onClick={onClose}
             className="text-white hover:text-gray-200 transition-colors"
@@ -269,13 +346,48 @@ export default function SellModal({
                   />
                 </svg>
                 <span className="text-sm text-gray-600">
-                  Click to upload images
+                  Click to {editListing ? "add more" : "upload"} images
                 </span>
                 <span className="text-xs text-gray-400 mt-1">
                   PNG, JPG, GIF up to 5MB each
                 </span>
               </label>
             </div>
+
+            {/* Existing images in edit mode */}
+            {existingImages.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs text-gray-500 mb-2">Current images (click × to remove):</p>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+                  {existingImages.map((img) => (
+                    <div key={img.id} className="relative group">
+                      <img
+                        src={img.imageurl}
+                        alt="existing"
+                        className="w-full h-24 object-cover rounded-lg border-2 border-gray-200"
+                      />
+                      {img.is_main && (
+                        <span className="absolute bottom-1 left-1 bg-green-500 text-white text-xs px-1 rounded">
+                          Main
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setRemovedImageIds((prev) => [...prev, img.id]);
+                          setExistingImages((prev) =>
+                            prev.filter((i) => i.id !== img.id),
+                          );
+                        }}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Image Previews */}
             {imagePreviews.length > 0 && (
@@ -324,11 +436,17 @@ export default function SellModal({
             />
             {duplicateWarning.length > 0 && (
               <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
-                <p className="font-semibold mb-1">Similar listing already exists:</p>
+                <p className="font-semibold mb-1">
+                  Similar listing already exists:
+                </p>
                 <ul className="list-disc list-inside">
-                  {duplicateWarning.map((t, i) => <li key={i}>{t}</li>)}
+                  {duplicateWarning.map((t, i) => (
+                    <li key={i}>{t}</li>
+                  ))}
                 </ul>
-                <p className="mt-1 text-amber-600 text-xs">Make sure this is not a duplicate before posting.</p>
+                <p className="mt-1 text-amber-600 text-xs">
+                  Make sure this is not a duplicate before posting.
+                </p>
               </div>
             )}
           </div>
@@ -577,7 +695,10 @@ export default function SellModal({
               Delivery &amp; Meetup
             </h3>
             <div>
-              <label htmlFor="delivery_type" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="delivery_type"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
                 Delivery Option
               </label>
               <select
@@ -594,8 +715,14 @@ export default function SellModal({
               </select>
             </div>
             <div>
-              <label htmlFor="delivery_notes" className="block text-sm font-semibold text-gray-700 mb-2">
-                Delivery Notes <span className="text-gray-400 font-normal text-xs">(optional)</span>
+              <label
+                htmlFor="delivery_notes"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                Delivery Notes{" "}
+                <span className="text-gray-400 font-normal text-xs">
+                  (optional)
+                </span>
               </label>
               <input
                 type="text"
@@ -667,10 +794,14 @@ export default function SellModal({
               </svg>
               <div>
                 <p className="text-green-700 font-medium">
-                  Listing created successfully!
+                  {editListing
+                    ? "Listing updated!"
+                    : "Listing created successfully!"}
                 </p>
                 <p className="text-green-600 text-sm">
-                  Your listing is pending admin approval.
+                  {editListing
+                    ? "Changes saved. It will be re-reviewed by our team if it was live."
+                    : "Your listing is pending admin approval."}
                 </p>
               </div>
             </div>
@@ -684,14 +815,16 @@ export default function SellModal({
             >
               Cancel
             </button>
-            <button
-              type="button"
-              onClick={(e) => handleSubmit(e as any, true)}
-              disabled={isSubmitting || submitSuccess}
-              className="flex-1 px-6 py-3 border-2 border-blue-400 text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Save Draft
-            </button>
+            {!editListing && (
+              <button
+                type="button"
+                onClick={(e) => handleSubmit(e as any, true)}
+                disabled={isSubmitting || submitSuccess}
+                className="flex-1 px-6 py-3 border-2 border-blue-400 text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Save Draft
+              </button>
+            )}
             <button
               type="submit"
               disabled={isSubmitting || submitSuccess}
@@ -719,7 +852,9 @@ export default function SellModal({
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  <span>Creating Listing...</span>
+                  <span>
+                    {editListing ? "Saving Changes..." : "Creating Listing..."}
+                  </span>
                 </>
               ) : submitSuccess ? (
                 <>
@@ -736,10 +871,10 @@ export default function SellModal({
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <span>Created!</span>
+                  <span>{editListing ? "Saved!" : "Created!"}</span>
                 </>
               ) : (
-                <span>Create Listing</span>
+                <span>{editListing ? "Save Changes" : "Create Listing"}</span>
               )}
             </button>
           </div>

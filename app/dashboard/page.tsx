@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Axios from "axios";
 import Image from "next/image";
 import SellModal from "../components/SellModal";
+import type { EditListingData } from "../components/SellModal";
 import SearchFilters from "../components/SearchFilters";
 import LoadingArt from "../components/LoadingArt";
 import ReportModal from "../components/ReportModal";
@@ -58,6 +59,8 @@ interface Listing {
   is_draft?: boolean;
   delivery_type?: string;
   delivery_notes?: string;
+  tags?: string[];
+  seller_email?: string;
 }
 
 interface UserLocation {
@@ -223,7 +226,12 @@ export default function Dashboard() {
     number | null
   >(null);
   const [renewingListing, setRenewingListing] = useState<number | null>(null);
-  const [publishingListing, setPublishingListing] = useState<number | null>(null);
+  const [publishingListing, setPublishingListing] = useState<number | null>(
+    null,
+  );
+  const [editingListing, setEditingListing] = useState<EditListingData | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [deletingListing, setDeletingListing] = useState<number | null>(null);
   const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
   const [myOffers, setMyOffers] = useState<any[]>([]);
   const [showMyOffers, setShowMyOffers] = useState(false);
@@ -809,6 +817,21 @@ export default function Dashboard() {
   };
 
   // Publish a draft listing
+  const deleteListing = async (listingId: number) => {
+    setDeletingListing(listingId);
+    try {
+      await Axios.delete(`${API_BASE}/api/listings/${listingId}`);
+      setMyListings((prev) => prev.filter((l) => l.id !== listingId));
+      setDeleteConfirmId(null);
+    } catch (err: any) {
+      alert(
+        err.response?.data?.error || "Failed to delete listing. Please try again.",
+      );
+    } finally {
+      setDeletingListing(null);
+    }
+  };
+
   const publishListing = async (listingId: number) => {
     try {
       setPublishingListing(listingId);
@@ -829,14 +852,20 @@ export default function Dashboard() {
   };
 
   // Buyer responds to a counter-offer
-  const respondToCounter = async (offerId: number, action: "accept_counter" | "decline_counter") => {
+  const respondToCounter = async (
+    offerId: number,
+    action: "accept_counter" | "decline_counter",
+  ) => {
     try {
       setRespondingOffer(offerId);
       await Axios.put(`${API_BASE}/api/offers/${offerId}`, { action });
       setMyOffers((prev) =>
         prev.map((o) =>
           o.id === offerId
-            ? { ...o, status: action === "accept_counter" ? "accepted" : "declined" }
+            ? {
+                ...o,
+                status: action === "accept_counter" ? "accepted" : "declined",
+              }
             : o,
         ),
       );
@@ -1150,9 +1179,18 @@ export default function Dashboard() {
                       >
                         {listing.is_draft ? (
                           <>
-                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
                             </svg>
                             Draft
                           </>
@@ -1207,7 +1245,9 @@ export default function Dashboard() {
                           disabled={publishingListing === listing.id}
                           className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 bg-blue-100 text-blue-700 hover:bg-blue-200"
                         >
-                          {publishingListing === listing.id ? "Publishing…" : "Publish Now"}
+                          {publishingListing === listing.id
+                            ? "Publishing…"
+                            : "Publish Now"}
                         </button>
                       ) : listing.status === "Expired" ? (
                         <button
@@ -1266,6 +1306,92 @@ export default function Dashboard() {
                         </button>
                       ) : null}
                     </div>
+
+                    {/* Edit / Delete row */}
+                    {deleteConfirmId === listing.id ? (
+                      <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                        <span className="text-xs text-gray-600 flex-1">
+                          Delete this listing?
+                        </span>
+                        <button
+                          onClick={() => deleteListing(listing.id)}
+                          disabled={deletingListing === listing.id}
+                          className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition disabled:opacity-50"
+                        >
+                          {deletingListing === listing.id ? "Deleting…" : "Yes, delete"}
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirmId(null)}
+                          className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingListing({
+                              id: listing.id,
+                              title: listing.title,
+                              description: listing.description,
+                              price: listing.price,
+                              currency: listing.currency,
+                              category_id: listing.category_id,
+                              location: listing.location,
+                              country: listing.country,
+                              city: listing.city,
+                              condition: listing.condition,
+                              phone: listing.phone,
+                              seller_email: (listing as any).seller_email,
+                              tags: listing.tags,
+                              delivery_type: listing.delivery_type,
+                              delivery_notes: listing.delivery_notes,
+                              images: listing.images,
+                            });
+                          }}
+                          className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
+                        >
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteConfirmId(listing.id);
+                          }}
+                          className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
+                        >
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                          Delete
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -1289,7 +1415,9 @@ export default function Dashboard() {
       {/* Trending Searches */}
       {trendingSearches.length > 0 && (
         <div className="mb-6">
-          <p className="text-sm font-semibold text-gray-500 mb-2">Trending searches</p>
+          <p className="text-sm font-semibold text-gray-500 mb-2">
+            Trending searches
+          </p>
           <div className="flex flex-wrap gap-2">
             {trendingSearches.map((term) => (
               <button
@@ -1300,9 +1428,18 @@ export default function Dashboard() {
                 }}
                 className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 hover:bg-emerald-100 hover:text-emerald-700 text-gray-600 rounded-full text-sm font-medium transition-colors"
               >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                <svg
+                  className="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
                 </svg>
                 {term}
               </button>
@@ -1326,50 +1463,94 @@ export default function Dashboard() {
                 </span>
               )}
             </h3>
-            <svg className={`w-5 h-5 text-gray-400 transition-transform ${showMyOffers ? "rotate-180" : ""}`}
-              fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <svg
+              className={`w-5 h-5 text-gray-400 transition-transform ${showMyOffers ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
           {showMyOffers && (
             <div className="mt-4 space-y-3">
               {myOffers.map((offer) => (
-                <div key={offer.id} className={`flex items-start gap-3 p-3 rounded-xl border ${
-                  offer.status === "countered" ? "border-amber-200 bg-amber-50" : "border-gray-100 bg-gray-50"
-                }`}>
+                <div
+                  key={offer.id}
+                  className={`flex items-start gap-3 p-3 rounded-xl border ${
+                    offer.status === "countered"
+                      ? "border-amber-200 bg-amber-50"
+                      : "border-gray-100 bg-gray-50"
+                  }`}
+                >
                   {offer.listing_image && (
-                    <img src={offer.listing_image} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                    <img
+                      src={offer.listing_image}
+                      alt=""
+                      className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                    />
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-800 truncate text-sm">{offer.listing_title}</p>
+                    <p className="font-semibold text-gray-800 truncate text-sm">
+                      {offer.listing_title}
+                    </p>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      Your offer: <span className="font-medium">{Number(offer.amount).toLocaleString()} {offer.currency}</span>
+                      Your offer:{" "}
+                      <span className="font-medium">
+                        {Number(offer.amount).toLocaleString()} {offer.currency}
+                      </span>
                     </p>
                     {offer.status === "countered" && offer.counter_amount && (
                       <p className="text-xs text-amber-700 font-semibold mt-0.5">
-                        Counter-offer: {Number(offer.counter_amount).toLocaleString()} {offer.currency}
-                        {offer.counter_message && <span className="font-normal"> — "{offer.counter_message}"</span>}
+                        Counter-offer:{" "}
+                        {Number(offer.counter_amount).toLocaleString()}{" "}
+                        {offer.currency}
+                        {offer.counter_message && (
+                          <span className="font-normal">
+                            {" "}
+                            — "{offer.counter_message}"
+                          </span>
+                        )}
                       </p>
                     )}
-                    <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-semibold ${
-                      offer.status === "pending" ? "bg-gray-200 text-gray-600"
-                      : offer.status === "countered" ? "bg-amber-200 text-amber-800"
-                      : offer.status === "accepted" ? "bg-emerald-100 text-emerald-700"
-                      : offer.status === "declined" ? "bg-red-100 text-red-700"
-                      : "bg-gray-200 text-gray-600"
-                    }`}>{offer.status === "countered" ? "Counter-offer received" : offer.status}</span>
+                    <span
+                      className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-semibold ${
+                        offer.status === "pending"
+                          ? "bg-gray-200 text-gray-600"
+                          : offer.status === "countered"
+                            ? "bg-amber-200 text-amber-800"
+                            : offer.status === "accepted"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : offer.status === "declined"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      {offer.status === "countered"
+                        ? "Counter-offer received"
+                        : offer.status}
+                    </span>
                   </div>
                   {offer.status === "countered" && (
                     <div className="flex flex-col gap-1.5 flex-shrink-0">
                       <button
-                        onClick={() => respondToCounter(offer.id, "accept_counter")}
+                        onClick={() =>
+                          respondToCounter(offer.id, "accept_counter")
+                        }
                         disabled={respondingOffer === offer.id}
                         className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
                       >
                         Accept
                       </button>
                       <button
-                        onClick={() => respondToCounter(offer.id, "decline_counter")}
+                        onClick={() =>
+                          respondToCounter(offer.id, "decline_counter")
+                        }
                         disabled={respondingOffer === offer.id}
                         className="px-3 py-1.5 text-xs font-semibold border border-red-300 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50"
                       >
@@ -1379,7 +1560,9 @@ export default function Dashboard() {
                   )}
                   {offer.status === "accepted" && (
                     <button
-                      onClick={() => router.push(`/listing/${offer.listing_id}`)}
+                      onClick={() =>
+                        router.push(`/listing/${offer.listing_id}`)
+                      }
                       className="px-3 py-1.5 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 flex-shrink-0"
                     >
                       Buy Now
@@ -1917,35 +2100,45 @@ export default function Dashboard() {
                     {/* Fonlok Escrow CTA */}
                     {canEscrow && (
                       <>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/listing/${listing.id}`);
-                        }}
-                        className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150"
-                      >
-                        <svg
-                          className="w-4 h-4 flex-shrink-0"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(`/listing/${listing.id}`);
+                          }}
+                          className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                          />
-                        </svg>
-                        Buy Securely via Escrow
-                      </button>
-                      {/* Fonlok Protected pill */}
-                      <div className="flex items-center gap-1 mt-1 justify-center">
-                        <svg className="w-3 h-3 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-xs text-emerald-600 font-medium">Fonlok Protected</span>
-                      </div>
+                          <svg
+                            className="w-4 h-4 flex-shrink-0"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                            />
+                          </svg>
+                          Buy Securely via Escrow
+                        </button>
+                        {/* Fonlok Protected pill */}
+                        <div className="flex items-center gap-1 mt-1 justify-center">
+                          <svg
+                            className="w-3 h-3 text-emerald-500"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span className="text-xs text-emerald-600 font-medium">
+                            Fonlok Protected
+                          </span>
+                        </div>
                       </>
                     )}
                   </div>
@@ -2043,11 +2236,13 @@ export default function Dashboard() {
       )}
 
       <SellModal
-        isOpen={showSellModal}
+        isOpen={showSellModal || editingListing !== null}
+        editListing={editingListing}
         onClose={() => {
           setShowSellModal(false);
-          fetchListings(); // Refresh listings after creating new one
-          fetchMyListings(); // Also refresh user's own listings
+          setEditingListing(null);
+          fetchListings();
+          fetchMyListings();
         }}
       />
 

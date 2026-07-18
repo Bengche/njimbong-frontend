@@ -114,6 +114,12 @@ function ChatPageContent() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Lock body scroll while on chat page
+  useEffect(() => {
+    document.body.classList.add("chat-page-active");
+    return () => document.body.classList.remove("chat-page-active");
+  }, []);
+
   const handleSelectConversation = (id: number) => {
     setSelectedConversationId(id);
     setShowConversation(true);
@@ -152,7 +158,8 @@ function ChatPageContent() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:py-10">
+    <main className="flex flex-col w-full h-[calc(100dvh-4rem-4rem)] md:h-[calc(100dvh-4rem)] overflow-hidden">
+      <div className="flex-shrink-0 px-4 pt-4 pb-2 sm:px-6">
       <PageHeader
         title="Messages"
         description="Stay connected with buyers and sellers."
@@ -203,8 +210,10 @@ function ChatPageContent() {
         }
       />
 
+      </div>
+
       {/* Main Content */}
-      <div className="mt-6 flex min-h-[calc(100vh-220px)] md:h-[calc(100vh-180px)]">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* Desktop Layout */}
         {!isMobileView && (
           <>

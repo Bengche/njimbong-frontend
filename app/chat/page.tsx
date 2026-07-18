@@ -145,7 +145,7 @@ function ChatPageContent() {
     isMobileView === null
   ) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="fixed inset-x-0 top-16 bottom-16 md:bottom-0 z-10 bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
           {startingChat && (
@@ -157,18 +157,20 @@ function ChatPageContent() {
   }
 
   return (
-    <main className="flex w-full h-[calc(100dvh-4rem-4rem)] md:h-[calc(100dvh-4rem)] overflow-hidden">
+    // fixed between navbar (top-16) and mobile bottom nav (bottom-16) / desktop edge (bottom-0)
+    // this guarantees height regardless of AppShell min-h-screen wrappers
+    <main className="fixed inset-x-0 top-16 bottom-16 md:bottom-0 z-10 flex overflow-hidden bg-white">
       {/* Desktop: conversations list + chat window side by side */}
       {!isMobileView && (
         <>
-          <div className="w-80 flex-shrink-0 border-r border-gray-200 overflow-hidden">
+          <div className="w-80 flex-shrink-0 border-r border-gray-200 overflow-hidden h-full">
             <ChatList
               selectedConversationId={selectedConversationId}
               onSelectConversation={handleSelectConversation}
               className="h-full"
             />
           </div>
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden h-full">
             <ChatWindow
               conversationId={selectedConversationId}
               className="h-full"
@@ -183,13 +185,13 @@ function ChatPageContent() {
           <ChatList
             selectedConversationId={selectedConversationId}
             onSelectConversation={handleSelectConversation}
-            className="flex-1 w-full"
+            className="h-full w-full"
           />
         ) : (
           <ChatWindow
             conversationId={selectedConversationId}
             onClose={handleBackToList}
-            className="flex-1 w-full"
+            className="h-full w-full"
           />
         )
       )}

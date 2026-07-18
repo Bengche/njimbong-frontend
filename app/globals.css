@@ -269,3 +269,8 @@
     overflow: hidden;
   }
 }
+
+/* Hide footer entirely on the chat page — fixed layout covers the viewport */
+body.chat-page-active footer {
+  display: none !important;
+}

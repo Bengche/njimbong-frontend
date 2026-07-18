@@ -26,6 +26,7 @@ export default function MobileBottomNav() {
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
   const [showSellModal, setShowSellModal] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const API_BASE = useMemo(() => process.env.NEXT_PUBLIC_API_URL || "", []);
 
   const checkAuth = useCallback(async () => {
@@ -40,6 +41,20 @@ export default function MobileBottomNav() {
     }
   }, [API_BASE]);
 
+  const fetchUnreadCount = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/chat/unread-count`, {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUnreadMessages(data.unreadCount || data.unread_count || 0);
+      }
+    } catch {
+      // Silently ignore
+    }
+  }, [API_BASE]);
+
   useEffect(() => {
     checkAuth();
     const handler = () => checkAuth();
@@ -51,6 +66,14 @@ export default function MobileBottomNav() {
   useEffect(() => {
     checkAuth();
   }, [pathname, checkAuth]);
+
+  // Poll unread message count
+  useEffect(() => {
+    if (!loggedIn) return;
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 10000);
+    return () => clearInterval(interval);
+  }, [loggedIn, fetchUnreadCount]);
 
   if (!loggedIn || !isAuthRoute(pathname)) return null;
 
@@ -175,19 +198,26 @@ export default function MobileBottomNav() {
                 : "text-gray-500 hover:text-green-600"
             }`}
           >
-            <svg
-              className="w-6 h-6"
-              fill={pathname === "/chat" ? "currentColor" : "none"}
-              stroke="currentColor"
-              strokeWidth={pathname === "/chat" ? 0 : 1.8}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
-              />
-            </svg>
+            <span className="relative">
+              <svg
+                className="w-6 h-6"
+                fill={pathname === "/chat" ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth={pathname === "/chat" ? 0 : 1.8}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+                />
+              </svg>
+              {unreadMessages > 0 && (
+                <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 flex items-center justify-center px-0.5 bg-red-500 text-white text-[9px] font-bold rounded-full leading-none">
+                  {unreadMessages > 99 ? "99+" : unreadMessages}
+                </span>
+              )}
+            </span>
             <span className="text-[10px] font-medium">Chat</span>
           </button>
         </div>

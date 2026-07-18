@@ -5,7 +5,6 @@ import Axios from "axios";
 import Image from "next/image";
 import SellModal from "../components/SellModal";
 import SearchFilters from "../components/SearchFilters";
-import Notifications from "../components/Notifications";
 import LoadingArt from "../components/LoadingArt";
 import ReportModal from "../components/ReportModal";
 import SuspensionBanner from "../components/SuspensionBanner";
@@ -215,7 +214,7 @@ export default function Dashboard() {
     id: number;
     name: string;
   } | null>(null);
-  const [unreadMessages, setUnreadMessages] = useState(0);
+
   const [updatingListingStatus, setUpdatingListingStatus] = useState<
     number | null
   >(null);
@@ -418,28 +417,6 @@ export default function Dashboard() {
       }
     };
     checkOnboarding();
-  }, []);
-
-  // Fetch unread message count
-  useEffect(() => {
-    const fetchUnreadCount = async () => {
-      try {
-        const response = await fetch(`${API_BASE}/api/chat/unread-count`, {
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUnreadMessages(data.unreadCount || data.unread_count || 0);
-        }
-      } catch (error) {
-        console.error("Error fetching unread count:", error);
-      }
-    };
-
-    fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 10000); // Poll every 10 seconds
-    return () => clearInterval(interval);
   }, []);
 
   // Fetch user's own listings
@@ -806,33 +783,7 @@ export default function Dashboard() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:py-10">
-      <div className="mb-6 flex flex-wrap items-center justify-end gap-3">
-        {currentUserId && <Notifications userId={currentUserId} />}
-        <button
-          onClick={() => router.push("/chat")}
-          className="relative p-2 bg-white text-green-600 rounded-lg shadow-sm hover:shadow-md transition-all"
-          title="Messages"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-            />
-          </svg>
-          {unreadMessages > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[20px] h-5 flex items-center justify-center px-1 bg-red-500 text-white text-xs font-bold rounded-full">
-              {unreadMessages > 99 ? "99+" : unreadMessages}
-            </span>
-          )}
-        </button>
-      </div>
+
 
       {/* Action Buttons — hidden on mobile (use bottom nav instead) */}
       <div className="hidden md:flex flex-row flex-wrap gap-4 mb-8">

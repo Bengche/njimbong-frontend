@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Notifications from "./Notifications";
 
 interface AuthUser {
   id: number;
@@ -182,6 +183,7 @@ export default function Navbar() {
                   {link.label}
                 </a>
               ))}
+              {user && <Notifications userId={user.id} />}
               {user && (
                 <button
                   onClick={handleLogout}
@@ -200,14 +202,16 @@ export default function Navbar() {
               )}
             </nav>
 
-            {/* Mobile hamburger */}
-            <button
-              className="md:hidden relative z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-100 bg-white text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50 active:scale-95"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label="Toggle navigation"
-              aria-expanded={isOpen}
-              aria-controls="mobile-nav"
-            >
+            {/* Mobile right cluster: notifications bell + hamburger */}
+            <div className="flex items-center gap-1 md:hidden">
+              {user && <Notifications userId={user.id} />}
+              <button
+                className="relative z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-100 bg-white text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50 active:scale-95"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle navigation"
+                aria-expanded={isOpen}
+                aria-controls="mobile-nav"
+              >
               <span className="sr-only">
                 {isOpen ? "Close menu" : "Open menu"}
               </span>
@@ -230,6 +234,7 @@ export default function Navbar() {
                 />
               </span>
             </button>
+            </div>
           </div>
         </div>
       </header>

@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Axios from "axios";
 import Image from "next/image";
 import SellModal from "../components/SellModal";
@@ -192,6 +192,7 @@ const formatRelativeTime = (
 
 export default function Dashboard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showSellModal, setShowSellModal] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [listings, setListings] = useState<Listing[]>([]);
@@ -276,6 +277,34 @@ export default function Dashboard() {
       fetchWishlistIds();
     }
   }, [currentUserId]);
+
+  // Handle ?tab= param from mobile bottom nav
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "my-listings") {
+      setShowMyListings(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (tab === "search") {
+      setShowFilters(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [searchParams]);
+
+  // Handle custom event from mobile bottom nav (when already on dashboard)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ tab: string }>).detail;
+      if (detail.tab === "my-listings") {
+        setShowMyListings((prev) => !prev);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (detail.tab === "search") {
+        setShowFilters((prev) => !prev);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    };
+    window.addEventListener("mobileNav", handler);
+    return () => window.removeEventListener("mobileNav", handler);
+  }, []);
 
   useEffect(() => {
     const cacheKey = "marketplace_user_location";
@@ -805,8 +834,8 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-8">
+      {/* Action Buttons — hidden on mobile (use bottom nav instead) */}
+      <div className="hidden md:flex flex-row flex-wrap gap-4 mb-8">
         <button
           onClick={() => setShowSellModal(true)}
           className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 flex items-center gap-2"

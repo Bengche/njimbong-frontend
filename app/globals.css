@@ -249,3 +249,10 @@
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+
+/* Mobile bottom nav spacing — prevents content from hiding behind the fixed bar */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
+}

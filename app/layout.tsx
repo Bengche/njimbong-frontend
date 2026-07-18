@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import AppShellWrapper from "./components/AppShellWrapper";
 import ClientPolyfills from "./components/ClientPolyfills";
 import AuthClientInit from "./components/AuthClientInit";
+import MobileBottomNav from "./components/MobileBottomNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -102,6 +103,7 @@ export default function RootLayout({
         <NotificationListener />
         <Navbar />
         <AppShellWrapper>{children}</AppShellWrapper>
+        <MobileBottomNav />
         <Footer />
       </body>
     </html>

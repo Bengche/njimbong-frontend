@@ -180,8 +180,8 @@ function ChatPageContent() {
       )}
 
       {/* Mobile: list or window, full screen */}
-      {isMobileView && (
-        !showConversation ? (
+      {isMobileView &&
+        (!showConversation ? (
           <ChatList
             selectedConversationId={selectedConversationId}
             onSelectConversation={handleSelectConversation}
@@ -193,8 +193,7 @@ function ChatPageContent() {
             onClose={handleBackToList}
             className="h-full w-full"
           />
-        )
-      )}
+        ))}
     </main>
   );
 }

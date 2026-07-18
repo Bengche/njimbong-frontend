@@ -355,7 +355,9 @@ export default function AnalyticsDashboard() {
             {overview.totalRevenue.toLocaleString()}
           </p>
           <p className="text-xs font-semibold text-gray-700">Revenue Earned</p>
-          <p className="text-[10px] text-gray-400 mt-0.5">XAF · after 3% Fonlok fee</p>
+          <p className="text-[10px] text-gray-400 mt-0.5">
+            XAF · after 3% Fonlok fee
+          </p>
         </div>
 
         {/* Money Spent */}
@@ -381,7 +383,9 @@ export default function AnalyticsDashboard() {
             {overview.totalSpent.toLocaleString()}
           </p>
           <p className="text-xs font-semibold text-gray-700">Money Spent</p>
-          <p className="text-[10px] text-gray-400 mt-0.5">XAF · confirmed purchases</p>
+          <p className="text-[10px] text-gray-400 mt-0.5">
+            XAF · confirmed purchases
+          </p>
         </div>
 
         {/* Net Position */}
@@ -394,7 +398,9 @@ export default function AnalyticsDashboard() {
         >
           <div className="flex items-center justify-between mb-2">
             <span
-              className={overview.netGain >= 0 ? "text-teal-600" : "text-red-500"}
+              className={
+                overview.netGain >= 0 ? "text-teal-600" : "text-red-500"
+              }
             >
               <svg
                 className="w-5 h-5"
@@ -424,7 +430,9 @@ export default function AnalyticsDashboard() {
             {overview.netGain.toLocaleString()}
           </p>
           <p className="text-xs font-semibold text-gray-700">Net Position</p>
-          <p className="text-[10px] text-gray-400 mt-0.5">XAF · earned minus spent</p>
+          <p className="text-[10px] text-gray-400 mt-0.5">
+            XAF · earned minus spent
+          </p>
         </div>
 
         {/* Total Listings */}
@@ -690,8 +698,7 @@ export default function AnalyticsDashboard() {
                     {listing.title}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {listing.currency}{" "}
-                    {Number(listing.price).toLocaleString()}
+                    {listing.currency} {Number(listing.price).toLocaleString()}
                   </p>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <span className="text-xs text-gray-500">
@@ -707,8 +714,8 @@ export default function AnalyticsDashboard() {
                         listing.ctr >= 5
                           ? "text-green-600"
                           : listing.ctr >= 2
-                          ? "text-yellow-600"
-                          : "text-gray-500"
+                            ? "text-yellow-600"
+                            : "text-gray-500"
                       }`}
                     >
                       {listing.ctr}% CTR
@@ -798,8 +805,8 @@ export default function AnalyticsDashboard() {
                           listing.ctr >= 5
                             ? "text-green-600"
                             : listing.ctr >= 2
-                            ? "text-yellow-600"
-                            : "text-gray-600"
+                              ? "text-yellow-600"
+                              : "text-gray-600"
                         }`}
                       >
                         {listing.ctr}%

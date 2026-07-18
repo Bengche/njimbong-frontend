@@ -180,7 +180,7 @@ export default function ChatWindow({
         reply_to_image_url: msg.reply_to_image_url as string | null | undefined,
       };
     },
-    []
+    [],
   );
 
   const fetchConversation = useCallback(async () => {
@@ -191,7 +191,7 @@ export default function ChatWindow({
         `${API_BASE}/api/chat/conversations/${conversationId}`,
         {
           credentials: "include",
-        }
+        },
       );
 
       if (response.ok) {
@@ -200,7 +200,8 @@ export default function ChatWindow({
 
         // Transform and sort messages
         const transformedMessages = data.messages.map(
-          (msg: Record<string, unknown>) => transformMessage(msg, currentUserId)
+          (msg: Record<string, unknown>) =>
+            transformMessage(msg, currentUserId),
         );
         const sortedMessages = sortMessages(transformedMessages);
         setMessages(sortedMessages);
@@ -217,7 +218,7 @@ export default function ChatWindow({
           {
             method: "PUT",
             credentials: "include",
-          }
+          },
         );
 
         scrollToBottom("auto");
@@ -247,13 +248,14 @@ export default function ChatWindow({
         `${API_BASE}/api/chat/conversations/${conversationId}/messages?limit=50`,
         {
           credentials: "include",
-        }
+        },
       );
 
       if (response.ok) {
         const data = await response.json();
         const transformedMessages = data.messages.map(
-          (msg: Record<string, unknown>) => transformMessage(msg, currentUserId)
+          (msg: Record<string, unknown>) =>
+            transformMessage(msg, currentUserId),
         );
         const sortedMessages = sortMessages(transformedMessages);
 
@@ -277,7 +279,7 @@ export default function ChatWindow({
               {
                 method: "PUT",
                 credentials: "include",
-              }
+              },
             );
           }
         }
@@ -303,7 +305,7 @@ export default function ChatWindow({
         `${API_BASE}/api/chat/conversations/${conversationId}/read-receipts`,
         {
           credentials: "include",
-        }
+        },
       );
 
       if (response.ok) {
@@ -314,14 +316,14 @@ export default function ChatWindow({
             prevMessages.map((msg) => {
               if (msg.is_mine) {
                 const receipt = data.receipts.find(
-                  (r: { id: number; status: string }) => r.id === msg.id
+                  (r: { id: number; status: string }) => r.id === msg.id,
                 );
                 if (receipt && receipt.status !== msg.status) {
                   return { ...msg, status: receipt.status };
                 }
               }
               return msg;
-            })
+            }),
           );
         }
       }
@@ -395,7 +397,7 @@ export default function ChatWindow({
         `${API_BASE}/api/chat/conversations/${conversationId}/messages?before=${oldestMessageId}&limit=20`,
         {
           credentials: "include",
-        }
+        },
       );
 
       if (response.ok) {
@@ -405,10 +407,10 @@ export default function ChatWindow({
         } else {
           const transformedMessages = data.messages.map(
             (msg: Record<string, unknown>) =>
-              transformMessage(msg, currentUserId)
+              transformMessage(msg, currentUserId),
           );
           setMessages((prev) =>
-            sortMessages([...transformedMessages, ...prev])
+            sortMessages([...transformedMessages, ...prev]),
           );
         }
       }
@@ -481,7 +483,7 @@ export default function ChatWindow({
             content: messageContent,
             replyToId: replyTo?.id,
           }),
-        }
+        },
       );
 
       if (response.ok) {
@@ -542,7 +544,7 @@ export default function ChatWindow({
           method: "POST",
           credentials: "include",
           body: formData,
-        }
+        },
       );
 
       if (response.ok) {
@@ -624,7 +626,7 @@ export default function ChatWindow({
         {
           method: "DELETE",
           credentials: "include",
-        }
+        },
       );
 
       if (response.ok) {
@@ -637,8 +639,8 @@ export default function ChatWindow({
                   content: "This message was deleted",
                   image_url: null,
                 }
-              : m
-          )
+              : m,
+          ),
         );
       } else {
         const errData = await response.json();
@@ -670,7 +672,7 @@ export default function ChatWindow({
     const date = new Date(dateString);
     const now = new Date();
     const diffDays = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
     );
 
     if (diffDays === 0) return "Today";
@@ -1063,8 +1065,8 @@ export default function ChatWindow({
                             message.is_deleted
                               ? "bg-gray-200 text-gray-500 italic"
                               : message.is_mine
-                              ? "bg-green-600 text-white"
-                              : "bg-white text-gray-900 shadow-sm"
+                                ? "bg-green-600 text-white"
+                                : "bg-white text-gray-900 shadow-sm"
                           } ${
                             message.is_mine ? "rounded-br-md" : "rounded-bl-md"
                           }`}
@@ -1142,8 +1144,8 @@ export default function ChatWindow({
                               message.is_deleted
                                 ? "text-gray-400"
                                 : message.is_mine
-                                ? "text-green-100"
-                                : "text-gray-400"
+                                  ? "text-green-100"
+                                  : "text-gray-400"
                             }`}
                           >
                             {message.is_edited && !message.is_deleted && (
@@ -1158,15 +1160,15 @@ export default function ChatWindow({
                                   message.status === "read"
                                     ? "text-blue-300"
                                     : message.status === "delivered"
-                                    ? "text-green-200"
-                                    : "text-green-100"
+                                      ? "text-green-200"
+                                      : "text-green-100"
                                 }`}
                                 title={
                                   message.status === "read"
                                     ? "Read"
                                     : message.status === "delivered"
-                                    ? "Delivered"
-                                    : "Sent"
+                                      ? "Delivered"
+                                      : "Sent"
                                 }
                               >
                                 {message.status === "read" ? (
@@ -1212,7 +1214,7 @@ export default function ChatWindow({
           (() => {
             // Find the last message sent by current user
             const myMessages = messages.filter(
-              (m) => m.is_mine && !m.is_deleted
+              (m) => m.is_mine && !m.is_deleted,
             );
             const lastMyMessage = myMessages[myMessages.length - 1];
 
@@ -1282,7 +1284,7 @@ export default function ChatWindow({
               className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
               onClick={() => {
                 const msg = messages.find(
-                  (m) => m.id === contextMenu.messageId
+                  (m) => m.id === contextMenu.messageId,
                 );
                 handleCopyText(msg?.content || null);
               }}

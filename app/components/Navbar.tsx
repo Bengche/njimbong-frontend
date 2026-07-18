@@ -406,7 +406,11 @@ export default function Navbar() {
         {/* Escrow trust note */}
         <div
           className="border-t border-gray-100 px-4 pt-3 bg-emerald-50/40"
-          style={{ paddingBottom: user ? "calc(4rem + env(safe-area-inset-bottom))" : "0.75rem" }}
+          style={{
+            paddingBottom: user
+              ? "calc(4rem + env(safe-area-inset-bottom))"
+              : "0.75rem",
+          }}
         >
           <a
             href="/safety-trust"

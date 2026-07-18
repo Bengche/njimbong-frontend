@@ -58,7 +58,7 @@ export default function TopSellers({ className = "" }: TopSellersProps) {
           `${API_BASE}/api/analytics/top-sellers?limit=4`,
           {
             credentials: "include",
-          }
+          },
         );
 
         if (response.ok) {
@@ -157,7 +157,7 @@ export default function TopSellers({ className = "" }: TopSellersProps) {
                 setExpandedCategory(
                   expandedCategory === categoryData.category.id
                     ? null
-                    : categoryData.category.id
+                    : categoryData.category.id,
                 )
               }
               className="w-full px-4 py-3 bg-gradient-to-r from-gray-50 to-white flex items-center justify-between hover:from-green-50 hover:to-white transition-all"

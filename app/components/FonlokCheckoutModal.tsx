@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Axios from "axios";
 
 Axios.defaults.withCredentials = true;
@@ -22,6 +23,7 @@ type CheckoutStep = "form" | "pending" | "success" | "failed";
 const POLL_DELAYS = [3000, 5000, 8000, 10000, 15000, 30000];
 
 export default function FonlokCheckoutModal({ listing, onClose }: Props) {
+  const router = useRouter();
   const [step, setStep] = useState<CheckoutStep>("form");
   const [phoneInput, setPhoneInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
@@ -293,24 +295,17 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               Payment secured!
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Your payment is safely held in Fonlok escrow. The seller has been
-              notified and will prepare your item. Once you receive it, release
-              the funds on{" "}
-              <a
-                href="https://fonlok.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-emerald-600 underline"
-              >
-                fonlok.com
-              </a>
-              .
+              Your payment is safely held in escrow. The seller has been
+              notified and will prepare your item. A confirmation email has been
+              sent to you. Once you receive the item, go to your{" "}
+              <span className="text-emerald-600 font-medium">Orders page</span>{" "}
+              to confirm receipt and release funds to the seller.
             </p>
             <button
-              onClick={onClose}
+              onClick={() => { onClose(); router.push("/orders"); }}
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-colors"
             >
-              Done
+              View My Orders
             </button>
           </div>
         )}

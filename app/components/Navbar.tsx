@@ -212,28 +212,28 @@ export default function Navbar() {
                 aria-expanded={isOpen}
                 aria-controls="mobile-nav"
               >
-              <span className="sr-only">
-                {isOpen ? "Close menu" : "Open menu"}
-              </span>
-              {/* Animated burger icon */}
-              <span className="flex h-5 w-5 flex-col items-center justify-center gap-[5px]">
-                <span
-                  className={`block h-[2px] w-5 rounded-full bg-current origin-center transition-all duration-300 ease-in-out ${
-                    isOpen ? "translate-y-[7px] rotate-45" : ""
-                  }`}
-                />
-                <span
-                  className={`block h-[2px] rounded-full bg-current transition-all duration-200 ease-in-out ${
-                    isOpen ? "w-0 opacity-0" : "w-5"
-                  }`}
-                />
-                <span
-                  className={`block h-[2px] w-5 rounded-full bg-current origin-center transition-all duration-300 ease-in-out ${
-                    isOpen ? "-translate-y-[7px] -rotate-45" : ""
-                  }`}
-                />
-              </span>
-            </button>
+                <span className="sr-only">
+                  {isOpen ? "Close menu" : "Open menu"}
+                </span>
+                {/* Animated burger icon */}
+                <span className="flex h-5 w-5 flex-col items-center justify-center gap-[5px]">
+                  <span
+                    className={`block h-[2px] w-5 rounded-full bg-current origin-center transition-all duration-300 ease-in-out ${
+                      isOpen ? "translate-y-[7px] rotate-45" : ""
+                    }`}
+                  />
+                  <span
+                    className={`block h-[2px] rounded-full bg-current transition-all duration-200 ease-in-out ${
+                      isOpen ? "w-0 opacity-0" : "w-5"
+                    }`}
+                  />
+                  <span
+                    className={`block h-[2px] w-5 rounded-full bg-current origin-center transition-all duration-300 ease-in-out ${
+                      isOpen ? "-translate-y-[7px] -rotate-45" : ""
+                    }`}
+                  />
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -404,7 +404,10 @@ export default function Navbar() {
         </div>
 
         {/* Escrow trust note */}
-        <div className="border-t border-gray-100 px-4 py-3 bg-emerald-50/40">
+        <div
+          className="border-t border-gray-100 px-4 pt-3 bg-emerald-50/40"
+          style={{ paddingBottom: user ? "calc(4rem + env(safe-area-inset-bottom))" : "0.75rem" }}
+        >
           <a
             href="/safety-trust"
             onClick={() => setIsOpen(false)}

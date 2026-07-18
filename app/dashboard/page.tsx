@@ -54,6 +54,10 @@ interface Listing {
   user_is_suspended?: boolean;
   createdat: string;
   images: { id: number; imageurl: string; is_main: boolean }[];
+  view_count?: number;
+  is_draft?: boolean;
+  delivery_type?: string;
+  delivery_notes?: string;
 }
 
 interface UserLocation {
@@ -219,6 +223,11 @@ export default function Dashboard() {
     number | null
   >(null);
   const [renewingListing, setRenewingListing] = useState<number | null>(null);
+  const [publishingListing, setPublishingListing] = useState<number | null>(null);
+  const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
+  const [myOffers, setMyOffers] = useState<any[]>([]);
+  const [showMyOffers, setShowMyOffers] = useState(false);
+  const [respondingOffer, setRespondingOffer] = useState<number | null>(null);
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
   const [showSaveSearchModal, setShowSaveSearchModal] = useState(false);
   const [saveSearchName, setSaveSearchName] = useState("");
@@ -275,6 +284,13 @@ export default function Dashboard() {
     if (currentUserId) {
       fetchSavedSearches();
       fetchWishlistIds();
+      // Fetch trending searches and my offers
+      Axios.get(`${API_BASE}/api/listings/trending-searches`)
+        .then((r) => setTrendingSearches(r.data.trending || []))
+        .catch(() => {});
+      Axios.get(`${API_BASE}/api/offers/mine`)
+        .then((r) => setMyOffers(r.data.offers || []))
+        .catch(() => {});
     }
   }, [currentUserId]);
 
@@ -792,6 +808,46 @@ export default function Dashboard() {
     }
   };
 
+  // Publish a draft listing
+  const publishListing = async (listingId: number) => {
+    try {
+      setPublishingListing(listingId);
+      await Axios.put(`${API_BASE}/api/listings/${listingId}/publish`, {});
+      setMyListings((prev) =>
+        prev.map((l) =>
+          l.id === listingId
+            ? { ...l, is_draft: false, moderation_status: "pending" }
+            : l,
+        ),
+      );
+    } catch (error: unknown) {
+      console.error("Error publishing listing:", error);
+      alert("Failed to publish listing. Please try again.");
+    } finally {
+      setPublishingListing(null);
+    }
+  };
+
+  // Buyer responds to a counter-offer
+  const respondToCounter = async (offerId: number, action: "accept_counter" | "decline_counter") => {
+    try {
+      setRespondingOffer(offerId);
+      await Axios.put(`${API_BASE}/api/offers/${offerId}`, { action });
+      setMyOffers((prev) =>
+        prev.map((o) =>
+          o.id === offerId
+            ? { ...o, status: action === "accept_counter" ? "accepted" : "declined" }
+            : o,
+        ),
+      );
+    } catch (error: unknown) {
+      console.error("Error responding to counter:", error);
+      alert("Failed to respond to offer. Please try again.");
+    } finally {
+      setRespondingOffer(null);
+    }
+  };
+
   if (!authChecked) {
     return (
       <LoadingArt
@@ -1083,23 +1139,42 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-gray-100">
                       <span
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          listing.status === "Available"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : listing.status === "Expired"
-                              ? "bg-orange-100 text-orange-700"
-                              : "bg-gray-100 text-gray-500"
+                          listing.is_draft
+                            ? "bg-blue-100 text-blue-700"
+                            : listing.status === "Available"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : listing.status === "Expired"
+                                ? "bg-orange-100 text-orange-700"
+                                : "bg-gray-100 text-gray-500"
                         }`}
                       >
-                        {listing.status === "Available" ? (
+                        {listing.is_draft ? (
+                          <>
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Draft
+                          </>
+                        ) : listing.status === "Available" ? (
                           <>
                             <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                             Available
                           </>
                         ) : listing.status === "Expired" ? (
                           <>
-                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
                             </svg>
                             Expired
                           </>
@@ -1123,7 +1198,18 @@ export default function Dashboard() {
                         )}
                       </span>
 
-                      {listing.status === "Expired" ? (
+                      {listing.is_draft ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            publishListing(listing.id);
+                          }}
+                          disabled={publishingListing === listing.id}
+                          className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 bg-blue-100 text-blue-700 hover:bg-blue-200"
+                        >
+                          {publishingListing === listing.id ? "Publishing…" : "Publish Now"}
+                        </button>
+                      ) : listing.status === "Expired" ? (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1132,7 +1218,9 @@ export default function Dashboard() {
                           disabled={renewingListing === listing.id}
                           className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 bg-orange-100 text-orange-700 hover:bg-orange-200"
                         >
-                          {renewingListing === listing.id ? "Renewing…" : "Renew Listing"}
+                          {renewingListing === listing.id
+                            ? "Renewing…"
+                            : "Renew Listing"}
                         </button>
                       ) : listing.moderation_status === "approved" ? (
                         <button
@@ -1196,6 +1284,112 @@ export default function Dashboard() {
           onReset={resetFilters}
           onSaveSearch={openSaveSearchModal}
         />
+      )}
+
+      {/* Trending Searches */}
+      {trendingSearches.length > 0 && (
+        <div className="mb-6">
+          <p className="text-sm font-semibold text-gray-500 mb-2">Trending searches</p>
+          <div className="flex flex-wrap gap-2">
+            {trendingSearches.map((term) => (
+              <button
+                key={term}
+                onClick={() => {
+                  setFilters((prev) => ({ ...prev, search: term }));
+                  setShowFilters(false);
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 hover:bg-emerald-100 hover:text-emerald-700 text-gray-600 rounded-full text-sm font-medium transition-colors"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                {term}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* My Offers — counter-offer acceptance flow */}
+      {myOffers.length > 0 && (
+        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8">
+          <button
+            onClick={() => setShowMyOffers((prev) => !prev)}
+            className="w-full flex items-center justify-between gap-2"
+          >
+            <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              My Offers
+              {myOffers.filter((o) => o.status === "countered").length > 0 && (
+                <span className="inline-flex items-center justify-center w-5 h-5 bg-amber-500 text-white rounded-full text-xs font-bold">
+                  {myOffers.filter((o) => o.status === "countered").length}
+                </span>
+              )}
+            </h3>
+            <svg className={`w-5 h-5 text-gray-400 transition-transform ${showMyOffers ? "rotate-180" : ""}`}
+              fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {showMyOffers && (
+            <div className="mt-4 space-y-3">
+              {myOffers.map((offer) => (
+                <div key={offer.id} className={`flex items-start gap-3 p-3 rounded-xl border ${
+                  offer.status === "countered" ? "border-amber-200 bg-amber-50" : "border-gray-100 bg-gray-50"
+                }`}>
+                  {offer.listing_image && (
+                    <img src={offer.listing_image} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-800 truncate text-sm">{offer.listing_title}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Your offer: <span className="font-medium">{Number(offer.amount).toLocaleString()} {offer.currency}</span>
+                    </p>
+                    {offer.status === "countered" && offer.counter_amount && (
+                      <p className="text-xs text-amber-700 font-semibold mt-0.5">
+                        Counter-offer: {Number(offer.counter_amount).toLocaleString()} {offer.currency}
+                        {offer.counter_message && <span className="font-normal"> — "{offer.counter_message}"</span>}
+                      </p>
+                    )}
+                    <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-semibold ${
+                      offer.status === "pending" ? "bg-gray-200 text-gray-600"
+                      : offer.status === "countered" ? "bg-amber-200 text-amber-800"
+                      : offer.status === "accepted" ? "bg-emerald-100 text-emerald-700"
+                      : offer.status === "declined" ? "bg-red-100 text-red-700"
+                      : "bg-gray-200 text-gray-600"
+                    }`}>{offer.status === "countered" ? "Counter-offer received" : offer.status}</span>
+                  </div>
+                  {offer.status === "countered" && (
+                    <div className="flex flex-col gap-1.5 flex-shrink-0">
+                      <button
+                        onClick={() => respondToCounter(offer.id, "accept_counter")}
+                        disabled={respondingOffer === offer.id}
+                        className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => respondToCounter(offer.id, "decline_counter")}
+                        disabled={respondingOffer === offer.id}
+                        className="px-3 py-1.5 text-xs font-semibold border border-red-300 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50"
+                      >
+                        Decline
+                      </button>
+                    </div>
+                  )}
+                  {offer.status === "accepted" && (
+                    <button
+                      onClick={() => router.push(`/listing/${offer.listing_id}`)}
+                      className="px-3 py-1.5 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 flex-shrink-0"
+                    >
+                      Buy Now
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       {/* Saved Searches */}
@@ -1722,6 +1916,7 @@ export default function Dashboard() {
 
                     {/* Fonlok Escrow CTA */}
                     {canEscrow && (
+                      <>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -1744,6 +1939,14 @@ export default function Dashboard() {
                         </svg>
                         Buy Securely via Escrow
                       </button>
+                      {/* Fonlok Protected pill */}
+                      <div className="flex items-center gap-1 mt-1 justify-center">
+                        <svg className="w-3 h-3 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-xs text-emerald-600 font-medium">Fonlok Protected</span>
+                      </div>
+                      </>
                     )}
                   </div>
                 </div>

@@ -140,6 +140,10 @@ export default function PublicProfilePage() {
   const [isFavorited, setIsFavorited] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
 
+  // Follow state
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
+
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
   // Helper: Get full image URL
@@ -264,6 +268,11 @@ export default function PublicProfilePage() {
               const favData = await favResponse.json();
               setIsFavorited(favData.isFavorited);
             }
+            // Check follow status
+            fetch(`${API_BASE}/api/users/${userId}/follow-status`, { credentials: "include" })
+              .then((r) => r.ok ? r.json() : null)
+              .then((d) => { if (d) setIsFollowing(d.following); })
+              .catch(() => {});
           }
         }
       } catch {
@@ -641,6 +650,35 @@ export default function PublicProfilePage() {
           {/* Action Buttons - Only show for other users, not own profile */}
           {!isOwnProfile && (
             <div className="flex flex-col gap-2 w-full sm:w-auto">
+              <button
+                onClick={async () => {
+                  setFollowLoading(true);
+                  try {
+                    const endpoint = `${API_BASE}/api/users/${userId}/follow`;
+                    const res = await fetch(endpoint, {
+                      method: isFollowing ? "DELETE" : "POST",
+                      credentials: "include",
+                    });
+                    if (res.ok) setIsFollowing(!isFollowing);
+                  } catch { /* ignore */ }
+                  setFollowLoading(false);
+                }}
+                disabled={followLoading}
+                className={`w-full sm:w-auto px-6 py-2.5 rounded-lg transition font-medium flex items-center gap-2 shadow-sm disabled:opacity-60 ${
+                  isFollowing
+                    ? "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
+                    : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d={isFollowing
+                      ? "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                      : "M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"}
+                  />
+                </svg>
+                {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+              </button>
               <button
                 onClick={() => router.push(`/chat?userId=${user.id}`)}
                 className="w-full sm:w-auto bg-emerald-600 text-white px-6 py-2.5 rounded-lg hover:bg-emerald-700 transition font-medium flex items-center gap-2 shadow-sm"

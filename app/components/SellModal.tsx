@@ -27,6 +27,7 @@ export default function SellModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [duplicateWarning, setDuplicateWarning] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -41,6 +42,8 @@ export default function SellModal({
     seller_email: "",
     tags: "",
     status: "Available",
+    delivery_type: "pickup",
+    delivery_notes: "",
   });
 
   // Fetch categories when modal opens
@@ -76,6 +79,15 @@ export default function SellModal({
     }));
   };
 
+  const handleTitleBlur = async () => {
+    const title = formData.title.trim();
+    if (title.length < 4) { setDuplicateWarning([]); return; }
+    try {
+      const res = await Axios.get(`${API_BASE}/api/listings/check-duplicate?title=${encodeURIComponent(title)}`);
+      setDuplicateWarning((res.data.duplicates || []).map((d: any) => d.title));
+    } catch { setDuplicateWarning([]); }
+  };
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const digits = e.target.value.replace(/\D/g, "");
     const local = digits.startsWith("237") ? digits.slice(3) : digits;
@@ -106,7 +118,7 @@ export default function SellModal({
     setImagePreviews(newPreviews);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, isDraft = false) => {
     e.preventDefault();
 
     // Prevent double submission
@@ -123,6 +135,7 @@ export default function SellModal({
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
+      if (isDraft) formDataToSend.append("is_draft", "true");
 
       // Append all images
       images.forEach((image) => {
@@ -157,9 +170,12 @@ export default function SellModal({
         seller_email: "",
         tags: "",
         status: "Available",
+        delivery_type: "pickup",
+        delivery_notes: "",
       });
       setImages([]);
       setImagePreviews([]);
+      setDuplicateWarning([]);
 
       // Call onSuccess callback if provided
       if (onSuccess) {
@@ -301,10 +317,20 @@ export default function SellModal({
               name="title"
               value={formData.title}
               onChange={handleInputChange}
+              onBlur={handleTitleBlur}
               required
               placeholder="e.g., iPhone 13 Pro Max"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
             />
+            {duplicateWarning.length > 0 && (
+              <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+                <p className="font-semibold mb-1">Similar listing already exists:</p>
+                <ul className="list-disc list-inside">
+                  {duplicateWarning.map((t, i) => <li key={i}>{t}</li>)}
+                </ul>
+                <p className="mt-1 text-amber-600 text-xs">Make sure this is not a duplicate before posting.</p>
+              </div>
+            )}
           </div>
 
           {/* Description */}
@@ -545,6 +571,44 @@ export default function SellModal({
             </div>
           </div>
 
+          {/* Delivery / Meetup */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
+              Delivery &amp; Meetup
+            </h3>
+            <div>
+              <label htmlFor="delivery_type" className="block text-sm font-semibold text-gray-700 mb-2">
+                Delivery Option
+              </label>
+              <select
+                id="delivery_type"
+                name="delivery_type"
+                value={formData.delivery_type}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
+              >
+                <option value="pickup">Pickup only</option>
+                <option value="delivery">Delivery available</option>
+                <option value="both">Pickup or delivery</option>
+                <option value="ships">Ships nationwide</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="delivery_notes" className="block text-sm font-semibold text-gray-700 mb-2">
+                Delivery Notes <span className="text-gray-400 font-normal text-xs">(optional)</span>
+              </label>
+              <input
+                type="text"
+                id="delivery_notes"
+                name="delivery_notes"
+                value={formData.delivery_notes}
+                onChange={handleInputChange}
+                placeholder="e.g., Can deliver within Douala for 2,000 XAF"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
+              />
+            </div>
+          </div>
+
           {/* Tags */}
           <div>
             <label
@@ -611,8 +675,6 @@ export default function SellModal({
               </div>
             </div>
           )}
-
-          {/* Submit Buttons */}
           <div className="flex flex-col gap-3 pt-4 border-t sm:flex-row sm:gap-4">
             <button
               type="button"
@@ -621,6 +683,14 @@ export default function SellModal({
               className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
+            </button>
+            <button
+              type="button"
+              onClick={(e) => handleSubmit(e as any, true)}
+              disabled={isSubmitting || submitSuccess}
+              className="flex-1 px-6 py-3 border-2 border-blue-400 text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Save Draft
             </button>
             <button
               type="submit"

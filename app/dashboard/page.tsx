@@ -1881,42 +1881,32 @@ export default function Dashboard() {
                 <div
                   key={listing.id}
                   onClick={() => router.push(`/listing/${listing.id}`)}
-                  className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group overflow-hidden flex flex-col"
+                  className="bg-white rounded-xl border border-gray-100 cursor-pointer group overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
                 >
                   {/* Image */}
-                  <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden flex-shrink-0">
+                  <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
                     {listing.images.length > 0 ? (
                       <Image
                         src={getImageUrl(listing.images[0].imageurl) || ""}
                         alt={listing.title}
-                        width={640}
-                        height={480}
-                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                        width={400}
+                        height={300}
+                        className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-300">
-                        <svg
-                          className="w-10 h-10"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
+                      <div className="w-full h-full flex items-center justify-center text-gray-200">
+                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
                     )}
-                    {/* NEW badge OR condition badge */}
+                    {/* NEW / condition badge */}
                     {timeInfo.isNew ? (
-                      <span className="absolute top-2 left-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm">
+                      <span className="absolute top-1.5 left-1.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-1.5 py-0.5 rounded-full text-[9px] font-bold shadow-sm leading-none">
                         NEW
                       </span>
                     ) : listing.condition ? (
-                      <span className="absolute top-2 left-2 rounded-full bg-white/90 backdrop-blur-sm px-2 py-0.5 text-[10px] font-semibold text-gray-700 shadow-sm capitalize">
+                      <span className="absolute top-1.5 left-1.5 bg-black/50 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[9px] font-medium capitalize leading-none">
                         {listing.condition}
                       </span>
                     ) : null}
@@ -1925,161 +1915,46 @@ export default function Dashboard() {
                       <button
                         onClick={(e) => toggleWishlist(e, listing.id)}
                         disabled={wishlistLoading === listing.id}
-                        className={`absolute top-2 right-2 p-1.5 rounded-full shadow-md transition-all duration-150 ${
-                          isWishlisted
-                            ? "bg-red-500 text-white"
-                            : "bg-white/90 text-gray-400 hover:text-red-500 hover:bg-white"
+                        className={`absolute top-1.5 right-1.5 p-1.5 rounded-full shadow transition-all duration-150 ${
+                          isWishlisted ? "bg-red-500 text-white" : "bg-white/80 text-gray-400 hover:text-red-500"
                         }`}
-                        title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
                       >
-                        <svg
-                          className="w-3 h-3"
-                          fill={isWishlisted ? "currentColor" : "none"}
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657 3.172 10.828a4 4 0 010-5.656z"
-                          />
+                        <svg className="w-3 h-3" fill={isWishlisted ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657 3.172 10.828a4 4 0 010-5.656z" />
                         </svg>
                       </button>
                     )}
-                    {/* Escrow overlay pill */}
+                    {/* Escrow pill */}
                     {canEscrow && listing.currency === "XAF" && (
-                      <span className="absolute bottom-2 left-2 flex items-center gap-1 bg-emerald-600/90 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[10px] font-semibold shadow-sm pointer-events-none">
-                        <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <span className="absolute bottom-1.5 left-1.5 flex items-center gap-0.5 bg-emerald-600/85 text-white px-1.5 py-0.5 rounded-full text-[9px] font-semibold pointer-events-none leading-none">
+                        <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                         Escrow
                       </span>
                     )}
-                    {/* Report */}
+                    {/* Report — hover only */}
                     <button
-                      onClick={(e) =>
-                        handleReportClick(e, "listing", listing.id, listing.title)
-                      }
-                      className="absolute bottom-2 right-2 bg-white/90 hover:bg-white p-1 rounded-full shadow transition-all opacity-0 group-hover:opacity-100 duration-150"
-                      title="Report this listing"
+                      onClick={(e) => handleReportClick(e, "listing", listing.id, listing.title)}
+                      className="absolute bottom-1.5 right-1.5 bg-white/80 hover:bg-white p-1 rounded-full shadow opacity-0 group-hover:opacity-100 transition-all duration-150"
                     >
-                      <svg
-                        className="w-3 h-3 text-red-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                        />
+                      <svg className="w-2.5 h-2.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     </button>
                   </div>
 
-                  {/* Content */}
-                  <div className="p-2.5 sm:p-3 flex flex-col gap-1.5 flex-1">
-                    {/* Seller micro-row */}
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <button
-                        onClick={(e) => { if (!isOwnListing) handleUserClick(e, listing.user_id); else e.stopPropagation(); }}
-                        className="flex items-center gap-1.5 min-w-0 hover:opacity-75 transition"
-                      >
-                        {listing.user_profile_picture ? (
-                          <Image
-                            src={getImageUrl(listing.user_profile_picture) || ""}
-                            alt={listing.username}
-                            width={16}
-                            height={16}
-                            className="w-4 h-4 rounded-full object-cover ring-1 ring-gray-200 flex-shrink-0"
-                          />
-                        ) : (
-                          <div className="w-4 h-4 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-[7px] font-bold flex-shrink-0">
-                            {getInitials(listing.username).slice(0, 1)}
-                          </div>
-                        )}
-                        <span className={`text-[10px] sm:text-xs truncate ${
-                          isOwnListing ? "text-emerald-600 font-semibold" : "text-gray-500"
-                        }`}>
-                          {isOwnListing ? "You" : listing.username}
-                        </span>
-                      </button>
-                      {listing.kyc_verified && (
-                        <svg
-                          className="w-3 h-3 text-blue-500 flex-shrink-0"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          aria-label="KYC Verified"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="font-semibold text-gray-900 text-xs sm:text-sm line-clamp-2 leading-snug">
+                  {/* Content — minimal */}
+                  <div className="p-2">
+                    <h3 className="text-[11px] sm:text-xs font-semibold text-gray-900 line-clamp-2 leading-tight">
                       {listing.title}
                     </h3>
-
-                    {/* Price + location */}
-                    <div className="flex items-end justify-between gap-1 mt-auto pt-1.5 border-t border-gray-50">
-                      <span className="text-sm sm:text-base font-bold text-emerald-700 leading-none">
-                        {listing.currency}{" "}
-                        {Number(listing.price).toLocaleString("en-US")}
-                      </span>
-                      <span className="text-[10px] sm:text-xs text-gray-400 flex items-center gap-0.5 flex-shrink-0">
-                        <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span className="truncate max-w-[60px]">{listing.city}</span>
-                      </span>
-                    </div>
-
-                    {/* Category + time */}
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-[10px] bg-amber-50 text-amber-700 border border-amber-100 px-1.5 py-0.5 rounded-full truncate max-w-[90px]">
-                        {listing.category_name}
-                      </span>
-                      <span className={`text-[10px] flex-shrink-0 ${
-                        timeInfo.isNew ? "text-blue-500 font-semibold" : "text-gray-400"
-                      }`}>
-                        {timeInfo.text}
-                      </span>
-                    </div>
-
-                    {/* Escrow CTA */}
-                    {canEscrow && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/listing/${listing.id}`);
-                        }}
-                        className="mt-0.5 flex w-full items-center justify-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] px-2 py-2 text-[11px] sm:text-xs font-semibold text-white shadow-sm transition-all duration-150"
-                      >
-                        <svg
-                          className="w-3 h-3 flex-shrink-0"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                          />
-                        </svg>
-                        Buy with Escrow
-                      </button>
-                    )}
+                    <p className="text-xs sm:text-sm font-bold text-emerald-700 mt-1 leading-none">
+                      {listing.currency} {Number(listing.price).toLocaleString("en-US")}
+                    </p>
+                    <p className="text-[10px] text-gray-400 mt-0.5 truncate">
+                      {listing.city}{listing.country ? `, ${listing.country}` : ""}
+                    </p>
                   </div>
                 </div>
               );

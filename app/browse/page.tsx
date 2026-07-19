@@ -116,18 +116,14 @@ export default function BrowsePage() {
 
         {/* Skeleton loader */}
         {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-2xl bg-white border border-gray-100 shadow-sm overflow-hidden animate-pulse"
-              >
-                <div className="h-48 bg-gray-100" />
-                <div className="p-4 space-y-3">
-                  <div className="h-4 bg-gray-100 rounded-lg w-3/4" />
-                  <div className="h-3 bg-gray-100 rounded-lg w-full" />
-                  <div className="h-3 bg-gray-100 rounded-lg w-2/3" />
-                  <div className="h-5 bg-gray-100 rounded-lg w-1/2 mt-2" />
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="rounded-xl bg-white border border-gray-100 overflow-hidden animate-pulse">
+                <div className="aspect-[4/3] bg-gray-100" />
+                <div className="p-2 space-y-1.5">
+                  <div className="h-3 bg-gray-100 rounded w-3/4" />
+                  <div className="h-3 bg-gray-100 rounded w-1/2" />
+                  <div className="h-2.5 bg-gray-100 rounded w-1/3" />
                 </div>
               </div>
             ))}
@@ -159,7 +155,7 @@ export default function BrowsePage() {
 
         {!loading && listings.length > 0 && (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
               {listings.map((listing) => (
                 <ListingCard key={listing.id} listing={listing} />
               ))}
@@ -222,116 +218,59 @@ function ListingCard({ listing }: { listing: Listing }) {
   return (
     <Link
       href={`/listing/${listing.id}`}
-      className="group block bg-white rounded-2xl border border-gray-100 shadow-sm
-                 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden"
+      className="group block bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
     >
       {/* Image */}
-      <div className="relative h-48 bg-gray-50 overflow-hidden">
+      <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
         {listing.imageurl ? (
           <img
             src={listing.imageurl}
             alt={listing.title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
             loading="lazy"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-gray-200">
-            <svg
-              className="w-14 h-14"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
         )}
-
+        {/* Condition badge */}
         {listing.condition && (
-          <span
-            className="absolute top-2 left-2 rounded-full bg-white/90 backdrop-blur-sm
-                           px-2.5 py-0.5 text-xs font-semibold text-gray-700 shadow-sm capitalize"
-          >
+          <span className="absolute top-1.5 left-1.5 rounded-full bg-black/50 backdrop-blur-sm px-1.5 py-0.5 text-[9px] font-medium text-white capitalize leading-none">
             {listing.condition}
           </span>
         )}
-
-        {/* Sold badge */}
+        {/* Sold overlay */}
         {!isAvailable && (
           <div className="absolute inset-0 bg-gray-900/40 flex items-center justify-center">
-            <span className="bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">
+            <span className="bg-gray-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
               Sold
             </span>
           </div>
         )}
-
-        {/* Escrow badge */}
+        {/* Escrow pill */}
         {listing.currency === "XAF" && isAvailable && (
-          <span
-            className="absolute top-2 right-2 rounded-full bg-emerald-600
-                           px-2 py-0.5 text-xs font-semibold text-white flex items-center gap-1 shadow-sm"
-          >
-            <svg
-              className="w-3 h-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
+          <span className="absolute bottom-1.5 left-1.5 flex items-center gap-0.5 rounded-full bg-emerald-600/85 px-1.5 py-0.5 text-[9px] font-semibold text-white pointer-events-none leading-none">
+            <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             Escrow
           </span>
         )}
       </div>
-
       {/* Content */}
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-900 truncate text-sm leading-snug">
+      <div className="p-2">
+        <h3 className="text-[11px] sm:text-xs font-semibold text-gray-900 line-clamp-2 leading-tight">
           {listing.title}
         </h3>
-        {listing.description && (
-          <p className="mt-1 text-xs text-gray-500 line-clamp-2 leading-relaxed">
-            {listing.description}
-          </p>
-        )}
-        <div className="mt-3 flex items-center justify-between gap-2">
-          <span className="text-base font-bold text-emerald-700">
-            {listing.currency} {Number(listing.price).toLocaleString("en-US")}
-          </span>
-          {listing.city && (
-            <span className="text-xs text-gray-400 flex items-center gap-0.5 flex-shrink-0">
-              <svg
-                className="w-3 h-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-              </svg>
-              <span className="truncate max-w-[72px]">{listing.city}</span>
-            </span>
-          )}
-        </div>
-
-        {/* Escrow hint for logged-out users */}
-        {listing.currency === "XAF" && isAvailable && (
-          <p className="mt-2 text-xs text-emerald-600 font-medium">
-            Secure escrow purchase available
+        <p className="text-xs sm:text-sm font-bold text-emerald-700 mt-1 leading-none">
+          {listing.currency} {Number(listing.price).toLocaleString("en-US")}
+        </p>
+        {listing.city && (
+          <p className="text-[10px] text-gray-400 mt-0.5 truncate">
+            {listing.city}{listing.country ? `, ${listing.country}` : ""}
           </p>
         )}
       </div>

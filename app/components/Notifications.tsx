@@ -114,7 +114,7 @@ interface NotificationsProps {
   userId: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_API_URL || "";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
 // --- notification item --------------------------------------------------------
 
@@ -191,7 +191,7 @@ export default function Notifications({ userId }: NotificationsProps) {
 
   const fetchUnreadCount = useCallback(async () => {
     try {
-      const res = await Axios.get(`/api/notifications//unread-count`);
+      const res = await Axios.get(`/api/notifications/${userId}/unread-count`);
       setUnreadCount(res.data.unreadCount ?? 0);
     } catch {
       /* silent */
@@ -202,7 +202,9 @@ export default function Notifications({ userId }: NotificationsProps) {
     async (lim: number) => {
       try {
         setLoading(true);
-        const res = await Axios.get(`/api/notifications/?limit=`);
+        const res = await Axios.get(
+          `/api/notifications/${userId}?limit=${lim}&offset=0`,
+        );
         setNotifications(res.data.notifications ?? []);
         setUnreadCount(res.data.unreadCount ?? 0);
         setTotal(res.data.total ?? res.data.notifications?.length ?? 0);
@@ -248,7 +250,7 @@ export default function Notifications({ userId }: NotificationsProps) {
 
   const markAsRead = useCallback(async (id: number) => {
     try {
-      await Axios.put(`/api/notifications//read`);
+      await Axios.put(`/api/notifications/${id}/read`);
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, isread: true } : n)),
       );
@@ -260,7 +262,7 @@ export default function Notifications({ userId }: NotificationsProps) {
 
   const markAllAsRead = useCallback(async () => {
     try {
-      await Axios.put(`/api/notifications/user//read-all`);
+      await Axios.put(`/api/notifications/user/${userId}/read-all`);
       setNotifications((prev) => prev.map((n) => ({ ...n, isread: true })));
       setUnreadCount(0);
     } catch {
@@ -272,7 +274,7 @@ export default function Notifications({ userId }: NotificationsProps) {
     async (e: React.MouseEvent, id: number) => {
       e.stopPropagation();
       try {
-        await Axios.delete(`/api/notifications/`);
+        await Axios.delete(`/api/notifications/${id}`);
         setNotifications((prev) => prev.filter((n) => n.id !== id));
         fetchUnreadCount();
       } catch {

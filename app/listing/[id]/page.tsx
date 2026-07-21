@@ -140,6 +140,10 @@ export default function ListingDetailPage() {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [offerSent, setOfferSent] = useState(false);
+  const [acceptedOffer, setAcceptedOffer] = useState<{
+    id: number;
+    amount: number;
+  } | null>(null);
 
   // Compute the display image URL with proper fallback
   // Always ensure we show an image if one exists
@@ -237,6 +241,22 @@ export default function ListingDetailPage() {
     };
     fetchCurrentUser();
   }, []);
+
+  // Check if the current buyer has an accepted offer on this listing
+  useEffect(() => {
+    if (!listingId || !currentUserId) return;
+    Axios.get(`${API_BASE}/api/offers/listing/${listingId}`)
+      .then((res) => {
+        const accepted = (res.data.offers || []).find(
+          (o: { buyer_id: number; status: string; amount: string | number }) =>
+            o.buyer_id === currentUserId && o.status === "accepted",
+        );
+        if (accepted) {
+          setAcceptedOffer({ id: accepted.id, amount: Number(accepted.amount) });
+        }
+      })
+      .catch(() => {});
+  }, [listingId, currentUserId]);
 
   useEffect(() => {
     const checkWishlist = async () => {
@@ -585,8 +605,22 @@ export default function ListingDetailPage() {
                 </div>
                 <div className="text-4xl font-bold text-green-600">
                   {currencySymbol}
-                  {Number(listing.price).toLocaleString("en-US")}
+                  {(acceptedOffer
+                    ? acceptedOffer.amount
+                    : Number(listing.price)
+                  ).toLocaleString("en-US")}
                 </div>
+                {acceptedOffer && (
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className="text-sm text-gray-400 line-through">
+                      {currencySymbol}
+                      {Number(listing.price).toLocaleString("en-US")}
+                    </span>
+                    <span className="text-xs bg-emerald-100 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-medium">
+                      Offer accepted
+                    </span>
+                  </div>
+                )}
               </div>
               {listing.status === "Available" && (
                 <span className="px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 bg-green-100 text-green-700">
@@ -1508,7 +1542,7 @@ export default function ListingDetailPage() {
           listing={{
             id: listing.id,
             title: listing.title,
-            price: listing.price,
+            price: acceptedOffer?.amount ?? listing.price,
             currency: listing.currency,
           }}
           onClose={() => setShowCheckout(false)}

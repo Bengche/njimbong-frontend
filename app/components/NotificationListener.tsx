@@ -8,7 +8,7 @@ import {
 
 export default function NotificationListener() {
   const [userId, setUserId] = useState<number | null>(null);
-  const API_BASE = process.env.NEXT_PUBLIC_BACKEND_API_URL || "";
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
   useEffect(() => {
     const fetchMe = async () => {

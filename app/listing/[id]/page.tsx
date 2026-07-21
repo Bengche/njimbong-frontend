@@ -549,25 +549,35 @@ export default function ListingDetailPage() {
 
         {/* Product Details */}
         <div className="space-y-4">
-
           {/* ── Listing info card ───────────────────────────────────── */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-
             {/* Title + wishlist */}
             <div className="relative px-5 pt-5 pb-4">
               {currentUserId && listing.user_id !== currentUserId && (
                 <button
                   onClick={toggleWishlist}
                   disabled={wishlistLoading}
-                  aria-label={isWishlisted ? "Remove from saved" : "Save listing"}
+                  aria-label={
+                    isWishlisted ? "Remove from saved" : "Save listing"
+                  }
                   className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
                     isWishlisted
                       ? "text-red-500 bg-red-50"
                       : "text-gray-300 hover:text-red-400 hover:bg-red-50"
                   }`}
                 >
-                  <svg className="w-5 h-5" fill={isWishlisted ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657 3.172 10.828a4 4 0 010-5.656z"/>
+                  <svg
+                    className="w-5 h-5"
+                    fill={isWishlisted ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657 3.172 10.828a4 4 0 010-5.656z"
+                    />
                   </svg>
                 </button>
               )}
@@ -584,25 +594,67 @@ export default function ListingDetailPage() {
                 )}
                 {listing.status === "In Escrow" && (
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <svg
+                      className="w-3 h-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
                     Payment in progress
                   </span>
                 )}
-                {listing.status !== "Available" && listing.status !== "In Escrow" && (
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">
-                    Sold
-                  </span>
-                )}
+                {listing.status !== "Available" &&
+                  listing.status !== "In Escrow" && (
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">
+                      Sold
+                    </span>
+                  )}
                 {listing.kyc_verified && (
                   <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
-                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
                     Verified seller
                   </span>
                 )}
                 {(listing as any).view_count > 0 && (
                   <span className="inline-flex items-center gap-1 text-xs text-gray-400 ml-auto">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    {(listing as any).view_count.toLocaleString()} {(listing as any).view_count === 1 ? "view" : "views"}
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                    {(listing as any).view_count.toLocaleString()}{" "}
+                    {(listing as any).view_count === 1 ? "view" : "views"}
                   </span>
                 )}
               </div>
@@ -613,14 +665,20 @@ export default function ListingDetailPage() {
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-3xl font-bold text-gray-900 tracking-tight">
                   {currencySymbol}
-                  {(acceptedOffer ? acceptedOffer.amount : Number(listing.price)).toLocaleString("en-US")}
+                  {(acceptedOffer
+                    ? acceptedOffer.amount
+                    : Number(listing.price)
+                  ).toLocaleString("en-US")}
                 </span>
-                <span className="text-sm text-gray-400 font-normal">{listing.currency}</span>
+                <span className="text-sm text-gray-400 font-normal">
+                  {listing.currency}
+                </span>
               </div>
               {acceptedOffer && (
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-sm text-gray-400 line-through">
-                    {currencySymbol}{Number(listing.price).toLocaleString("en-US")}
+                    {currencySymbol}
+                    {Number(listing.price).toLocaleString("en-US")}
                   </span>
                   <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-medium">
                     Offer accepted
@@ -633,65 +691,103 @@ export default function ListingDetailPage() {
             <dl className="divide-y divide-gray-50 border-t border-gray-100">
               {listing.condition && (
                 <div className="flex items-center justify-between px-5 py-3 gap-4">
-                  <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Condition</dt>
-                  <dd className="text-sm font-medium text-gray-800 capitalize text-right">{listing.condition}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">
+                    Condition
+                  </dt>
+                  <dd className="text-sm font-medium text-gray-800 capitalize text-right">
+                    {listing.condition}
+                  </dd>
                 </div>
               )}
               {listing.categoryname && (
                 <div className="flex items-center justify-between px-5 py-3 gap-4">
-                  <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Category</dt>
-                  <dd className="text-sm font-medium text-gray-800 text-right">{listing.categoryname}</dd>
-                </div>
-              )}
-              <div className="flex items-center justify-between px-5 py-3 gap-4">
-                <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Location</dt>
-                <dd className="text-sm font-medium text-gray-800 text-right">
-                  {[listing.city, listing.country].filter(Boolean).join(", ") || listing.location || "—"}
-                  {listing.location && listing.city && (
-                    <span className="block text-xs text-gray-400 font-normal">{listing.location}</span>
-                  )}
-                </dd>
-              </div>
-              {listing.createdat && (() => {
-                const timeInfo = formatRelativeTime(listing.createdat);
-                return (
-                  <div className="flex items-center justify-between px-5 py-3 gap-4">
-                    <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Listed</dt>
-                    <dd className="text-sm font-medium text-gray-800 text-right">
-                      {timeInfo.isNew ? (
-                        <span className="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded text-xs">New</span>
-                      ) : (
-                        timeInfo.text.replace("Posted ", "")
-                      )}
-                    </dd>
-                  </div>
-                );
-              })()}
-              {(listing as any).delivery_type && (listing as any).delivery_type !== "pickup" && (
-                <div className="flex items-center justify-between px-5 py-3 gap-4">
-                  <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Delivery</dt>
+                  <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">
+                    Category
+                  </dt>
                   <dd className="text-sm font-medium text-gray-800 text-right">
-                    {({"delivery": "Available", "both": "Pickup or delivery", "ships": "Ships nationwide"} as Record<string, string>)[(listing as any).delivery_type] || (listing as any).delivery_type}
-                    {(listing as any).delivery_notes && (
-                      <span className="block text-xs text-gray-400 font-normal">{(listing as any).delivery_notes}</span>
-                    )}
+                    {listing.categoryname}
                   </dd>
                 </div>
               )}
+              <div className="flex items-center justify-between px-5 py-3 gap-4">
+                <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">
+                  Location
+                </dt>
+                <dd className="text-sm font-medium text-gray-800 text-right">
+                  {[listing.city, listing.country].filter(Boolean).join(", ") ||
+                    listing.location ||
+                    "—"}
+                  {listing.location && listing.city && (
+                    <span className="block text-xs text-gray-400 font-normal">
+                      {listing.location}
+                    </span>
+                  )}
+                </dd>
+              </div>
+              {listing.createdat &&
+                (() => {
+                  const timeInfo = formatRelativeTime(listing.createdat);
+                  return (
+                    <div className="flex items-center justify-between px-5 py-3 gap-4">
+                      <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">
+                        Listed
+                      </dt>
+                      <dd className="text-sm font-medium text-gray-800 text-right">
+                        {timeInfo.isNew ? (
+                          <span className="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded text-xs">
+                            New
+                          </span>
+                        ) : (
+                          timeInfo.text.replace("Posted ", "")
+                        )}
+                      </dd>
+                    </div>
+                  );
+                })()}
+              {(listing as any).delivery_type &&
+                (listing as any).delivery_type !== "pickup" && (
+                  <div className="flex items-center justify-between px-5 py-3 gap-4">
+                    <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">
+                      Delivery
+                    </dt>
+                    <dd className="text-sm font-medium text-gray-800 text-right">
+                      {(
+                        {
+                          delivery: "Available",
+                          both: "Pickup or delivery",
+                          ships: "Ships nationwide",
+                        } as Record<string, string>
+                      )[(listing as any).delivery_type] ||
+                        (listing as any).delivery_type}
+                      {(listing as any).delivery_notes && (
+                        <span className="block text-xs text-gray-400 font-normal">
+                          {(listing as any).delivery_notes}
+                        </span>
+                      )}
+                    </dd>
+                  </div>
+                )}
             </dl>
           </div>
 
           {/* ── Seller + actions card ───────────────────────────────── */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-
             {/* Seller profile row */}
             <div className="flex items-center gap-3 pb-4 mb-4 border-b border-gray-100">
               {currentUserId && currentUserId === listing.user_id ? (
                 <>
                   {listing.user_profile_picture ? (
-                    <Image src={getImageUrl(listing.user_profile_picture) || ""} alt="You" width={44} height={44} className="w-11 h-11 rounded-full object-cover shrink-0"/>
+                    <Image
+                      src={getImageUrl(listing.user_profile_picture) || ""}
+                      alt="You"
+                      width={44}
+                      height={44}
+                      className="w-11 h-11 rounded-full object-cover shrink-0"
+                    />
                   ) : (
-                    <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-sm font-bold shrink-0">{getInitials(listing.username)}</div>
+                    <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-sm font-bold shrink-0">
+                      {getInitials(listing.username)}
+                    </div>
                   )}
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-gray-900">You</p>
@@ -700,73 +796,172 @@ export default function ListingDetailPage() {
                 </>
               ) : (
                 <button
-                  onClick={() => listing.user_id && router.push(`/profile/${listing.user_id}`)}
+                  onClick={() =>
+                    listing.user_id &&
+                    router.push(`/profile/${listing.user_id}`)
+                  }
                   className="flex items-center gap-3 flex-1 min-w-0 group text-left"
                 >
                   {listing.user_profile_picture ? (
-                    <Image src={getImageUrl(listing.user_profile_picture) || ""} alt={listing.username} width={44} height={44} className="w-11 h-11 rounded-full object-cover shrink-0"/>
+                    <Image
+                      src={getImageUrl(listing.user_profile_picture) || ""}
+                      alt={listing.username}
+                      width={44}
+                      height={44}
+                      className="w-11 h-11 rounded-full object-cover shrink-0"
+                    />
                   ) : (
-                    <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-sm font-bold shrink-0">{getInitials(listing.username)}</div>
+                    <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-sm font-bold shrink-0">
+                      {getInitials(listing.username)}
+                    </div>
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-sm font-semibold text-gray-900 group-hover:text-emerald-700 transition truncate">{listing.username}</span>
+                      <span className="text-sm font-semibold text-gray-900 group-hover:text-emerald-700 transition truncate">
+                        {listing.username}
+                      </span>
                       {listing.kyc_verified && (
-                        <svg className="w-4 h-4 text-blue-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                        <svg
+                          className="w-4 h-4 text-blue-500 shrink-0"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                       )}
                       {listing.user_is_suspended && (
-                        <span className="text-xs text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded shrink-0">Suspended</span>
+                        <span className="text-xs text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded shrink-0">
+                          Suspended
+                        </span>
                       )}
                     </div>
                     <p className="text-xs text-gray-400 mt-0.5">View profile</p>
                   </div>
-                  <svg className="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
+                  <svg
+                    className="w-4 h-4 text-gray-300 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
                 </button>
               )}
             </div>
 
             {/* Phone number */}
             {listing.phone && currentUserId !== listing.user_id && (
-              <a href={`tel:${listing.phone}`} className="flex items-center gap-2.5 text-gray-700 hover:text-emerald-700 transition group mb-4">
-                <svg className="w-4 h-4 text-gray-400 group-hover:text-emerald-600 shrink-0 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              <a
+                href={`tel:${listing.phone}`}
+                className="flex items-center gap-2.5 text-gray-700 hover:text-emerald-700 transition group mb-4"
+              >
+                <svg
+                  className="w-4 h-4 text-gray-400 group-hover:text-emerald-600 shrink-0 transition"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
                 <span className="font-semibold text-base">{listing.phone}</span>
               </a>
             )}
 
-            {/* Buy Securely via Fonlok — only for XAF listings, available, not own listing */}
-            {currentUserId &&
-              currentUserId !== listing.user_id &&
-              listing.status === "Available" &&
-              listing.currency === "XAF" && (
-                <>
-                  {/* Fonlok Protected badge */}
-                  <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-xl mb-2">
-                    <svg
-                      className="w-5 h-5 text-emerald-600 flex-shrink-0"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+            {/* Action buttons */}
+            <div className="space-y-2">
+              {/* ── Buyer: XAF + Available ── */}
+              {currentUserId &&
+                currentUserId !== listing.user_id &&
+                listing.status === "Available" &&
+                listing.currency === "XAF" && (
+                  <>
+                    <button
+                      onClick={() => setShowCheckout(true)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 active:bg-emerald-800 transition font-semibold text-sm"
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <div>
-                      <p className="text-xs font-bold text-emerald-700">
-                        Fonlok Protected
-                      </p>
-                      <p className="text-xs text-emerald-600">
-                        Funds held in escrow until you confirm receipt
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setShowCheckout(true)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold mb-2"
+                      <svg
+                        className="w-4 h-4 shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        />
+                      </svg>
+                      Buy via Fonlok Escrow
+                    </button>
+                    <p className="text-center text-xs text-gray-400">
+                      Funds held securely until you confirm receipt
+                    </p>
+                    {!offerSent ? (
+                      <button
+                        onClick={() => setShowOfferModal(true)}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition font-medium text-sm"
+                      >
+                        <svg
+                          className="w-4 h-4 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                          />
+                        </svg>
+                        Make an Offer
+                      </button>
+                    ) : (
+                      <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-500 rounded-xl text-sm">
+                        <svg
+                          className="w-4 h-4 shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        Offer sent — awaiting response
+                      </div>
+                    )}
+                  </>
+                )}
+
+              {/* ── Visitor: not logged in, XAF + Available ── */}
+              {!currentUserId &&
+                listing.status === "Available" &&
+                listing.currency === "XAF" && (
+                  <a
+                    href={`/login?redirect=/listing/${listing.id}`}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold text-sm text-center"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4 shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -778,62 +973,18 @@ export default function ListingDetailPage() {
                         d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                       />
                     </svg>
-                    Buy Securely via Fonlok Escrow
-                  </button>
-                  {/* Make Offer button */}
-                  {!offerSent ? (
-                    <button
-                      onClick={() => setShowOfferModal(true)}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-amber-500 text-amber-600 rounded-xl hover:bg-amber-50 transition font-semibold mb-3 text-sm"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                        />
-                      </svg>
-                      Make an Offer
-                    </button>
-                  ) : (
-                    <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-50 border border-amber-200 text-amber-700 rounded-xl text-sm font-semibold mb-3">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      Offer sent — awaiting seller response
-                    </div>
-                  )}
-                </>
-              )}
+                    Sign in to Buy Securely
+                  </a>
+                )}
 
-            {/* Visitor escrow CTA — not logged in, XAF listing, available */}
-            {!currentUserId &&
-              listing.status === "Available" &&
-              listing.currency === "XAF" && (
+              {/* ── Message seller ── */}
+              {!currentUserId && listing.status === "Available" && (
                 <a
                   href={`/login?redirect=/listing/${listing.id}`}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3
-                             bg-emerald-600 text-white rounded-xl hover:bg-emerald-700
-                             transition font-semibold mb-3 text-center"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium text-sm text-center"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="w-4 h-4 shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -842,127 +993,16 @@ export default function ListingDetailPage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                     />
                   </svg>
-                  Sign in to Buy Securely via Escrow
-                </a>
-              )}
-
-            {/* Visitor message CTA — not logged in */}
-            {!currentUserId && listing.status === "Available" && (
-              <a
-                href={`/login?redirect=/listing/${listing.id}`}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3
-                           bg-green-600 text-white rounded-lg hover:bg-green-700
-                           transition font-medium mb-3 text-center"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-                Sign in to Message Seller
-              </a>
-            )}
-
-            {/* Message Seller Button in Seller Section */}
-            {currentUserId &&
-              currentUserId !== listing.user_id &&
-              (listing.status === "Available" ||
-                listing.status === "In Escrow") && (
-                <button
-                  onClick={startChatWithSeller}
-                  disabled={startingChat}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium mb-3 disabled:opacity-50"
-                >
-                  {startingChat ? (
-                    <div className="w-5 h-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                  ) : (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                      />
-                    </svg>
-                  )}
-                  {startingChat ? "Starting chat..." : "Message Seller"}
-                </button>
-              )}
-
-            {/* Action buttons */}
-            <div className="space-y-2">
-
-              {/* ── Buyer: XAF + Available ── */}
-              {currentUserId &&
-                currentUserId !== listing.user_id &&
-                listing.status === "Available" &&
-                listing.currency === "XAF" && (
-                  <>
-                    <button
-                      onClick={() => setShowCheckout(true)}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 active:bg-emerald-800 transition font-semibold text-sm"
-                    >
-                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                      Buy via Fonlok Escrow
-                    </button>
-                    <p className="text-center text-xs text-gray-400">Funds held securely until you confirm receipt</p>
-                    {!offerSent ? (
-                      <button
-                        onClick={() => setShowOfferModal(true)}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition font-medium text-sm"
-                      >
-                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-                        Make an Offer
-                      </button>
-                    ) : (
-                      <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-500 rounded-xl text-sm">
-                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
-                        Offer sent — awaiting response
-                      </div>
-                    )}
-                  </>
-                )}
-
-              {/* ── Visitor: not logged in, XAF + Available ── */}
-              {!currentUserId && listing.status === "Available" && listing.currency === "XAF" && (
-                <a
-                  href={`/login?redirect=/listing/${listing.id}`}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold text-sm text-center"
-                >
-                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  Sign in to Buy Securely
-                </a>
-              )}
-
-              {/* ── Message seller ── */}
-              {!currentUserId && listing.status === "Available" && (
-                <a
-                  href={`/login?redirect=/listing/${listing.id}`}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium text-sm text-center"
-                >
-                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                   Sign in to Message Seller
                 </a>
               )}
               {currentUserId &&
                 currentUserId !== listing.user_id &&
-                (listing.status === "Available" || listing.status === "In Escrow") && (
+                (listing.status === "Available" ||
+                  listing.status === "In Escrow") && (
                   <button
                     onClick={startChatWithSeller}
                     disabled={startingChat}
@@ -971,25 +1011,68 @@ export default function ListingDetailPage() {
                     {startingChat ? (
                       <div className="w-4 h-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
                     ) : (
-                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                      <svg
+                        className="w-4 h-4 shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                        />
+                      </svg>
                     )}
                     {startingChat ? "Starting chat…" : "Message Seller"}
                   </button>
                 )}
 
               {/* ── Status notices ── */}
-              {listing.status === "In Escrow" && currentUserId !== listing.user_id && (
-                <div className="flex items-start gap-2.5 px-3.5 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800">
-                  <svg className="w-4 h-4 mt-0.5 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                  <p className="text-xs leading-relaxed">Payment secured in escrow. The seller is preparing delivery.</p>
-                </div>
-              )}
-              {listing.status === "Sold" && currentUserId !== listing.user_id && (
-                <div className="flex items-center justify-center gap-2 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500">
-                  <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
-                  <span className="text-xs font-medium">This item has been sold</span>
-                </div>
-              )}
+              {listing.status === "In Escrow" &&
+                currentUserId !== listing.user_id && (
+                  <div className="flex items-start gap-2.5 px-3.5 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800">
+                    <svg
+                      className="w-4 h-4 mt-0.5 shrink-0 text-amber-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                    <p className="text-xs leading-relaxed">
+                      Payment secured in escrow. The seller is preparing
+                      delivery.
+                    </p>
+                  </div>
+                )}
+              {listing.status === "Sold" &&
+                currentUserId !== listing.user_id && (
+                  <div className="flex items-center justify-center gap-2 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500">
+                    <svg
+                      className="w-4 h-4 shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    <span className="text-xs font-medium">
+                      This item has been sold
+                    </span>
+                  </div>
+                )}
             </div>
 
             {/* Report + Share — secondary actions */}
@@ -998,34 +1081,77 @@ export default function ListingDetailPage() {
                 onClick={handleShare}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-50 transition"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                  />
+                </svg>
                 Share
               </button>
               <button
-                onClick={() => { setReportType("listing"); setShowReportModal(true); }}
+                onClick={() => {
+                  setReportType("listing");
+                  setShowReportModal(true);
+                }}
                 className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
                 Report listing
               </button>
               {currentUserId && currentUserId !== listing.user_id && (
                 <button
-                  onClick={() => { setReportType("user"); setShowReportModal(true); }}
+                  onClick={() => {
+                    setReportType("user");
+                    setShowReportModal(true);
+                  }}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+                    />
+                  </svg>
                   Report user
                 </button>
               )}
             </div>
-
           </div>
         </div>
       </div>
 
       {/* Description */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-6 mb-10">
-        <h2 className="text-base font-semibold text-gray-900 mb-3">About this listing</h2>
+        <h2 className="text-base font-semibold text-gray-900 mb-3">
+          About this listing
+        </h2>
         <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
           {listing.description}
         </p>

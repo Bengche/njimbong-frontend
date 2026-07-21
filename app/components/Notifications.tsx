@@ -114,7 +114,7 @@ interface NotificationsProps {
   userId: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_API_URL || "";
 
 // --- notification item --------------------------------------------------------
 

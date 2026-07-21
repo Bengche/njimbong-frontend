@@ -704,8 +704,8 @@ export default function ListingDetailPage() {
                 return (
                   <div className="flex items-center gap-2 mb-4">
                     {timeInfo.isNew ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full text-sm font-bold shadow-md">
-                        <span className="animate-pulse">✨</span> NEW LISTING
+                      <span className="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-600 border border-gray-200 rounded text-xs font-medium tracking-wide">
+                        New listing
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1.5 text-gray-500 text-sm">

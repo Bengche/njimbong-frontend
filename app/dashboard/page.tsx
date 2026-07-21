@@ -1912,8 +1912,8 @@ export default function Dashboard() {
                     )}
                     {/* NEW / condition badge */}
                     {timeInfo.isNew ? (
-                      <span className="absolute top-1.5 left-1.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-1.5 py-0.5 rounded-full text-[9px] font-bold shadow-sm leading-none">
-                        NEW
+                      <span className="absolute top-1.5 left-1.5 bg-white/90 text-gray-700 border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-medium leading-none tracking-wide">
+                        New
                       </span>
                     ) : listing.condition ? (
                       <span className="absolute top-1.5 left-1.5 bg-black/50 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full text-[9px] font-medium capitalize leading-none">

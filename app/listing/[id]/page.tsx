@@ -252,7 +252,10 @@ export default function ListingDetailPage() {
             o.buyer_id === currentUserId && o.status === "accepted",
         );
         if (accepted) {
-          setAcceptedOffer({ id: accepted.id, amount: Number(accepted.amount) });
+          setAcceptedOffer({
+            id: accepted.id,
+            amount: Number(accepted.amount),
+          });
         }
       })
       .catch(() => {});

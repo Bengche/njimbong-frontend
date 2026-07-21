@@ -898,7 +898,9 @@ export default function Dashboard() {
                       ? "declined"
                       : "countered",
                 counter_amount:
-                  action === "counter" ? parseFloat(counterAmount) : o.counter_amount,
+                  action === "counter"
+                    ? parseFloat(counterAmount)
+                    : o.counter_amount,
                 counter_message:
                   action === "counter" ? counterMessage : o.counter_message,
               }
@@ -1576,8 +1578,8 @@ export default function Dashboard() {
                       <p className="text-sm font-bold text-emerald-700 mt-1">
                         {Number(offer.amount).toLocaleString()} {offer.currency}
                         <span className="text-xs font-normal text-gray-500 ml-1">
-                          (asking{" "}
-                          {Number(offer.listing_price).toLocaleString()})
+                          (asking {Number(offer.listing_price).toLocaleString()}
+                          )
                         </span>
                       </p>
                       {offer.message && (
@@ -1660,9 +1662,7 @@ export default function Dashboard() {
                         />
                         <div className="flex gap-2">
                           <button
-                            onClick={() =>
-                              respondToOffer(offer.id, "counter")
-                            }
+                            onClick={() => respondToOffer(offer.id, "counter")}
                             disabled={sellerRespondingOffer === offer.id}
                             className="flex-1 py-2 text-xs font-semibold bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50"
                           >

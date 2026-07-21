@@ -114,7 +114,9 @@ interface NotificationsProps {
   userId: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://njimbong-backend-production.up.railway.app";
 
 // --- notification item --------------------------------------------------------
 

@@ -120,7 +120,7 @@ export default function Login() {
               </svg>
             </div>
             <div className="w-20 h-20 bg-gradient-to-br from-green-500 via-yellow-500 to-red-500 rounded-full flex items-center justify-center shadow-xl animate-pulse-slow relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white to-transparent opacity-20 animate-shimmer"></div>
+              <div className="absolute inset-0 bg-emerald-600 opacity-20 animate-shimmer"></div>
               <svg
                 className="w-10 h-10 text-white relative z-10"
                 fill="none"
@@ -294,7 +294,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:from-green-700 hover:via-yellow-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group ${
+              className={`w-full bg-emerald-600 text-white py-3 px-4 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:from-green-700 hover:via-yellow-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group ${
                 isSubmitting ? "opacity-80 cursor-not-allowed" : ""
               }`}
             >

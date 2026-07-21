@@ -1895,8 +1895,18 @@ export default function Dashboard() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-200">
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <svg
+                          className="w-8 h-8"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                     )}
@@ -1916,30 +1926,69 @@ export default function Dashboard() {
                         onClick={(e) => toggleWishlist(e, listing.id)}
                         disabled={wishlistLoading === listing.id}
                         className={`absolute top-1.5 right-1.5 p-1.5 rounded-full shadow transition-all duration-150 ${
-                          isWishlisted ? "bg-red-500 text-white" : "bg-white/80 text-gray-400 hover:text-red-500"
+                          isWishlisted
+                            ? "bg-red-500 text-white"
+                            : "bg-white/80 text-gray-400 hover:text-red-500"
                         }`}
                       >
-                        <svg className="w-3 h-3" fill={isWishlisted ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657 3.172 10.828a4 4 0 010-5.656z" />
+                        <svg
+                          className="w-3 h-3"
+                          fill={isWishlisted ? "currentColor" : "none"}
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657 3.172 10.828a4 4 0 010-5.656z"
+                          />
                         </svg>
                       </button>
                     )}
                     {/* Escrow pill */}
                     {canEscrow && listing.currency === "XAF" && (
                       <span className="absolute bottom-1.5 left-1.5 flex items-center gap-0.5 bg-emerald-600/85 text-white px-1.5 py-0.5 rounded-full text-[9px] font-semibold pointer-events-none leading-none">
-                        <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        <svg
+                          className="w-2.5 h-2.5 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                          />
                         </svg>
                         Escrow
                       </span>
                     )}
                     {/* Report — hover only */}
                     <button
-                      onClick={(e) => handleReportClick(e, "listing", listing.id, listing.title)}
+                      onClick={(e) =>
+                        handleReportClick(
+                          e,
+                          "listing",
+                          listing.id,
+                          listing.title,
+                        )
+                      }
                       className="absolute bottom-1.5 right-1.5 bg-white/80 hover:bg-white p-1 rounded-full shadow opacity-0 group-hover:opacity-100 transition-all duration-150"
                     >
-                      <svg className="w-2.5 h-2.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      <svg
+                        className="w-2.5 h-2.5 text-red-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -1950,10 +1999,12 @@ export default function Dashboard() {
                       {listing.title}
                     </h3>
                     <p className="text-xs sm:text-sm font-bold text-emerald-700 mt-1 leading-none">
-                      {listing.currency} {Number(listing.price).toLocaleString("en-US")}
+                      {listing.currency}{" "}
+                      {Number(listing.price).toLocaleString("en-US")}
                     </p>
                     <p className="text-[10px] text-gray-400 mt-0.5 truncate">
-                      {listing.city}{listing.country ? `, ${listing.country}` : ""}
+                      {listing.city}
+                      {listing.country ? `, ${listing.country}` : ""}
                     </p>
                   </div>
                 </div>

@@ -118,7 +118,10 @@ export default function BrowsePage() {
         {loading && (
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="rounded-xl bg-white border border-gray-100 overflow-hidden animate-pulse">
+              <div
+                key={i}
+                className="rounded-xl bg-white border border-gray-100 overflow-hidden animate-pulse"
+              >
                 <div className="aspect-[4/3] bg-gray-100" />
                 <div className="p-2 space-y-1.5">
                   <div className="h-3 bg-gray-100 rounded w-3/4" />
@@ -231,8 +234,18 @@ function ListingCard({ listing }: { listing: Listing }) {
           />
         ) : (
           <div className="flex h-full items-center justify-center text-gray-200">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg
+              className="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
             </svg>
           </div>
         )}
@@ -253,8 +266,18 @@ function ListingCard({ listing }: { listing: Listing }) {
         {/* Escrow pill */}
         {listing.currency === "XAF" && isAvailable && (
           <span className="absolute bottom-1.5 left-1.5 flex items-center gap-0.5 rounded-full bg-emerald-600/85 px-1.5 py-0.5 text-[9px] font-semibold text-white pointer-events-none leading-none">
-            <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <svg
+              className="w-2.5 h-2.5 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
             Escrow
           </span>
@@ -270,7 +293,8 @@ function ListingCard({ listing }: { listing: Listing }) {
         </p>
         {listing.city && (
           <p className="text-[10px] text-gray-400 mt-0.5 truncate">
-            {listing.city}{listing.country ? `, ${listing.country}` : ""}
+            {listing.city}
+            {listing.country ? `, ${listing.country}` : ""}
           </p>
         )}
       </div>

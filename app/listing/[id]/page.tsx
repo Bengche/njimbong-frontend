@@ -1175,7 +1175,7 @@ export default function ListingDetailPage() {
           </div>
 
           {/* Contact Information */}
-          <div className="bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-2xl shadow-lg p-6">
+          <div className="bg-emerald-600 text-white rounded-2xl shadow-lg p-6">
             <div className="flex items-center gap-2 mb-3">
               <h3 className="text-xl font-bold">Contact Seller</h3>
               {listing.kyc_verified && (

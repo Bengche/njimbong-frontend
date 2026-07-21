@@ -517,7 +517,7 @@ export default function ProfilePage() {
 
         {/* Profile Header */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
-          <div className="bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 h-32"></div>
+          <div className="bg-emerald-600 h-32"></div>
           <div className="px-4 pb-6 sm:px-8 sm:pb-8">
             <div className="flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16">
               {/* Profile Picture */}

@@ -287,7 +287,7 @@ export default function SellModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3 sm:p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white p-4 sm:p-6 rounded-t-2xl flex justify-between items-center">
+        <div className="sticky top-0 bg-emerald-600 text-white p-4 sm:p-6 rounded-t-2xl flex justify-between items-center">
           <h2 className="text-2xl font-bold">
             {editListing ? "Edit Listing" : "Create New Listing"}
           </h2>
@@ -830,7 +830,7 @@ export default function SellModal({
             <button
               type="submit"
               disabled={isSubmitting || submitSuccess}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>

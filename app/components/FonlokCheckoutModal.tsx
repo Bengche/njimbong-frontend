@@ -163,12 +163,13 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Your email{" "}
                 <span className="text-gray-400 text-xs">
-                  (optional — for receipt)
+                  (For receipt & release confirmation.)
                 </span>
               </label>
               <input
                 type="email"
                 value={emailInput}
+                required
                 onChange={(e) => setEmailInput(e.target.value)}
                 placeholder="you@example.com"
                 className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-white dark:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
@@ -298,8 +299,8 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               Your payment is safely held in escrow. The seller has been
               notified and will prepare your item. A confirmation email has been
               sent to you. Once you receive the item, go to your{" "}
-              <span className="text-emerald-600 font-medium">Orders page</span>{" "}
-              to confirm receipt and release funds to the seller.
+              <span className="text-emerald-600 font-medium">Email</span> to
+              confirm receipt and release funds to the seller.
             </p>
             <button
               onClick={() => {

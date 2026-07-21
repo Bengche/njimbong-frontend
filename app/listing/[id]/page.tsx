@@ -548,370 +548,190 @@ export default function ListingDetailPage() {
         </div>
 
         {/* Product Details */}
-        <div className="space-y-6">
-          {/* Price and Status */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <h1 className="text-3xl font-bold text-gray-800">
-                    {listing.title}
-                  </h1>
-                  {currentUserId && listing.user_id !== currentUserId && (
-                    <button
-                      onClick={toggleWishlist}
-                      disabled={wishlistLoading}
-                      className={`p-2 rounded-full border transition ${
-                        isWishlisted
-                          ? "bg-red-500 text-white border-red-500"
-                          : "bg-white text-gray-500 border-gray-200 hover:text-red-500"
-                      }`}
-                      title={
-                        isWishlisted
-                          ? "Remove from wishlist"
-                          : "Add to wishlist"
-                      }
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill={isWishlisted ? "currentColor" : "none"}
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657 3.172 10.828a4 4 0 010-5.656z"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                  {listing.kyc_verified && (
-                    <span
-                      className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full"
-                      title="KYC Verified Seller"
-                    >
-                      <svg
-                        className="w-5 h-5 text-blue-600"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  )}
-                </div>
-                <div className="text-4xl font-bold text-green-600">
-                  {currencySymbol}
-                  {(acceptedOffer
-                    ? acceptedOffer.amount
-                    : Number(listing.price)
-                  ).toLocaleString("en-US")}
-                </div>
-                {acceptedOffer && (
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <span className="text-sm text-gray-400 line-through">
-                      {currencySymbol}
-                      {Number(listing.price).toLocaleString("en-US")}
-                    </span>
-                    <span className="text-xs bg-emerald-100 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-medium">
-                      Offer accepted
-                    </span>
-                  </div>
-                )}
-              </div>
-              {listing.status === "Available" && (
-                <span className="px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 bg-green-100 text-green-700">
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                  Available
-                </span>
-              )}
-              {listing.status === "In Escrow" && (
-                <span className="px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 bg-amber-100 text-amber-700">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
+        <div className="space-y-4">
+
+          {/* ── Listing info card ───────────────────────────────────── */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+
+            {/* Title + wishlist */}
+            <div className="relative px-5 pt-5 pb-4">
+              {currentUserId && listing.user_id !== currentUserId && (
+                <button
+                  onClick={toggleWishlist}
+                  disabled={wishlistLoading}
+                  aria-label={isWishlisted ? "Remove from saved" : "Save listing"}
+                  className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
+                    isWishlisted
+                      ? "text-red-500 bg-red-50"
+                      : "text-gray-300 hover:text-red-400 hover:bg-red-50"
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill={isWishlisted ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.172 5.172a4 4 0 015.656 0L12 8.343l3.172-3.171a4 4 0 115.656 5.656L12 21.657 3.172 10.828a4 4 0 010-5.656z"/>
                   </svg>
-                  Payment in Progress
-                </span>
+                </button>
               )}
-              {listing.status !== "Available" &&
-                listing.status !== "In Escrow" && (
-                  <span className="px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 bg-gray-200 text-gray-600">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 leading-snug pr-10">
+                {listing.title}
+              </h1>
+              {/* Status + KYC badges */}
+              <div className="flex flex-wrap items-center gap-2 mt-2.5">
+                {listing.status === "Available" && (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                    Available
+                  </span>
+                )}
+                {listing.status === "In Escrow" && (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    Payment in progress
+                  </span>
+                )}
+                {listing.status !== "Available" && listing.status !== "In Escrow" && (
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">
                     Sold
                   </span>
                 )}
-            </div>
-
-            {/* Condition */}
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-gray-600 font-semibold">Condition:</span>
-              <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold capitalize">
-                {listing.condition}
-              </span>
-              {(listing as any).view_count > 0 && (
-                <span className="ml-auto inline-flex items-center gap-1 text-gray-400 text-xs">
-                  <svg
-                    className="w-3.5 h-3.5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    />
-                  </svg>
-                  {(listing as any).view_count.toLocaleString()}{" "}
-                  {(listing as any).view_count === 1 ? "view" : "views"}
-                </span>
-              )}
-            </div>
-
-            {/* Delivery info */}
-            {(listing as any).delivery_type &&
-              (listing as any).delivery_type !== "pickup" && (
-                <div className="flex items-start gap-2 mb-4">
-                  <span className="text-gray-600 font-semibold text-sm mt-0.5">
-                    Delivery:
+                {listing.kyc_verified && (
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                    Verified seller
                   </span>
-                  <div>
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        (listing as any).delivery_type === "ships"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-green-100 text-green-700"
-                      }`}
-                    >
-                      {{
-                        delivery: "Delivery available",
-                        both: "Pickup or delivery",
-                        ships: "Ships nationwide",
-                      }[(listing as any).delivery_type as string] ||
-                        (listing as any).delivery_type}
-                    </span>
-                    {(listing as any).delivery_notes && (
-                      <p className="text-xs text-gray-500 mt-0.5">
-                        {(listing as any).delivery_notes}
-                      </p>
-                    )}
-                  </div>
+                )}
+                {(listing as any).view_count > 0 && (
+                  <span className="inline-flex items-center gap-1 text-xs text-gray-400 ml-auto">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    {(listing as any).view_count.toLocaleString()} {(listing as any).view_count === 1 ? "view" : "views"}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Price */}
+            <div className="px-5 py-4 border-t border-gray-100">
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-3xl font-bold text-gray-900 tracking-tight">
+                  {currencySymbol}
+                  {(acceptedOffer ? acceptedOffer.amount : Number(listing.price)).toLocaleString("en-US")}
+                </span>
+                <span className="text-sm text-gray-400 font-normal">{listing.currency}</span>
+              </div>
+              {acceptedOffer && (
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-sm text-gray-400 line-through">
+                    {currencySymbol}{Number(listing.price).toLocaleString("en-US")}
+                  </span>
+                  <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-medium">
+                    Offer accepted
+                  </span>
                 </div>
               )}
+            </div>
 
-            {/* Posted Time */}
-            {listing.createdat &&
-              (() => {
+            {/* Meta rows */}
+            <dl className="divide-y divide-gray-50 border-t border-gray-100">
+              {listing.condition && (
+                <div className="flex items-center justify-between px-5 py-3 gap-4">
+                  <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Condition</dt>
+                  <dd className="text-sm font-medium text-gray-800 capitalize text-right">{listing.condition}</dd>
+                </div>
+              )}
+              {listing.categoryname && (
+                <div className="flex items-center justify-between px-5 py-3 gap-4">
+                  <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Category</dt>
+                  <dd className="text-sm font-medium text-gray-800 text-right">{listing.categoryname}</dd>
+                </div>
+              )}
+              <div className="flex items-center justify-between px-5 py-3 gap-4">
+                <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Location</dt>
+                <dd className="text-sm font-medium text-gray-800 text-right">
+                  {[listing.city, listing.country].filter(Boolean).join(", ") || listing.location || "—"}
+                  {listing.location && listing.city && (
+                    <span className="block text-xs text-gray-400 font-normal">{listing.location}</span>
+                  )}
+                </dd>
+              </div>
+              {listing.createdat && (() => {
                 const timeInfo = formatRelativeTime(listing.createdat);
                 return (
-                  <div className="flex items-center gap-2 mb-4">
-                    {timeInfo.isNew ? (
-                      <span className="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-600 border border-gray-200 rounded text-xs font-medium tracking-wide">
-                        New listing
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 text-gray-500 text-sm">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        {timeInfo.text}
-                      </span>
-                    )}
+                  <div className="flex items-center justify-between px-5 py-3 gap-4">
+                    <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Listed</dt>
+                    <dd className="text-sm font-medium text-gray-800 text-right">
+                      {timeInfo.isNew ? (
+                        <span className="inline-flex items-center px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded text-xs">New</span>
+                      ) : (
+                        timeInfo.text.replace("Posted ", "")
+                      )}
+                    </dd>
                   </div>
                 );
               })()}
-
-            {/* Category */}
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-gray-600 font-semibold">Category:</span>
-              <span className="text-gray-800">{listing.categoryname}</span>
-            </div>
-
-            {/* Location */}
-            <div className="border-t pt-4">
-              <div className="flex items-center gap-2 text-gray-700">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                <span className="font-semibold">
-                  {listing.city}, {listing.country}
-                </span>
-              </div>
-              {listing.location && (
-                <p className="text-sm text-gray-600 mt-1 ml-7">
-                  {listing.location}
-                </p>
+              {(listing as any).delivery_type && (listing as any).delivery_type !== "pickup" && (
+                <div className="flex items-center justify-between px-5 py-3 gap-4">
+                  <dt className="text-xs uppercase tracking-wide text-gray-400 font-medium shrink-0">Delivery</dt>
+                  <dd className="text-sm font-medium text-gray-800 text-right">
+                    {({"delivery": "Available", "both": "Pickup or delivery", "ships": "Ships nationwide"} as Record<string, string>)[(listing as any).delivery_type] || (listing as any).delivery_type}
+                    {(listing as any).delivery_notes && (
+                      <span className="block text-xs text-gray-400 font-normal">{(listing as any).delivery_notes}</span>
+                    )}
+                  </dd>
+                </div>
               )}
-            </div>
+            </dl>
           </div>
 
-          {/* Seller Information */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">
-              {currentUserId && currentUserId === listing.user_id
-                ? "Your Listing"
-                : "Seller"}
-            </h3>
-            <div className="flex items-center gap-4 mb-4">
+          {/* ── Seller + actions card ───────────────────────────────── */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+
+            {/* Seller profile row */}
+            <div className="flex items-center gap-3 pb-4 mb-4 border-b border-gray-100">
               {currentUserId && currentUserId === listing.user_id ? (
-                // Current user's own listing
-                <div className="flex items-center gap-3">
+                <>
                   {listing.user_profile_picture ? (
-                    <Image
-                      src={getImageUrl(listing.user_profile_picture) || ""}
-                      alt="You"
-                      width={48}
-                      height={48}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-green-500"
-                    />
+                    <Image src={getImageUrl(listing.user_profile_picture) || ""} alt="You" width={44} height={44} className="w-11 h-11 rounded-full object-cover shrink-0"/>
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-yellow-500 flex items-center justify-center text-white text-lg font-bold border-2 border-green-500">
-                      {getInitials(listing.username)}
-                    </div>
+                    <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-sm font-bold shrink-0">{getInitials(listing.username)}</div>
                   )}
-                  <div className="text-left">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-green-600">You</span>
-                      {listing.kyc_verified && (
-                        <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-100 rounded-full">
-                          <svg
-                            className="w-3 h-3 text-blue-600"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      )}
-                      {listing.user_is_suspended && (
-                        <span className="inline-flex items-center gap-1.5 bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-semibold">
-                          Suspended
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-sm text-gray-500">
-                      This is your listing
-                    </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-900">You</p>
+                    <p className="text-xs text-gray-400 mt-0.5">Your listing</p>
                   </div>
-                </div>
+                </>
               ) : (
-                // Other user's listing
                 <button
-                  onClick={() =>
-                    listing.user_id &&
-                    router.push(`/profile/${listing.user_id}`)
-                  }
-                  className="flex items-center gap-3 hover:opacity-80 transition group"
+                  onClick={() => listing.user_id && router.push(`/profile/${listing.user_id}`)}
+                  className="flex items-center gap-3 flex-1 min-w-0 group text-left"
                 >
                   {listing.user_profile_picture ? (
-                    <Image
-                      src={getImageUrl(listing.user_profile_picture) || ""}
-                      alt={listing.username}
-                      width={48}
-                      height={48}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 group-hover:border-green-500 transition"
-                    />
+                    <Image src={getImageUrl(listing.user_profile_picture) || ""} alt={listing.username} width={44} height={44} className="w-11 h-11 rounded-full object-cover shrink-0"/>
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-yellow-500 flex items-center justify-center text-white text-lg font-bold border-2 border-gray-200 group-hover:border-green-500 transition">
-                      {getInitials(listing.username)}
-                    </div>
+                    <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 text-sm font-bold shrink-0">{getInitials(listing.username)}</div>
                   )}
-                  <div className="text-left">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-gray-900 group-hover:text-green-600 transition">
-                        {listing.username}
-                      </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-sm font-semibold text-gray-900 group-hover:text-emerald-700 transition truncate">{listing.username}</span>
                       {listing.kyc_verified && (
-                        <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-100 rounded-full">
-                          <svg
-                            className="w-3 h-3 text-blue-600"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </span>
+                        <svg className="w-4 h-4 text-blue-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
                       )}
                       {listing.user_is_suspended && (
-                        <span className="inline-flex items-center gap-1.5 bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-semibold">
-                          Suspended
-                        </span>
+                        <span className="text-xs text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded shrink-0">Suspended</span>
                       )}
                     </div>
-                    <span className="text-sm text-gray-500">View Profile</span>
+                    <p className="text-xs text-gray-400 mt-0.5">View profile</p>
                   </div>
+                  <svg className="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
                 </button>
               )}
             </div>
+
+            {/* Phone number */}
+            {listing.phone && currentUserId !== listing.user_id && (
+              <a href={`tel:${listing.phone}`} className="flex items-center gap-2.5 text-gray-700 hover:text-emerald-700 transition group mb-4">
+                <svg className="w-4 h-4 text-gray-400 group-hover:text-emerald-600 shrink-0 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                <span className="font-semibold text-base">{listing.phone}</span>
+              </a>
+            )}
 
             {/* Buy Securely via Fonlok — only for XAF listings, available, not own listing */}
             {currentUserId &&
@@ -1085,210 +905,128 @@ export default function ListingDetailPage() {
                 </button>
               )}
 
-            {/* In Escrow Notice — payment secured, awaiting delivery */}
-            {listing.status === "In Escrow" &&
-              currentUserId !== listing.user_id && (
-                <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-4 mb-3">
-                  <div className="flex items-center gap-2 text-amber-700 mb-1.5">
-                    <svg
-                      className="w-5 h-5 flex-shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+            {/* Action buttons */}
+            <div className="space-y-2">
+
+              {/* ── Buyer: XAF + Available ── */}
+              {currentUserId &&
+                currentUserId !== listing.user_id &&
+                listing.status === "Available" &&
+                listing.currency === "XAF" && (
+                  <>
+                    <button
+                      onClick={() => setShowCheckout(true)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 active:bg-emerald-800 transition font-semibold text-sm"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
-                    <span className="font-semibold text-sm">
-                      Payment Secured in Escrow
-                    </span>
-                  </div>
-                  <p className="text-xs text-amber-700 leading-relaxed">
-                    A buyer has paid for this item and the funds are held
-                    securely in escrow. The seller is preparing delivery. This
-                    listing is temporarily reserved.
-                  </p>
-                </div>
-              )}
-
-            {/* Sold Notice - show when listing is sold */}
-            {listing.status === "Sold" && currentUserId !== listing.user_id && (
-              <div className="w-full bg-gray-100 border border-gray-200 rounded-lg p-4 mb-3 text-center">
-                <div className="flex items-center justify-center gap-2 text-gray-600">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="font-medium">This item has been sold</span>
-                </div>
-                <p className="text-sm text-gray-500 mt-1">
-                  This listing is no longer available for purchase
-                </p>
-              </div>
-            )}
-
-            <button
-              onClick={() => {
-                setReportType("listing");
-                setShowReportModal(true);
-              }}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition text-sm"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-              Report this listing
-            </button>
-
-            {/* Report User Button - only show if not own listing */}
-            {currentUserId && currentUserId !== listing.user_id && (
-              <button
-                onClick={() => {
-                  setReportType("user");
-                  setShowReportModal(true);
-                }}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-orange-200 text-orange-600 rounded-lg hover:bg-orange-50 transition text-sm mt-2"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-                  />
-                </svg>
-                Report this user
-              </button>
-            )}
-
-            {/* Share Listing Button */}
-            <button
-              onClick={handleShare}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-green-200 text-green-700 rounded-lg hover:bg-green-50 transition text-sm mt-2"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                />
-              </svg>
-              Share this listing
-            </button>
-          </div>
-
-          {/* Contact Information */}
-          <div className="bg-emerald-600 text-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <h3 className="text-xl font-bold">Contact Seller</h3>
-              {listing.kyc_verified && (
-                <span className="inline-flex items-center gap-1 bg-white bg-opacity-20 px-2 py-1 rounded-full text-xs font-semibold">
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  KYC Verified
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-3">
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                />
-              </svg>
-              <a
-                href={`tel:${listing.phone}`}
-                className="text-2xl font-bold hover:underline"
-              >
-                {listing.phone}
-              </a>
-            </div>
-
-            {/* Message Seller Button */}
-            {currentUserId && currentUserId !== listing.user_id && (
-              <button
-                onClick={startChatWithSeller}
-                disabled={startingChat}
-                className="mt-4 w-full flex items-center justify-center gap-2 py-3 bg-white text-green-600 rounded-xl font-semibold hover:bg-green-50 transition disabled:opacity-50"
-              >
-                {startingChat ? (
-                  <div className="w-5 h-5 animate-spin rounded-full border-2 border-green-600 border-t-transparent"></div>
-                ) : (
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                  </svg>
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                      Buy via Fonlok Escrow
+                    </button>
+                    <p className="text-center text-xs text-gray-400">Funds held securely until you confirm receipt</p>
+                    {!offerSent ? (
+                      <button
+                        onClick={() => setShowOfferModal(true)}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition font-medium text-sm"
+                      >
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                        Make an Offer
+                      </button>
+                    ) : (
+                      <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-50 border border-gray-200 text-gray-500 rounded-xl text-sm">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
+                        Offer sent — awaiting response
+                      </div>
+                    )}
+                  </>
                 )}
-                {startingChat ? "Starting chat..." : "Message Seller"}
+
+              {/* ── Visitor: not logged in, XAF + Available ── */}
+              {!currentUserId && listing.status === "Available" && listing.currency === "XAF" && (
+                <a
+                  href={`/login?redirect=/listing/${listing.id}`}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold text-sm text-center"
+                >
+                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  Sign in to Buy Securely
+                </a>
+              )}
+
+              {/* ── Message seller ── */}
+              {!currentUserId && listing.status === "Available" && (
+                <a
+                  href={`/login?redirect=/listing/${listing.id}`}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium text-sm text-center"
+                >
+                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                  Sign in to Message Seller
+                </a>
+              )}
+              {currentUserId &&
+                currentUserId !== listing.user_id &&
+                (listing.status === "Available" || listing.status === "In Escrow") && (
+                  <button
+                    onClick={startChatWithSeller}
+                    disabled={startingChat}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition font-medium text-sm disabled:opacity-50"
+                  >
+                    {startingChat ? (
+                      <div className="w-4 h-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
+                    ) : (
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    )}
+                    {startingChat ? "Starting chat…" : "Message Seller"}
+                  </button>
+                )}
+
+              {/* ── Status notices ── */}
+              {listing.status === "In Escrow" && currentUserId !== listing.user_id && (
+                <div className="flex items-start gap-2.5 px-3.5 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800">
+                  <svg className="w-4 h-4 mt-0.5 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  <p className="text-xs leading-relaxed">Payment secured in escrow. The seller is preparing delivery.</p>
+                </div>
+              )}
+              {listing.status === "Sold" && currentUserId !== listing.user_id && (
+                <div className="flex items-center justify-center gap-2 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500">
+                  <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
+                  <span className="text-xs font-medium">This item has been sold</span>
+                </div>
+              )}
+            </div>
+
+            {/* Report + Share — secondary actions */}
+            <div className="flex items-center gap-2 mt-4 pt-4 border-t border-gray-100">
+              <button
+                onClick={handleShare}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-50 transition"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                Share
               </button>
-            )}
+              <button
+                onClick={() => { setReportType("listing"); setShowReportModal(true); }}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                Report listing
+              </button>
+              {currentUserId && currentUserId !== listing.user_id && (
+                <button
+                  onClick={() => { setReportType("user"); setShowReportModal(true); }}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  Report user
+                </button>
+              )}
+            </div>
+
           </div>
         </div>
       </div>
 
       {/* Description */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Description</h2>
-        <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-6 mb-10">
+        <h2 className="text-base font-semibold text-gray-900 mb-3">About this listing</h2>
+        <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
           {listing.description}
         </p>
 

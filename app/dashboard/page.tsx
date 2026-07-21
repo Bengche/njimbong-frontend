@@ -238,6 +238,16 @@ export default function Dashboard() {
   const [myOffers, setMyOffers] = useState<any[]>([]);
   const [showMyOffers, setShowMyOffers] = useState(false);
   const [respondingOffer, setRespondingOffer] = useState<number | null>(null);
+  const [incomingOffers, setIncomingOffers] = useState<any[]>([]);
+  const [showIncomingOffers, setShowIncomingOffers] = useState(false);
+  const [sellerRespondingOffer, setSellerRespondingOffer] = useState<
+    number | null
+  >(null);
+  const [counteringOfferId, setCounteringOfferId] = useState<number | null>(
+    null,
+  );
+  const [counterAmount, setCounterAmount] = useState("");
+  const [counterMessage, setCounterMessage] = useState("");
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
   const [showSaveSearchModal, setShowSaveSearchModal] = useState(false);
   const [saveSearchName, setSaveSearchName] = useState("");
@@ -300,6 +310,9 @@ export default function Dashboard() {
         .catch(() => {});
       Axios.get(`${API_BASE}/api/offers/mine`)
         .then((r) => setMyOffers(r.data.offers || []))
+        .catch(() => {});
+      Axios.get(`${API_BASE}/api/offers/incoming`)
+        .then((r) => setIncomingOffers(r.data.offers || []))
         .catch(() => {});
     }
   }, [currentUserId]);
@@ -851,6 +864,54 @@ export default function Dashboard() {
       alert("Failed to publish listing. Please try again.");
     } finally {
       setPublishingListing(null);
+    }
+  };
+
+  // Seller responds to an incoming offer
+  const respondToOffer = async (
+    offerId: number,
+    action: "accept" | "decline" | "counter",
+  ) => {
+    try {
+      setSellerRespondingOffer(offerId);
+      const body: Record<string, unknown> = { action };
+      if (action === "counter") {
+        const parsed = parseFloat(counterAmount);
+        if (isNaN(parsed) || parsed <= 0) {
+          alert("Please enter a valid counter amount.");
+          setSellerRespondingOffer(null);
+          return;
+        }
+        body.counter_amount = parsed;
+        body.counter_message = counterMessage || null;
+      }
+      await Axios.put(`${API_BASE}/api/offers/${offerId}`, body);
+      setIncomingOffers((prev) =>
+        prev.map((o) =>
+          o.id === offerId
+            ? {
+                ...o,
+                status:
+                  action === "accept"
+                    ? "accepted"
+                    : action === "decline"
+                      ? "declined"
+                      : "countered",
+                counter_amount:
+                  action === "counter" ? parseFloat(counterAmount) : o.counter_amount,
+                counter_message:
+                  action === "counter" ? counterMessage : o.counter_message,
+              }
+            : o,
+        ),
+      );
+      setCounteringOfferId(null);
+      setCounterAmount("");
+      setCounterMessage("");
+    } catch {
+      alert("Failed to respond to offer. Please try again.");
+    } finally {
+      setSellerRespondingOffer(null);
     }
   };
 
@@ -1450,6 +1511,176 @@ export default function Dashboard() {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Received Offers — seller responds to incoming offers on their listings */}
+      {incomingOffers.length > 0 && (
+        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8">
+          <button
+            onClick={() => setShowIncomingOffers((prev) => !prev)}
+            className="w-full flex items-center justify-between gap-2"
+          >
+            <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              Received Offers
+              {incomingOffers.filter((o) => o.status === "pending").length >
+                0 && (
+                <span className="inline-flex items-center justify-center w-5 h-5 bg-emerald-600 text-white rounded-full text-xs font-bold">
+                  {incomingOffers.filter((o) => o.status === "pending").length}
+                </span>
+              )}
+            </h3>
+            <svg
+              className={`w-5 h-5 text-gray-400 transition-transform ${showIncomingOffers ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          {showIncomingOffers && (
+            <div className="mt-4 space-y-3">
+              {incomingOffers.map((offer) => (
+                <div
+                  key={offer.id}
+                  className={`rounded-xl border p-3 ${
+                    offer.status === "pending"
+                      ? "border-emerald-200 bg-emerald-50"
+                      : "border-gray-100 bg-gray-50"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    {offer.listing_image && (
+                      <img
+                        src={offer.listing_image}
+                        alt=""
+                        className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-800 truncate text-sm">
+                        {offer.listing_title}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        From{" "}
+                        <span className="font-medium text-gray-700">
+                          {offer.buyer_name}
+                        </span>
+                      </p>
+                      <p className="text-sm font-bold text-emerald-700 mt-1">
+                        {Number(offer.amount).toLocaleString()} {offer.currency}
+                        <span className="text-xs font-normal text-gray-500 ml-1">
+                          (asking{" "}
+                          {Number(offer.listing_price).toLocaleString()})
+                        </span>
+                      </p>
+                      {offer.message && (
+                        <p className="text-xs text-gray-600 mt-1 italic">
+                          "{offer.message}"
+                        </p>
+                      )}
+                      <span
+                        className={`inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full font-medium ${
+                          offer.status === "pending"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : offer.status === "accepted"
+                              ? "bg-blue-100 text-blue-700"
+                              : offer.status === "declined"
+                                ? "bg-red-100 text-red-600"
+                                : offer.status === "countered"
+                                  ? "bg-amber-100 text-amber-700"
+                                  : "bg-gray-200 text-gray-600"
+                        }`}
+                      >
+                        {offer.status === "countered"
+                          ? `You countered: ${Number(offer.counter_amount).toLocaleString()} ${offer.currency}`
+                          : offer.status}
+                      </span>
+                    </div>
+                    {offer.status === "pending" &&
+                      counteringOfferId !== offer.id && (
+                        <div className="flex flex-col gap-1.5 flex-shrink-0">
+                          <button
+                            onClick={() => respondToOffer(offer.id, "accept")}
+                            disabled={sellerRespondingOffer === offer.id}
+                            className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() => {
+                              setCounteringOfferId(offer.id);
+                              setCounterAmount("");
+                              setCounterMessage("");
+                            }}
+                            className="px-3 py-1.5 text-xs font-semibold border border-amber-400 text-amber-700 rounded-lg hover:bg-amber-50"
+                          >
+                            Counter
+                          </button>
+                          <button
+                            onClick={() => respondToOffer(offer.id, "decline")}
+                            disabled={sellerRespondingOffer === offer.id}
+                            className="px-3 py-1.5 text-xs font-semibold border border-red-300 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50"
+                          >
+                            Decline
+                          </button>
+                        </div>
+                      )}
+                  </div>
+                  {/* Inline counter-offer form */}
+                  {offer.status === "pending" &&
+                    counteringOfferId === offer.id && (
+                      <div className="mt-3 pt-3 border-t border-gray-200 space-y-2">
+                        <div className="flex rounded-lg border border-gray-300 overflow-hidden focus-within:ring-2 focus-within:ring-amber-400">
+                          <span className="flex items-center px-3 bg-gray-50 border-r border-gray-200 text-gray-500 text-xs font-medium select-none whitespace-nowrap">
+                            {offer.currency}
+                          </span>
+                          <input
+                            type="number"
+                            min="1"
+                            value={counterAmount}
+                            onChange={(e) => setCounterAmount(e.target.value)}
+                            placeholder="Your counter amount"
+                            className="flex-1 px-3 py-2 outline-none text-sm font-semibold bg-transparent"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          value={counterMessage}
+                          onChange={(e) => setCounterMessage(e.target.value)}
+                          placeholder="Optional message to buyer"
+                          maxLength={300}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-400"
+                        />
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() =>
+                              respondToOffer(offer.id, "counter")
+                            }
+                            disabled={sellerRespondingOffer === offer.id}
+                            className="flex-1 py-2 text-xs font-semibold bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50"
+                          >
+                            Send Counter
+                          </button>
+                          <button
+                            onClick={() => setCounteringOfferId(null)}
+                            className="px-4 py-2 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

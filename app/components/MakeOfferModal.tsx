@@ -164,8 +164,8 @@ export default function MakeOfferModal({
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                   Your Offer ({currency})
                 </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">
+                <div className="flex rounded-xl border border-gray-300 overflow-hidden focus-within:ring-2 focus-within:ring-amber-500">
+                  <span className="flex items-center px-3 bg-gray-50 border-r border-gray-200 text-gray-500 font-medium text-sm select-none whitespace-nowrap">
                     {currencySymbol}
                   </span>
                   <input
@@ -178,7 +178,7 @@ export default function MakeOfferModal({
                       setError("");
                     }}
                     placeholder={`e.g. ${Math.round(askingPrice * 0.85).toLocaleString()}`}
-                    className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-lg font-semibold"
+                    className="flex-1 px-3 py-3 outline-none text-lg font-semibold bg-transparent"
                     required
                   />
                 </div>

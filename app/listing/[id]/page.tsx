@@ -352,11 +352,17 @@ export default function ListingDetailPage() {
           setSelectedImage(getImageUrl(response.data.images[0].imageurl) || "");
         }
 
-        // Record this view for personalization
+        // Record this view for personalisation (auth-required — skip for guests)
         try {
-          await Axios.post(`${API_BASE}/api/preferences/view`, {
-            listingId: parseInt(listingId as string),
-          });
+          const authToken =
+            typeof localStorage !== "undefined"
+              ? localStorage.getItem("authToken")
+              : null;
+          if (authToken) {
+            await Axios.post(`${API_BASE}/api/preferences/view`, {
+              listingId: parseInt(listingId as string),
+            });
+          }
         } catch (viewErr) {
           console.log("Could not record view:", viewErr);
         }
@@ -379,10 +385,7 @@ export default function ListingDetailPage() {
         );
         setRelatedListings(relatedResponse.data);
       } catch (error: unknown) {
-        if (Axios.isAxiosError(error) && error.response?.status === 401) {
-          window.location.href =
-            process.env.NEXT_PUBLIC_LOGIN_ENDPOINT || "/login";
-        }
+        // Non-fatal — listing may not exist or server error; stay on page
         console.error("Error fetching listing:", error);
       } finally {
         setLoading(false);

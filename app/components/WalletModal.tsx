@@ -410,7 +410,8 @@ export default function WalletModal({
                           </span>
                         </div>
                         <p className="text-[11px] text-amber-700 pt-0.5">
-                          * Standard MoMo operator charges (MTN / Orange) may also apply on top of this amount.
+                          * Standard MoMo operator charges (MTN / Orange) may
+                          also apply on top of this amount.
                         </p>
                       </div>
                     )}
@@ -430,6 +431,27 @@ export default function WalletModal({
                     <p className="text-xs text-gray-400 mt-1">
                       MTN or Orange Cameroon number. Country code 237 is added
                       automatically.
+                    </p>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex gap-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <p className="text-xs text-blue-700 leading-relaxed">
+                      <strong>Important:</strong> Please ensure this MoMo
+                      number belongs to you. In the event of a dispute or
+                      required refund on any purchase made using your wallet
+                      balance, funds will be returned to this number.
                     </p>
                   </div>
 

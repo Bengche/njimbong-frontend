@@ -5,6 +5,7 @@ import Axios from "axios";
 import Image from "next/image";
 import SellModal from "../components/SellModal";
 import type { EditListingData } from "../components/SellModal";
+import ListingShareCardModal from "../components/ListingShareCardModal";
 import SearchFilters from "../components/SearchFilters";
 import LoadingArt from "../components/LoadingArt";
 import ReportModal from "../components/ReportModal";
@@ -232,6 +233,11 @@ export default function Dashboard() {
   const [editingListing, setEditingListing] = useState<EditListingData | null>(
     null,
   );
+  const [shareCardListing, setShareCardListing] = useState<{
+    id: number; title: string; price: string | number; currency: string;
+    condition?: string; city?: string; country?: string; category?: string;
+    imageUrl?: string;
+  } | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [deletingListing, setDeletingListing] = useState<number | null>(null);
   const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
@@ -1453,6 +1459,31 @@ export default function Dashboard() {
                           </svg>
                           Edit
                         </button>
+                        {/* Share Story button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const img = listing.images?.find((i) => i.is_main) ?? listing.images?.[0];
+                            setShareCardListing({
+                              id: listing.id,
+                              title: listing.title,
+                              price: listing.price,
+                              currency: listing.currency,
+                              condition: listing.condition,
+                              city: listing.city,
+                              country: listing.country,
+                              category: listing.category_name,
+                              imageUrl: img?.imageurl ?? undefined,
+                            });
+                          }}
+                          title="Share as WhatsApp Story"
+                          className="flex items-center justify-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition"
+                        >
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                          </svg>
+                          Share
+                        </button>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1722,7 +1753,12 @@ export default function Dashboard() {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
 
@@ -1731,15 +1767,41 @@ export default function Dashboard() {
               {myOffers
                 .filter((o) => o.status !== "withdrawn")
                 .map((offer) => {
-                  const statusConfig: Record<string, { label: string; classes: string }> = {
-                    pending:   { label: "Awaiting response", classes: "bg-gray-100 text-gray-600" },
-                    countered: { label: "Counter-offer received", classes: "bg-amber-100 text-amber-800" },
-                    accepted:  { label: "Accepted", classes: "bg-emerald-100 text-emerald-700" },
-                    declined:  { label: "Declined", classes: "bg-red-100 text-red-600" },
-                    expired:   { label: "Expired", classes: "bg-gray-100 text-gray-500" },
+                  const statusConfig: Record<
+                    string,
+                    { label: string; classes: string }
+                  > = {
+                    pending: {
+                      label: "Awaiting response",
+                      classes: "bg-gray-100 text-gray-600",
+                    },
+                    countered: {
+                      label: "Counter-offer received",
+                      classes: "bg-amber-100 text-amber-800",
+                    },
+                    accepted: {
+                      label: "Accepted",
+                      classes: "bg-emerald-100 text-emerald-700",
+                    },
+                    declined: {
+                      label: "Declined",
+                      classes: "bg-red-100 text-red-600",
+                    },
+                    expired: {
+                      label: "Expired",
+                      classes: "bg-gray-100 text-gray-500",
+                    },
                   };
-                  const st = statusConfig[offer.status] ?? { label: offer.status, classes: "bg-gray-100 text-gray-500" };
-                  const canWithdraw = ["pending", "countered", "declined", "expired"].includes(offer.status);
+                  const st = statusConfig[offer.status] ?? {
+                    label: offer.status,
+                    classes: "bg-gray-100 text-gray-500",
+                  };
+                  const canWithdraw = [
+                    "pending",
+                    "countered",
+                    "declined",
+                    "expired",
+                  ].includes(offer.status);
 
                   return (
                     <div
@@ -1748,10 +1810,11 @@ export default function Dashboard() {
                         offer.status === "countered"
                           ? "border-amber-200 bg-amber-50"
                           : offer.status === "accepted"
-                          ? "border-emerald-200 bg-emerald-50"
-                          : offer.status === "declined" || offer.status === "expired"
-                          ? "border-gray-100 bg-gray-50 opacity-80"
-                          : "border-gray-100 bg-gray-50"
+                            ? "border-emerald-200 bg-emerald-50"
+                            : offer.status === "declined" ||
+                                offer.status === "expired"
+                              ? "border-gray-100 bg-gray-50 opacity-80"
+                              : "border-gray-100 bg-gray-50"
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -1769,49 +1832,82 @@ export default function Dashboard() {
                           <div className="flex items-start justify-between gap-2 flex-wrap">
                             <p
                               className="font-semibold text-gray-900 text-sm truncate cursor-pointer hover:text-emerald-700 transition-colors"
-                              onClick={() => router.push(`/listing/${offer.listing_id}`)}
+                              onClick={() =>
+                                router.push(`/listing/${offer.listing_id}`)
+                              }
                             >
                               {offer.listing_title}
                             </p>
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium flex-shrink-0 ${st.classes}`}>
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium flex-shrink-0 ${st.classes}`}
+                            >
                               {st.label}
                             </span>
                           </div>
 
                           <p className="text-sm text-gray-700 font-semibold mt-1">
-                            {Number(offer.amount).toLocaleString()} {offer.currency}
+                            {Number(offer.amount).toLocaleString()}{" "}
+                            {offer.currency}
                             {offer.message && (
-                              <span className="text-xs font-normal text-gray-400 ml-2">— "{offer.message}"</span>
+                              <span className="text-xs font-normal text-gray-400 ml-2">
+                                — "{offer.message}"
+                              </span>
                             )}
                           </p>
 
-                          {offer.status === "countered" && offer.counter_amount && (
-                            <div className="mt-1.5 flex items-center gap-1.5 text-xs text-amber-700">
-                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-                              </svg>
-                              <span className="font-semibold">
-                                Counter: {Number(offer.counter_amount).toLocaleString()} {offer.currency}
-                              </span>
-                              {offer.counter_message && (
-                                <span className="font-normal text-amber-600">— "{offer.counter_message}"</span>
-                              )}
-                            </div>
-                          )}
+                          {offer.status === "countered" &&
+                            offer.counter_amount && (
+                              <div className="mt-1.5 flex items-center gap-1.5 text-xs text-amber-700">
+                                <svg
+                                  className="w-3.5 h-3.5 flex-shrink-0"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                                  />
+                                </svg>
+                                <span className="font-semibold">
+                                  Counter:{" "}
+                                  {Number(
+                                    offer.counter_amount,
+                                  ).toLocaleString()}{" "}
+                                  {offer.currency}
+                                </span>
+                                {offer.counter_message && (
+                                  <span className="font-normal text-amber-600">
+                                    — "{offer.counter_message}"
+                                  </span>
+                                )}
+                              </div>
+                            )}
 
                           {/* Action row */}
                           <div className="flex items-center gap-2 mt-2.5 flex-wrap">
                             {offer.status === "countered" && (
                               <>
                                 <button
-                                  onClick={() => respondToCounter(offer.id, "accept_counter")}
+                                  onClick={() =>
+                                    respondToCounter(offer.id, "accept_counter")
+                                  }
                                   disabled={respondingOffer === offer.id}
                                   className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition"
                                 >
-                                  {respondingOffer === offer.id ? "…" : "Accept counter"}
+                                  {respondingOffer === offer.id
+                                    ? "…"
+                                    : "Accept counter"}
                                 </button>
                                 <button
-                                  onClick={() => respondToCounter(offer.id, "decline_counter")}
+                                  onClick={() =>
+                                    respondToCounter(
+                                      offer.id,
+                                      "decline_counter",
+                                    )
+                                  }
                                   disabled={respondingOffer === offer.id}
                                   className="px-3 py-1.5 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition"
                                 >
@@ -1822,7 +1918,9 @@ export default function Dashboard() {
 
                             {offer.status === "accepted" && (
                               <button
-                                onClick={() => router.push(`/listing/${offer.listing_id}`)}
+                                onClick={() =>
+                                  router.push(`/listing/${offer.listing_id}`)
+                                }
                                 className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition"
                               >
                                 Buy now
@@ -1831,22 +1929,37 @@ export default function Dashboard() {
 
                             {canWithdraw && (
                               <button
-                                onClick={() => withdrawOffer(offer.id, offer.status)}
+                                onClick={() =>
+                                  withdrawOffer(offer.id, offer.status)
+                                }
                                 className={`inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition ${
-                                  offer.status === "pending" || offer.status === "countered"
+                                  offer.status === "pending" ||
+                                  offer.status === "countered"
                                     ? "border-red-200 text-red-500 hover:bg-red-50"
                                     : "border-gray-200 text-gray-400 hover:bg-gray-100"
                                 }`}
                                 title={
-                                  offer.status === "pending" || offer.status === "countered"
+                                  offer.status === "pending" ||
+                                  offer.status === "countered"
                                     ? "Withdraw offer"
                                     : "Remove from list"
                                 }
                               >
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
+                                <svg
+                                  className="w-3.5 h-3.5"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
                                 </svg>
-                                {offer.status === "pending" || offer.status === "countered"
+                                {offer.status === "pending" ||
+                                offer.status === "countered"
                                   ? "Withdraw"
                                   : "Dismiss"}
                               </button>
@@ -2424,6 +2537,15 @@ export default function Dashboard() {
 
       {/* Browser Notification Permission Banner */}
       <NotificationPermissionBanner />
+
+      {/* Listing Share Card Modal */}
+      {shareCardListing && (
+        <ListingShareCardModal
+          isOpen={true}
+          onClose={() => setShareCardListing(null)}
+          listing={shareCardListing}
+        />
+      )}
     </main>
   );
 }

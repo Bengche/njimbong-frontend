@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+import ListingShareCardModal from "./ListingShareCardModal";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -58,6 +59,11 @@ export default function SellModal({
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [duplicateWarning, setDuplicateWarning] = useState<string[]>([]);
+  const [shareCardListing, setShareCardListing] = useState<{
+    id: number; title: string; price: string | number; currency: string;
+    condition?: string; city?: string; country?: string; category?: string;
+    imageUrl?: string;
+  } | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -220,15 +226,33 @@ export default function SellModal({
       } else {
         // ── Create mode: POST new listing ────────────────────────────────────
         if (isDraft) formDataToSend.append("is_draft", "true");
-        await Axios.post(`${API_BASE}/api/listings`, formDataToSend, {
+        const createRes = await Axios.post(`${API_BASE}/api/listings`, formDataToSend, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-      }
 
-      setSubmitSuccess(true);
+        // Build share card data from the response before resetting form
+        const created = createRes.data?.listing;
+        const firstImg = createRes.data?.images?.[0]?.imageurl
+          ?? createRes.data?.images?.[0]?.url
+          ?? undefined;
+        const catName = categories.find(
+          (c) => c.id === Number(created?.category_id)
+        )?.name;
+        if (created?.id) {
+          setShareCardListing({
+            id: created.id,
+            title: formData.title,
+            price: formData.price,
+            currency: formData.currency,
+            condition: formData.condition,
+            city: formData.city,
+            country: formData.country,
+            category: catName,
+            imageUrl: firstImg,
+          });
+        }
 
-      if (!editListing) {
-        // Reset form only on create
+        // Reset form state
         setFormData({
           title: "",
           description: "",
@@ -249,7 +273,15 @@ export default function SellModal({
         setImages([]);
         setImagePreviews([]);
         setDuplicateWarning([]);
+
+        if (onSuccess) onSuccess();
+
+        // Close the SellModal immediately — the share card modal takes over
+        onClose();
+        return; // skip the edit-mode success path below
       }
+
+      setSubmitSuccess(true);
 
       if (onSuccess) onSuccess();
 
@@ -280,6 +312,17 @@ export default function SellModal({
       setIsSubmitting(false);
     }
   };
+
+  // Share card modal is shown AFTER SellModal closes (on new listing creation)
+  if (shareCardListing) {
+    return (
+      <ListingShareCardModal
+        isOpen={true}
+        onClose={() => setShareCardListing(null)}
+        listing={shareCardListing}
+      />
+    );
+  }
 
   if (!isOpen) return null;
 

@@ -488,7 +488,9 @@ export default function RequestsPage() {
   }
 
   function handlePostSuccess() {
-    setSuccessMessage("Your request has been submitted and is pending admin review. It will appear once approved.");
+    setSuccessMessage(
+      "Your request has been submitted and is pending admin review. It will appear once approved.",
+    );
     setPage(1);
     fetchRequests();
     if (activeTab === "mine") fetchMyRequests();

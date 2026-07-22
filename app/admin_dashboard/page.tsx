@@ -41,12 +41,12 @@ export default function AdminDashboard() {
           return;
         }
         router.push(
-          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin",
         );
       } catch (error: any) {
         if (error.response?.status === 401 || error.response?.status === 403) {
           router.push(
-            process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+            process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin",
           );
           return;
         }
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
     } catch (error: any) {
       if (error.response?.status === 401) {
         router.push(
-          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin",
         );
       }
       console.error("Error fetching categories:", error);
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
   }, [fetchCategories]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
         // Update existing category
         await Axios.put(
           `${API_BASE}/api/categories/${editingCategory.id}`,
-          submitData
+          submitData,
         );
 
         alert("Category updated successfully!");
@@ -152,7 +152,7 @@ export default function AdminDashboard() {
     } catch (error: any) {
       if (error.response?.status === 401) {
         router.push(
-          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin",
         );
       }
       console.error("Error saving category:", error);
@@ -189,7 +189,7 @@ export default function AdminDashboard() {
     } catch (error: any) {
       if (error.response?.status === 401) {
         router.push(
-          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"
+          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin",
         );
       }
       // console.error("Error deleting category:", error);
@@ -427,8 +427,12 @@ export default function AdminDashboard() {
               </svg>
             </div>
             <div>
-              <h3 className="font-bold text-gray-800 text-lg">Buyer Requests</h3>
-              <p className="text-sm text-gray-600">Approve or reject requests</p>
+              <h3 className="font-bold text-gray-800 text-lg">
+                Buyer Requests
+              </h3>
+              <p className="text-sm text-gray-600">
+                Approve or reject requests
+              </p>
             </div>
           </div>
           <p className="text-2xl font-bold text-gray-800 mb-3">Review</p>

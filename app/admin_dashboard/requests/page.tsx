@@ -29,14 +29,19 @@ export default function AdminRequestsPage() {
   const [requests, setRequests] = useState<PendingRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [actioningId, setActioningId] = useState<number | null>(null);
-  const [toast, setToast] = useState<{ msg: string; type: "ok" | "err" } | null>(null);
+  const [toast, setToast] = useState<{
+    msg: string;
+    type: "ok" | "err";
+  } | null>(null);
 
   // Auth check
   useEffect(() => {
     Axios.get(`${API_BASE}/api/admin/reports/stats`)
       .then(() => setAdminChecked(true))
       .catch(() =>
-        router.push(process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin"),
+        router.push(
+          process.env.NEXT_PUBLIC_ADMIN_LOGIN_ENDPOINT || "/auth/admin",
+        ),
       );
   }, [router]);
 
@@ -66,7 +71,9 @@ export default function AdminRequestsPage() {
     try {
       await Axios.put(`${API_BASE}/api/admin/requests/${id}/${action}`);
       showToast(
-        action === "approve" ? "Request approved and now live." : "Request rejected.",
+        action === "approve"
+          ? "Request approved and now live."
+          : "Request rejected.",
         "ok",
       );
       setRequests((prev) => prev.filter((r) => r.id !== id));
@@ -87,7 +94,11 @@ export default function AdminRequestsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <PageHeader title="Request Moderation" showBack backHref="/admin_dashboard" />
+      <PageHeader
+        title="Request Moderation"
+        showBack
+        backHref="/admin_dashboard"
+      />
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Toast */}
@@ -103,7 +114,9 @@ export default function AdminRequestsPage() {
 
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Pending Buyer Requests</h2>
+            <h2 className="text-xl font-bold text-gray-900">
+              Pending Buyer Requests
+            </h2>
             <p className="text-sm text-gray-500 mt-0.5">
               Review and approve or reject buyer requests before they go live.
             </p>
@@ -138,7 +151,9 @@ export default function AdminRequestsPage() {
               </svg>
             </div>
             <p className="text-gray-700 font-semibold text-lg">All clear</p>
-            <p className="text-gray-400 text-sm mt-1">No pending requests to review.</p>
+            <p className="text-gray-400 text-sm mt-1">
+              No pending requests to review.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -171,11 +186,15 @@ export default function AdminRequestsPage() {
                       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2.5">
                         {req.category_name && (
                           <span className="text-xs text-gray-400">
-                            Category: <span className="text-gray-600">{req.category_name}</span>
+                            Category:{" "}
+                            <span className="text-gray-600">
+                              {req.category_name}
+                            </span>
                           </span>
                         )}
                         <span className="text-xs text-gray-400">
-                          Country: <span className="text-gray-600">{req.country}</span>
+                          Country:{" "}
+                          <span className="text-gray-600">{req.country}</span>
                         </span>
                         <span className="text-xs text-gray-400">
                           Posted:{" "}
@@ -203,7 +222,9 @@ export default function AdminRequestsPage() {
                   <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between gap-3 flex-wrap">
                     <div className="text-sm text-gray-500">
                       Buyer:{" "}
-                      <span className="font-semibold text-gray-700">{req.username}</span>
+                      <span className="font-semibold text-gray-700">
+                        {req.username}
+                      </span>
                       {" · "}
                       <span className="text-gray-400">{req.user_email}</span>
                     </div>

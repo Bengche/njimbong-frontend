@@ -943,6 +943,23 @@ export default function Dashboard() {
     }
   };
 
+  // Buyer withdraws / dismisses an offer
+  const withdrawOffer = async (offerId: number, status: string) => {
+    const isActive = status === "pending" || status === "countered";
+    const confirmed = window.confirm(
+      isActive
+        ? "Withdraw this offer? The seller will no longer be able to respond."
+        : "Remove this offer from your list?",
+    );
+    if (!confirmed) return;
+    try {
+      await Axios.delete(`${API_BASE}/api/offers/${offerId}`);
+      setMyOffers((prev) => prev.filter((o) => o.id !== offerId));
+    } catch {
+      alert("Could not withdraw the offer. Please try again.");
+    }
+  };
+
   if (!authChecked) {
     return (
       <LoadingArt
@@ -1685,13 +1702,13 @@ export default function Dashboard() {
       )}
 
       {/* My Offers — counter-offer acceptance flow */}
-      {myOffers.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8">
+      {myOffers.filter((o) => o.status !== "withdrawn").length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 mb-8">
           <button
             onClick={() => setShowMyOffers((prev) => !prev)}
             className="w-full flex items-center justify-between gap-2"
           >
-            <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+            <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
               My Offers
               {myOffers.filter((o) => o.status === "countered").length > 0 && (
                 <span className="inline-flex items-center justify-center w-5 h-5 bg-amber-500 text-white rounded-full text-xs font-bold">
@@ -1705,107 +1722,141 @@ export default function Dashboard() {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
+
           {showMyOffers && (
             <div className="mt-4 space-y-3">
-              {myOffers.map((offer) => (
-                <div
-                  key={offer.id}
-                  className={`flex items-start gap-3 p-3 rounded-xl border ${
-                    offer.status === "countered"
-                      ? "border-amber-200 bg-amber-50"
-                      : "border-gray-100 bg-gray-50"
-                  }`}
-                >
-                  {offer.listing_image && (
-                    <img
-                      src={offer.listing_image}
-                      alt=""
-                      className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-800 truncate text-sm">
-                      {offer.listing_title}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      Your offer:{" "}
-                      <span className="font-medium">
-                        {Number(offer.amount).toLocaleString()} {offer.currency}
-                      </span>
-                    </p>
-                    {offer.status === "countered" && offer.counter_amount && (
-                      <p className="text-xs text-amber-700 font-semibold mt-0.5">
-                        Counter-offer:{" "}
-                        {Number(offer.counter_amount).toLocaleString()}{" "}
-                        {offer.currency}
-                        {offer.counter_message && (
-                          <span className="font-normal">
-                            {" "}
-                            — "{offer.counter_message}"
-                          </span>
-                        )}
-                      </p>
-                    )}
-                    <span
-                      className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-semibold ${
-                        offer.status === "pending"
-                          ? "bg-gray-200 text-gray-600"
-                          : offer.status === "countered"
-                            ? "bg-amber-200 text-amber-800"
-                            : offer.status === "accepted"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : offer.status === "declined"
-                                ? "bg-red-100 text-red-700"
-                                : "bg-gray-200 text-gray-600"
+              {myOffers
+                .filter((o) => o.status !== "withdrawn")
+                .map((offer) => {
+                  const statusConfig: Record<string, { label: string; classes: string }> = {
+                    pending:   { label: "Awaiting response", classes: "bg-gray-100 text-gray-600" },
+                    countered: { label: "Counter-offer received", classes: "bg-amber-100 text-amber-800" },
+                    accepted:  { label: "Accepted", classes: "bg-emerald-100 text-emerald-700" },
+                    declined:  { label: "Declined", classes: "bg-red-100 text-red-600" },
+                    expired:   { label: "Expired", classes: "bg-gray-100 text-gray-500" },
+                  };
+                  const st = statusConfig[offer.status] ?? { label: offer.status, classes: "bg-gray-100 text-gray-500" };
+                  const canWithdraw = ["pending", "countered", "declined", "expired"].includes(offer.status);
+
+                  return (
+                    <div
+                      key={offer.id}
+                      className={`rounded-xl border p-3 sm:p-4 ${
+                        offer.status === "countered"
+                          ? "border-amber-200 bg-amber-50"
+                          : offer.status === "accepted"
+                          ? "border-emerald-200 bg-emerald-50"
+                          : offer.status === "declined" || offer.status === "expired"
+                          ? "border-gray-100 bg-gray-50 opacity-80"
+                          : "border-gray-100 bg-gray-50"
                       }`}
                     >
-                      {offer.status === "countered"
-                        ? "Counter-offer received"
-                        : offer.status}
-                    </span>
-                  </div>
-                  {offer.status === "countered" && (
-                    <div className="flex flex-col gap-1.5 flex-shrink-0">
-                      <button
-                        onClick={() =>
-                          respondToCounter(offer.id, "accept_counter")
-                        }
-                        disabled={respondingOffer === offer.id}
-                        className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={() =>
-                          respondToCounter(offer.id, "decline_counter")
-                        }
-                        disabled={respondingOffer === offer.id}
-                        className="px-3 py-1.5 text-xs font-semibold border border-red-300 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50"
-                      >
-                        Decline
-                      </button>
+                      <div className="flex items-start gap-3">
+                        {/* Listing image */}
+                        {offer.listing_image && (
+                          <img
+                            src={offer.listing_image}
+                            alt=""
+                            className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0"
+                          />
+                        )}
+
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2 flex-wrap">
+                            <p
+                              className="font-semibold text-gray-900 text-sm truncate cursor-pointer hover:text-emerald-700 transition-colors"
+                              onClick={() => router.push(`/listing/${offer.listing_id}`)}
+                            >
+                              {offer.listing_title}
+                            </p>
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium flex-shrink-0 ${st.classes}`}>
+                              {st.label}
+                            </span>
+                          </div>
+
+                          <p className="text-sm text-gray-700 font-semibold mt-1">
+                            {Number(offer.amount).toLocaleString()} {offer.currency}
+                            {offer.message && (
+                              <span className="text-xs font-normal text-gray-400 ml-2">— "{offer.message}"</span>
+                            )}
+                          </p>
+
+                          {offer.status === "countered" && offer.counter_amount && (
+                            <div className="mt-1.5 flex items-center gap-1.5 text-xs text-amber-700">
+                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                              </svg>
+                              <span className="font-semibold">
+                                Counter: {Number(offer.counter_amount).toLocaleString()} {offer.currency}
+                              </span>
+                              {offer.counter_message && (
+                                <span className="font-normal text-amber-600">— "{offer.counter_message}"</span>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Action row */}
+                          <div className="flex items-center gap-2 mt-2.5 flex-wrap">
+                            {offer.status === "countered" && (
+                              <>
+                                <button
+                                  onClick={() => respondToCounter(offer.id, "accept_counter")}
+                                  disabled={respondingOffer === offer.id}
+                                  className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition"
+                                >
+                                  {respondingOffer === offer.id ? "…" : "Accept counter"}
+                                </button>
+                                <button
+                                  onClick={() => respondToCounter(offer.id, "decline_counter")}
+                                  disabled={respondingOffer === offer.id}
+                                  className="px-3 py-1.5 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition"
+                                >
+                                  Decline
+                                </button>
+                              </>
+                            )}
+
+                            {offer.status === "accepted" && (
+                              <button
+                                onClick={() => router.push(`/listing/${offer.listing_id}`)}
+                                className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition"
+                              >
+                                Buy now
+                              </button>
+                            )}
+
+                            {canWithdraw && (
+                              <button
+                                onClick={() => withdrawOffer(offer.id, offer.status)}
+                                className={`inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition ${
+                                  offer.status === "pending" || offer.status === "countered"
+                                    ? "border-red-200 text-red-500 hover:bg-red-50"
+                                    : "border-gray-200 text-gray-400 hover:bg-gray-100"
+                                }`}
+                                title={
+                                  offer.status === "pending" || offer.status === "countered"
+                                    ? "Withdraw offer"
+                                    : "Remove from list"
+                                }
+                              >
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                                {offer.status === "pending" || offer.status === "countered"
+                                  ? "Withdraw"
+                                  : "Dismiss"}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  {offer.status === "accepted" && (
-                    <button
-                      onClick={() =>
-                        router.push(`/listing/${offer.listing_id}`)
-                      }
-                      className="px-3 py-1.5 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 flex-shrink-0"
-                    >
-                      Buy Now
-                    </button>
-                  )}
-                </div>
-              ))}
+                  );
+                })}
             </div>
           )}
         </div>

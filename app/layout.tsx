@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NotificationListener from "./components/NotificationListener";
 import Navbar from "./components/Navbar";
+import WalletBar from "./components/WalletBar";
 import Footer from "./components/Footer";
 import AppShellWrapper from "./components/AppShellWrapper";
 import ClientPolyfills from "./components/ClientPolyfills";
@@ -102,6 +103,7 @@ export default function RootLayout({
         <AuthClientInit />
         <NotificationListener />
         <Navbar />
+        <WalletBar />
         <AppShellWrapper>{children}</AppShellWrapper>
         <MobileBottomNav />
         <Footer />

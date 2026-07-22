@@ -18,6 +18,7 @@ interface Props {
 }
 
 type CheckoutStep = "form" | "pending" | "success" | "failed";
+type PaymentMethod = "momo" | "wallet";
 
 // Poll intervals in ms — progressively longer to respect rate limits
 const POLL_DELAYS = [3000, 5000, 8000, 10000, 15000, 30000];
@@ -32,11 +33,57 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const pollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Wallet payment state
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("momo");
+  const [walletBalance, setWalletBalance] = useState<number | null>(null);
+  const [walletLoading, setWalletLoading] = useState(false);
+  const [walletError, setWalletError] = useState("");
+
   useEffect(() => {
     return () => {
       if (pollingTimeout.current) clearTimeout(pollingTimeout.current);
     };
   }, []);
+
+  // Fetch wallet balance when wallet tab is selected
+  useEffect(() => {
+    if (paymentMethod !== "wallet" || walletBalance !== null) return;
+    fetch("/api/wallet/balance", { credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && typeof d.balance === "number") setWalletBalance(d.balance);
+      })
+      .catch(() => setWalletBalance(0));
+  }, [paymentMethod, walletBalance]);
+
+  const handleWalletPay = async () => {
+    setWalletError("");
+    setWalletLoading(true);
+    try {
+      const res = await Axios.post(`${API_BASE}/api/payments/initiate-wallet`, {
+        listing_id: listing.id,
+      });
+      if (res.data.status === "paid_in_escrow") {
+        setStep("success");
+      } else {
+        setWalletError("Payment did not complete. Please try again.");
+      }
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { status?: number; data?: { error?: string } } };
+      if (axiosErr.response?.status === 409) {
+        setWalletError(
+          axiosErr.response.data?.error ||
+            "Insufficient wallet balance. Please top up and try again.",
+        );
+      } else {
+        setWalletError(
+          axiosErr.response?.data?.error ?? "Wallet payment failed. Please try again.",
+        );
+      }
+    } finally {
+      setWalletLoading(false);
+    }
+  };
 
   function startPolling(reference: string) {
     let index = 0;
@@ -158,8 +205,37 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
 
         {/* Step: form */}
         {step === "form" && (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+          <div className="space-y-4">
+            {/* Payment method selector */}
+            <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => { setPaymentMethod("momo"); setWalletError(""); }}
+                className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
+                  paymentMethod === "momo"
+                    ? "bg-emerald-600 text-white"
+                    : "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                MoMo Direct
+              </button>
+              <button
+                type="button"
+                onClick={() => { setPaymentMethod("wallet"); setError(""); }}
+                className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
+                  paymentMethod === "wallet"
+                    ? "bg-emerald-600 text-white"
+                    : "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
+              >
+                Wallet Balance
+              </button>
+            </div>
+
+            {/* MoMo form */}
+            {paymentMethod === "momo" && (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Your email{" "}
                 <span className="text-gray-400 text-xs">
@@ -216,16 +292,82 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               only released to the seller after you confirm receipt of the item.
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold py-3 rounded-xl transition-colors"
-            >
-              {loading
-                ? "Initiating payment..."
-                : `Pay ${listing.price.toLocaleString()} ${listing.currency} via MoMo`}
-            </button>
-          </form>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold py-3 rounded-xl transition-colors"
+                >
+                  {loading
+                    ? "Initiating payment..."
+                    : `Pay ${listing.price.toLocaleString()} ${listing.currency} via MoMo`}
+                </button>
+              </form>
+            )}
+
+            {/* Wallet payment */}
+            {paymentMethod === "wallet" && (
+              <div className="space-y-4">
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl px-4 py-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Wallet balance</span>
+                    <span className="font-bold text-emerald-700 dark:text-emerald-400">
+                      {walletBalance === null
+                        ? "Loading…"
+                        : `${walletBalance.toLocaleString("fr-CM")} XAF`}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-gray-600 dark:text-gray-400">Order total</span>
+                    <span className="font-bold text-gray-900 dark:text-white">
+                      {listing.price.toLocaleString()} {listing.currency}
+                    </span>
+                  </div>
+                </div>
+
+                {walletBalance !== null && walletBalance < listing.price && (
+                  <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2 text-sm text-amber-800 dark:text-amber-300">
+                    Insufficient balance. You need{" "}
+                    <strong>
+                      {(listing.price - walletBalance).toLocaleString("fr-CM")} XAF
+                    </strong>{" "}
+                    more.{" "}
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="underline font-semibold"
+                    >
+                      Top up wallet
+                    </button>
+                  </div>
+                )}
+
+                {walletError && (
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                    <p className="text-sm text-red-700 dark:text-red-400">{walletError}</p>
+                  </div>
+                )}
+
+                <div className="text-xs text-gray-500 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
+                  Funds are deducted from your wallet instantly and held in escrow. No MoMo prompt will be sent.
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleWalletPay}
+                  disabled={
+                    walletLoading ||
+                    walletBalance === null ||
+                    walletBalance < listing.price
+                  }
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold py-3 rounded-xl transition-colors"
+                >
+                  {walletLoading
+                    ? "Processing…"
+                    : `Pay ${listing.price.toLocaleString()} ${listing.currency} from Wallet`}
+                </button>
+              </div>
+            )}
+          </div>
         )}
 
         {/* Step: pending MoMo approval */}

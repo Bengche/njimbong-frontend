@@ -124,7 +124,10 @@ function AudioBubble({
         preload="metadata"
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
-        onEnded={() => { setPlaying(false); setCurrent(0); }}
+        onEnded={() => {
+          setPlaying(false);
+          setCurrent(0);
+        }}
         onTimeUpdate={() => setCurrent(audioRef.current?.currentTime ?? 0)}
         onLoadedMetadata={() => {
           const d = audioRef.current?.duration;
@@ -164,8 +167,12 @@ function AudioBubble({
                 key={i}
                 className={`w-1 rounded-full transition-colors ${
                   filled
-                    ? isMine ? "bg-white" : "bg-emerald-500"
-                    : isMine ? "bg-white/40" : "bg-gray-300"
+                    ? isMine
+                      ? "bg-white"
+                      : "bg-emerald-500"
+                    : isMine
+                      ? "bg-white/40"
+                      : "bg-gray-300"
                 }`}
                 style={{ height: `${h}%` }}
               />
@@ -235,7 +242,11 @@ function VideoBubble({
           className="w-full bg-black rounded-xl flex items-center justify-center"
           style={{ height: 120 }}
         >
-          <svg className="w-8 h-8 text-white/60" fill="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-8 h-8 text-white/60"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path d="M8 5v14l11-7z" />
           </svg>
         </div>
@@ -243,7 +254,11 @@ function VideoBubble({
       {/* Play overlay */}
       <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition rounded-xl">
         <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-          <svg className="w-6 h-6 text-gray-800 ml-1" fill="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-6 h-6 text-gray-800 ml-1"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path d="M8 5v14l11-7z" />
           </svg>
         </div>
@@ -804,14 +819,15 @@ export default function ChatWindow({
     setError("");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mimeType = [
-        "audio/webm;codecs=opus",
-        "audio/webm",
-        "audio/mp4",
-        "audio/ogg",
-      ].find((t) => MediaRecorder.isTypeSupported(t)) ?? "";
+      const mimeType =
+        ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"].find(
+          (t) => MediaRecorder.isTypeSupported(t),
+        ) ?? "";
 
-      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const recorder = new MediaRecorder(
+        stream,
+        mimeType ? { mimeType } : undefined,
+      );
       audioChunksRef.current = [];
 
       recorder.ondataavailable = (e) => {
@@ -847,7 +863,9 @@ export default function ChatWindow({
         });
       }, 1000);
     } catch {
-      setError("Microphone access denied. Please allow microphone access to send voice notes.");
+      setError(
+        "Microphone access denied. Please allow microphone access to send voice notes.",
+      );
     }
   };
 
@@ -968,7 +986,10 @@ export default function ChatWindow({
       const vid = document.createElement("video");
       vid.preload = "metadata";
       await new Promise<void>((resolve) => {
-        vid.onloadedmetadata = () => { duration = vid.duration; resolve(); };
+        vid.onloadedmetadata = () => {
+          duration = vid.duration;
+          resolve();
+        };
         vid.onerror = () => resolve();
         vid.src = url;
       });
@@ -1881,7 +1902,6 @@ export default function ChatWindow({
       {/* Input */}
       {!isBlocked && (
         <div className="flex-shrink-0 border-t border-gray-200 bg-white">
-
           {/* ── Recording indicator bar ── */}
           {isRecording && (
             <div className="flex items-center gap-3 px-4 py-2.5 bg-red-50 border-b border-red-100">
@@ -1891,8 +1911,7 @@ export default function ChatWindow({
                 <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500" />
               </span>
               <span className="text-sm font-semibold text-red-600 flex-1 tabular-nums">
-                Recording {fmtDuration(recordingTime)}
-                {" "}
+                Recording {fmtDuration(recordingTime)}{" "}
                 <span className="font-normal text-red-400">
                   / {fmtDuration(MAX_RECORDING_SECS)}
                 </span>
@@ -1911,7 +1930,11 @@ export default function ChatWindow({
                 onClick={stopRecording}
                 className="flex items-center gap-1.5 text-xs bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1.5 rounded-lg transition flex-shrink-0"
               >
-                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                 </svg>
                 Send
@@ -1919,10 +1942,7 @@ export default function ChatWindow({
             </div>
           )}
 
-          <form
-            onSubmit={sendMessage}
-            className="px-3 py-2.5 sm:px-4 sm:py-3"
-          >
+          <form onSubmit={sendMessage} className="px-3 py-2.5 sm:px-4 sm:py-3">
             {/* Hidden file inputs */}
             <input
               ref={fileInputRef}
@@ -1940,7 +1960,6 @@ export default function ChatWindow({
             />
 
             <div className="flex items-end gap-1.5 sm:gap-2">
-
               {/* ── Media attachment buttons (collapsed on recording) ── */}
               {!isRecording && (
                 <div className="flex items-center gap-0.5 flex-shrink-0">
@@ -1948,15 +1967,27 @@ export default function ChatWindow({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    disabled={uploadingImage || uploadingAudio || uploadingVideo}
+                    disabled={
+                      uploadingImage || uploadingAudio || uploadingVideo
+                    }
                     className="p-2 text-gray-400 hover:text-emerald-600 hover:bg-gray-100 rounded-full disabled:opacity-40 transition-colors"
                     title="Send image"
                   >
                     {uploadingImage ? (
                       <div className="w-5 h-5 animate-spin rounded-full border-2 border-gray-300 border-t-emerald-600" />
                     ) : (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
                     )}
                   </button>
@@ -1965,15 +1996,27 @@ export default function ChatWindow({
                   <button
                     type="button"
                     onClick={() => videoInputRef.current?.click()}
-                    disabled={uploadingImage || uploadingAudio || uploadingVideo}
+                    disabled={
+                      uploadingImage || uploadingAudio || uploadingVideo
+                    }
                     className="p-2 text-gray-400 hover:text-purple-600 hover:bg-gray-100 rounded-full disabled:opacity-40 transition-colors"
                     title={`Send video (max ${MAX_VIDEO_SECS}s / 50 MB)`}
                   >
                     {uploadingVideo ? (
                       <div className="w-5 h-5 animate-spin rounded-full border-2 border-gray-300 border-t-purple-600" />
                     ) : (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.069A1 1 0 0121 8.868v6.264a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 10l4.553-2.069A1 1 0 0121 8.868v6.264a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"
+                        />
                       </svg>
                     )}
                   </button>
@@ -2010,38 +2053,71 @@ export default function ChatWindow({
                   {sending ? (
                     <div className="w-5 h-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
                   ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                      />
                     </svg>
                   )}
                 </button>
               ) : (
                 <button
                   type="button"
-                  onPointerDown={(e) => { e.preventDefault(); if (!isRecording) startRecording(); }}
-                  onClick={() => { if (isRecording) stopRecording(); }}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    if (!isRecording) startRecording();
+                  }}
+                  onClick={() => {
+                    if (isRecording) stopRecording();
+                  }}
                   disabled={uploadingAudio || uploadingVideo || uploadingImage}
                   className={[
                     "p-2.5 rounded-full transition-all duration-150 flex-shrink-0",
                     isRecording
                       ? "bg-red-500 hover:bg-red-600 text-white scale-110"
                       : uploadingAudio
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-gray-100 hover:bg-emerald-50 text-gray-500 hover:text-emerald-600",
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : "bg-gray-100 hover:bg-emerald-50 text-gray-500 hover:text-emerald-600",
                   ].join(" ")}
-                  title={isRecording ? "Stop recording" : "Hold or click to record voice note"}
+                  title={
+                    isRecording
+                      ? "Stop recording"
+                      : "Hold or click to record voice note"
+                  }
                 >
                   {uploadingAudio ? (
                     <div className="w-5 h-5 animate-spin rounded-full border-2 border-gray-300 border-t-emerald-600" />
                   ) : isRecording ? (
                     /* Stop icon */
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <rect x="6" y="6" width="12" height="12" rx="2" />
                     </svg>
                   ) : (
                     /* Mic icon */
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                      />
                     </svg>
                   )}
                 </button>

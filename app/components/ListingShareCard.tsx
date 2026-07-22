@@ -43,7 +43,17 @@ export default function ListingShareCard({
   data: ShareCardData;
   cardRef?: React.RefObject<HTMLDivElement | null>;
 }) {
-  const { title, price, currency, condition, city, country, imageDataUrl, qrDataUrl, category } = data;
+  const {
+    title,
+    price,
+    currency,
+    condition,
+    city,
+    country,
+    imageDataUrl,
+    qrDataUrl,
+    category,
+  } = data;
   const location = [city, country].filter(Boolean).join(", ");
   const priceLabel = formatPrice(price, currency);
 
@@ -57,7 +67,8 @@ export default function ListingShareCard({
         overflow: "hidden",
         fontFamily:
           "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-        background: "linear-gradient(160deg, #071a0e 0%, #0b3320 45%, #052e16 100%)",
+        background:
+          "linear-gradient(160deg, #071a0e 0%, #0b3320 45%, #052e16 100%)",
         flexShrink: 0,
       }}
     >
@@ -488,7 +499,7 @@ export default function ListingShareCard({
                 />
                 {label}
               </div>
-            )
+            ),
           )}
         </div>
       </div>

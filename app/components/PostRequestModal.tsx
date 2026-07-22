@@ -15,7 +15,11 @@ interface Props {
   onSuccess: () => void;
 }
 
-export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) {
+export default function PostRequestModal({
+  isOpen,
+  onClose,
+  onSuccess,
+}: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -44,9 +48,14 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
   useEffect(() => {
     if (!isOpen) {
       setFormData({
-        title: "", description: "", category_id: "",
-        budget_min: "", budget_max: "", currency: "XAF",
-        country: "Cameroon", city: "",
+        title: "",
+        description: "",
+        category_id: "",
+        budget_min: "",
+        budget_max: "",
+        currency: "XAF",
+        country: "Cameroon",
+        city: "",
       });
       setImage(null);
       setImagePreview(null);
@@ -54,7 +63,11 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
     }
   }, [isOpen]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleChange(
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) {
     const { name, value } = e.target;
     setFormData((p) => ({ ...p, [name]: value }));
   }
@@ -79,16 +92,21 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
     if (submitting) return;
     setError("");
 
-    if (!formData.title.trim()) return setError("Please provide a title for your request.");
+    if (!formData.title.trim())
+      return setError("Please provide a title for your request.");
     if (formData.description.trim().length < 30) {
-      return setError("Please provide a detailed description (at least 30 characters). Include all specifications so sellers know exactly what you need.");
+      return setError(
+        "Please provide a detailed description (at least 30 characters). Include all specifications so sellers know exactly what you need.",
+      );
     }
     if (!formData.city.trim()) return setError("Please enter your city.");
 
     setSubmitting(true);
     try {
       const fd = new FormData();
-      Object.entries(formData).forEach(([k, v]) => { if (v) fd.append(k, v); });
+      Object.entries(formData).forEach(([k, v]) => {
+        if (v) fd.append(k, v);
+      });
       if (image) fd.append("image", image);
 
       await Axios.post(`${API_BASE}/api/requests`, fd, {
@@ -98,7 +116,10 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to post request. Please try again.");
+      setError(
+        err.response?.data?.error ||
+          "Failed to post request. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -110,7 +131,9 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
       style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(3px)" }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         className="bg-white w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl shadow-2xl max-h-[95vh] flex flex-col"
@@ -124,9 +147,22 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
               Describe what you&apos;re looking for — sellers will come to you
             </p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 transition text-gray-400 hover:text-gray-700 -mr-1">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl hover:bg-gray-100 transition text-gray-400 hover:text-gray-700 -mr-1"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -135,15 +171,18 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
         <div className="mx-5 mt-4 flex gap-3 bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex-shrink-0">
           <span className="text-xl flex-shrink-0">💡</span>
           <div className="text-sm text-amber-800 leading-relaxed">
-            <strong>Be as specific as possible.</strong> Sellers who find your request will
-            auto-create a listing using your exact description. Include brand, model, size, color,
-            acceptable condition, and any other details that matter to you.
+            <strong>Be as specific as possible.</strong> Sellers who find your
+            request will auto-create a listing using your exact description.
+            Include brand, model, size, color, acceptable condition, and any
+            other details that matter to you.
           </div>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
-
+        <form
+          onSubmit={handleSubmit}
+          className="overflow-y-auto flex-1 px-5 py-4 space-y-4"
+        >
           {/* Title */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -162,7 +201,8 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
           {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Full Description &amp; Specifications <span className="text-red-500">*</span>
+              Full Description &amp; Specifications{" "}
+              <span className="text-red-500">*</span>
             </label>
             <textarea
               name="description"
@@ -173,12 +213,16 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition resize-none leading-relaxed"
               maxLength={2000}
             />
-            <p className="text-xs text-gray-400 mt-1 text-right">{formData.description.length}/2000</p>
+            <p className="text-xs text-gray-400 mt-1 text-right">
+              {formData.description.length}/2000
+            </p>
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Category</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Category
+            </label>
             <select
               name="category_id"
               value={formData.category_id}
@@ -187,14 +231,18 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
             >
               <option value="">Select a category (optional)</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
               ))}
             </select>
           </div>
 
           {/* Budget */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Budget Range (optional)</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Budget Range (optional)
+            </label>
             <div className="flex gap-2 items-center">
               <select
                 name="currency"
@@ -202,7 +250,7 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
                 onChange={handleChange}
                 className="px-3 py-3 rounded-xl border border-gray-200 focus:border-amber-400 outline-none text-sm bg-white w-24 flex-shrink-0"
               >
-                {["XAF","USD","EUR","GBP","NGN","GHS"].map((c) => (
+                {["XAF", "USD", "EUR", "GBP", "NGN", "GHS"].map((c) => (
                   <option key={c}>{c}</option>
                 ))}
               </select>
@@ -231,7 +279,9 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
           {/* Location */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Country <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Country <span className="text-red-500">*</span>
+              </label>
               <input
                 name="country"
                 value={formData.country}
@@ -241,7 +291,9 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">City <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                City <span className="text-red-500">*</span>
+              </label>
               <input
                 name="city"
                 value={formData.city}
@@ -258,7 +310,8 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
               Attach an Image (optional)
             </label>
             <p className="text-xs text-gray-500 mb-2">
-              Upload a reference image to help sellers understand exactly what you want.
+              Upload a reference image to help sellers understand exactly what
+              you want.
             </p>
 
             {imagePreview ? (
@@ -278,10 +331,22 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
               </div>
             ) : (
               <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-amber-300 hover:bg-amber-50 transition">
-                <svg className="w-6 h-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <svg
+                  className="w-6 h-6 text-gray-400 mb-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
                 </svg>
-                <span className="text-xs text-gray-400">Click to upload (max 5MB)</span>
+                <span className="text-xs text-gray-400">
+                  Click to upload (max 5MB)
+                </span>
                 <input
                   ref={fileRef}
                   type="file"
@@ -296,8 +361,16 @@ export default function PostRequestModal({ isOpen, onClose, onSuccess }: Props) 
           {/* Error */}
           {error && (
             <div className="flex gap-2 bg-red-50 border border-red-200 rounded-xl p-3">
-              <svg className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              <svg
+                className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
               </svg>
               <p className="text-sm text-red-700">{error}</p>
             </div>

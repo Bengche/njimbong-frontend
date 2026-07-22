@@ -25,13 +25,15 @@ interface Props {
     city?: string;
     country?: string;
     category?: string;
-    imageUrl?: string;  // first image URL (Cloudinary)
+    imageUrl?: string; // first image URL (Cloudinary)
   };
 }
 
 const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ||
-  (typeof window !== "undefined" ? window.location.origin : "https://njimbong.com");
+  (typeof window !== "undefined"
+    ? window.location.origin
+    : "https://njimbong.com");
 
 // Convert a remote image URL to a base64 data URL to avoid CORS issues in html-to-image
 async function urlToDataUrl(src: string): Promise<string> {
@@ -45,7 +47,11 @@ async function urlToDataUrl(src: string): Promise<string> {
   });
 }
 
-export default function ListingShareCardModal({ isOpen, onClose, listing }: Props) {
+export default function ListingShareCardModal({
+  isOpen,
+  onClose,
+  listing,
+}: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardData, setCardData] = useState<ShareCardData | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -63,7 +69,7 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
     try {
       // 1. Generate QR code as base64 PNG
       const qrDataUrl = await QRCode.toDataURL(listingUrl, {
-        width: 216,          // renders at 3× (72px display → 216px logical = crisp at 3× pixelRatio)
+        width: 216, // renders at 3× (72px display → 216px logical = crisp at 3× pixelRatio)
         margin: 1,
         color: { dark: "#111827", light: "#ffffff" },
         errorCorrectionLevel: "M",
@@ -117,7 +123,7 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
     setIsDownloading(true);
     try {
       const blob = await toBlob(cardRef.current, {
-        pixelRatio: 3,         // 360×3 = 1080px  |  640×3 = 1920px
+        pixelRatio: 3, // 360×3 = 1080px  |  640×3 = 1920px
         cacheBust: true,
         backgroundColor: undefined, // card has its own background
       });
@@ -142,7 +148,9 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(4px)" }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         className="bg-white rounded-2xl shadow-2xl w-full overflow-hidden"
@@ -164,15 +172,24 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
             className="text-white/70 hover:text-white transition-colors ml-3 flex-shrink-0"
             aria-label="Close"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
         {/* ── Body ── */}
         <div className="p-5">
-
           {/* Card preview area */}
           <div
             className="rounded-xl overflow-hidden mb-5 relative"
@@ -189,7 +206,9 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
               /* Loading skeleton */
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
                 <div className="w-8 h-8 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
-                <span className="text-emerald-300 text-sm">Generating your share card…</span>
+                <span className="text-emerald-300 text-sm">
+                  Generating your share card…
+                </span>
               </div>
             )}
 
@@ -197,7 +216,8 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center">
                 <span className="text-4xl">⚠️</span>
                 <p className="text-white/60 text-sm">
-                  Could not generate the share card. You can still view your listing from the dashboard.
+                  Could not generate the share card. You can still view your
+                  listing from the dashboard.
                 </p>
               </div>
             )}
@@ -232,8 +252,8 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
                 !cardData || isDownloading || prepError
                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                   : downloadDone
-                  ? "bg-emerald-50 border-2 border-emerald-500 text-emerald-700"
-                  : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 active:scale-[0.98]",
+                    ? "bg-emerald-50 border-2 border-emerald-500 text-emerald-700"
+                    : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 active:scale-[0.98]",
               ].join(" ")}
             >
               {isDownloading ? (
@@ -243,15 +263,35 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
                 </>
               ) : downloadDone ? (
                 <>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   Saved to your device!
                 </>
               ) : (
                 <>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+                    />
                   </svg>
                   Download Story Image (1080×1920)
                 </>
@@ -263,7 +303,9 @@ export default function ListingShareCardModal({ isOpen, onClose, listing }: Prop
               <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-100 rounded-xl p-3.5">
                 <span className="text-lg flex-shrink-0">💡</span>
                 <p className="text-sm text-emerald-800 leading-relaxed">
-                  Open WhatsApp, tap <strong>Status → My status → Image</strong>, then select the downloaded image. Buyers can scan the QR code directly from your story!
+                  Open WhatsApp, tap <strong>Status → My status → Image</strong>
+                  , then select the downloaded image. Buyers can scan the QR
+                  code directly from your story!
                 </p>
               </div>
             )}

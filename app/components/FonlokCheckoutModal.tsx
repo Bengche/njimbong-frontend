@@ -299,8 +299,8 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               Your payment is safely held in escrow. The seller has been
               notified and will prepare your item. A confirmation email has been
               sent to you. Once you receive the item, go to your{" "}
-              <span className="text-emerald-600 font-medium">Email</span> to
-              confirm receipt and release funds to the seller.
+              <span className="text-emerald-600 font-medium">Orders Page</span>{" "}
+              to confirm receipt and release funds to the seller.
             </p>
             <button
               onClick={() => {

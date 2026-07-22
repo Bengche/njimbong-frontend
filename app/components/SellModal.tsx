@@ -60,8 +60,14 @@ export default function SellModal({
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [duplicateWarning, setDuplicateWarning] = useState<string[]>([]);
   const [shareCardListing, setShareCardListing] = useState<{
-    id: number; title: string; price: string | number; currency: string;
-    condition?: string; city?: string; country?: string; category?: string;
+    id: number;
+    title: string;
+    price: string | number;
+    currency: string;
+    condition?: string;
+    city?: string;
+    country?: string;
+    category?: string;
     imageUrl?: string;
   } | null>(null);
   const [formData, setFormData] = useState({
@@ -226,17 +232,22 @@ export default function SellModal({
       } else {
         // ── Create mode: POST new listing ────────────────────────────────────
         if (isDraft) formDataToSend.append("is_draft", "true");
-        const createRes = await Axios.post(`${API_BASE}/api/listings`, formDataToSend, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        const createRes = await Axios.post(
+          `${API_BASE}/api/listings`,
+          formDataToSend,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          },
+        );
 
         // Build share card data from the response before resetting form
         const created = createRes.data?.listing;
-        const firstImg = createRes.data?.images?.[0]?.imageurl
-          ?? createRes.data?.images?.[0]?.url
-          ?? undefined;
+        const firstImg =
+          createRes.data?.images?.[0]?.imageurl ??
+          createRes.data?.images?.[0]?.url ??
+          undefined;
         const catName = categories.find(
-          (c) => c.id === Number(created?.category_id)
+          (c) => c.id === Number(created?.category_id),
         )?.name;
         if (created?.id) {
           setShareCardListing({

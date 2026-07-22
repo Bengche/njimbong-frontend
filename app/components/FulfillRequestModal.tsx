@@ -40,7 +40,12 @@ const DELIVERY_TYPES = [
   { value: "both", label: "Pickup or Delivery" },
 ];
 
-export default function FulfillRequestModal({ isOpen, onClose, onSuccess, request }: Props) {
+export default function FulfillRequestModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  request,
+}: Props) {
   const [formData, setFormData] = useState({
     price: "",
     currency: "XAF",
@@ -74,7 +79,11 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
     }
   }, [isOpen, request]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleChange(
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) {
     const { name, value } = e.target;
     setFormData((p) => ({ ...p, [name]: value }));
   }
@@ -84,7 +93,11 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
     if (submitting) return;
     setError("");
 
-    if (!formData.price || isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
+    if (
+      !formData.price ||
+      isNaN(Number(formData.price)) ||
+      Number(formData.price) <= 0
+    ) {
       return setError("Please enter a valid price.");
     }
     if (!formData.seller_phone.trim()) {
@@ -104,7 +117,9 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
       onSuccess(response.data.listing_id);
       onClose();
     } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to submit. Please try again.");
+      setError(
+        err.response?.data?.error || "Failed to submit. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -121,7 +136,9 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
       style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         className="bg-white w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl shadow-2xl max-h-[95vh] flex flex-col"
@@ -130,14 +147,30 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
         {/* Header */}
         <div className="flex items-start justify-between px-5 py-4 border-b border-gray-100 flex-shrink-0">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Fulfill This Request</h2>
+            <h2 className="text-lg font-bold text-gray-900">
+              Fulfill This Request
+            </h2>
             <p className="text-sm text-gray-500 mt-0.5">
-              Set your price and contact details — a listing is created instantly
+              Set your price and contact details — a listing is created
+              instantly
             </p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 transition text-gray-400 hover:text-gray-700 -mr-1 flex-shrink-0 mt-0.5">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl hover:bg-gray-100 transition text-gray-400 hover:text-gray-700 -mr-1 flex-shrink-0 mt-0.5"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -146,8 +179,18 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
           {/* Request summary (locked / read-only) */}
           <div className="mx-5 mt-4 rounded-xl border border-emerald-100 bg-emerald-50 overflow-hidden flex-shrink-0">
             <div className="flex items-center gap-2 px-4 py-2.5 bg-emerald-100 border-b border-emerald-100">
-              <svg className="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <svg
+                className="w-4 h-4 text-emerald-600 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
               </svg>
               <span className="text-xs font-semibold text-emerald-700">
                 Auto-filled from buyer's request — cannot be changed
@@ -162,8 +205,12 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
                 />
               )}
               <div className="min-w-0 flex-1">
-                <p className="font-bold text-gray-900 text-sm leading-snug">{request.title}</p>
-                <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">{request.description}</p>
+                <p className="font-bold text-gray-900 text-sm leading-snug">
+                  {request.title}
+                </p>
+                <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
+                  {request.description}
+                </p>
                 {request.category_name && (
                   <span className="inline-block mt-2 text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
                     {request.category_name}
@@ -174,9 +221,17 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
             {budgetHint && (
               <div className="px-4 pb-3">
                 <span className="inline-flex items-center gap-1.5 text-xs text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full font-medium">
-                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <svg
+                    className="w-3 h-3"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
                     <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.028 2.353 1.118V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.028-2.354-1.118V5z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.028 2.353 1.118V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.028-2.354-1.118V5z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   {budgetHint}
                 </span>
@@ -186,7 +241,6 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
 
           {/* Seller form */}
           <form onSubmit={handleSubmit} className="px-5 py-4 space-y-4">
-
             {/* Price */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -199,7 +253,9 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
                   onChange={handleChange}
                   className="w-24 flex-shrink-0 px-3 py-3 rounded-xl border border-gray-200 focus:border-emerald-400 outline-none text-sm bg-white"
                 >
-                  {CURRENCIES.map((c) => <option key={c}>{c}</option>)}
+                  {CURRENCIES.map((c) => (
+                    <option key={c}>{c}</option>
+                  ))}
                 </select>
                 <input
                   name="price"
@@ -230,7 +286,9 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 outline-none text-sm bg-white transition"
               >
                 {CONDITIONS.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
                 ))}
               </select>
             </div>
@@ -278,7 +336,9 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Contact Email</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                  Contact Email
+                </label>
                 <input
                   name="seller_email"
                   type="email"
@@ -292,7 +352,9 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
 
             {/* Delivery */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Delivery Options</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Delivery Options
+              </label>
               <div className="grid grid-cols-3 gap-2">
                 {DELIVERY_TYPES.map((d) => (
                   <label
@@ -330,7 +392,8 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
             {/* Message to buyer */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Message to Buyer <span className="text-gray-400 font-normal">(optional)</span>
+                Message to Buyer{" "}
+                <span className="text-gray-400 font-normal">(optional)</span>
               </label>
               <textarea
                 name="message"
@@ -346,8 +409,16 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
             {/* Error */}
             {error && (
               <div className="flex gap-2 bg-red-50 border border-red-200 rounded-xl p-3">
-                <svg className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                <svg
+                  className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <p className="text-sm text-red-700">{error}</p>
               </div>
@@ -376,8 +447,18 @@ export default function FulfillRequestModal({ isOpen, onClose, onSuccess, reques
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
                 I Have This — Fulfill
               </>

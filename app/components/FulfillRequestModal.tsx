@@ -355,7 +355,7 @@ export default function FulfillRequestModal({
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Delivery Options
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {DELIVERY_TYPES.map((d) => (
                   <label
                     key={d.value}

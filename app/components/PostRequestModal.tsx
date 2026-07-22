@@ -243,36 +243,38 @@ export default function PostRequestModal({
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
               Budget Range (optional)
             </label>
-            <div className="flex gap-2 items-center">
+            <div className="flex flex-col gap-2">
               <select
                 name="currency"
                 value={formData.currency}
                 onChange={handleChange}
-                className="px-3 py-3 rounded-xl border border-gray-200 focus:border-amber-400 outline-none text-sm bg-white w-24 flex-shrink-0"
+                className="w-full sm:w-28 px-3 py-3 rounded-xl border border-gray-200 focus:border-amber-400 outline-none text-sm bg-white transition"
               >
                 {["XAF", "USD", "EUR", "GBP", "NGN", "GHS"].map((c) => (
                   <option key={c}>{c}</option>
                 ))}
               </select>
-              <input
-                name="budget_min"
-                type="number"
-                min="0"
-                value={formData.budget_min}
-                onChange={handleChange}
-                placeholder="Min"
-                className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition"
-              />
-              <span className="text-gray-400 text-sm flex-shrink-0">to</span>
-              <input
-                name="budget_max"
-                type="number"
-                min="0"
-                value={formData.budget_max}
-                onChange={handleChange}
-                placeholder="Max"
-                className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition"
-              />
+              <div className="flex gap-2 items-center">
+                <input
+                  name="budget_min"
+                  type="number"
+                  min="0"
+                  value={formData.budget_min}
+                  onChange={handleChange}
+                  placeholder="Min"
+                  className="flex-1 min-w-0 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition"
+                />
+                <span className="text-gray-400 text-sm flex-shrink-0">to</span>
+                <input
+                  name="budget_max"
+                  type="number"
+                  min="0"
+                  value={formData.budget_max}
+                  onChange={handleChange}
+                  placeholder="Max"
+                  className="flex-1 min-w-0 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition"
+                />
+              </div>
             </div>
           </div>
 

@@ -405,6 +405,40 @@ export default function AdminDashboard() {
             Manage Users
           </div>
         </a>
+
+        <a
+          href="/admin_dashboard/requests"
+          className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow block"
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <div className="bg-amber-100 rounded-full p-3">
+              <svg
+                className="w-8 h-8 text-amber-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-800 text-lg">Buyer Requests</h3>
+              <p className="text-sm text-gray-600">Approve or reject requests</p>
+            </div>
+          </div>
+          <p className="text-2xl font-bold text-gray-800 mb-3">Review</p>
+          <p className="text-sm text-gray-600 mb-4">
+            Approve buyer requests before they go live
+          </p>
+          <div className="w-full bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition-colors font-semibold text-center">
+            Review Requests
+          </div>
+        </a>
       </div>
 
       <h2

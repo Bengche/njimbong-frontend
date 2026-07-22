@@ -25,11 +25,7 @@ export default function PostRequestModal({
     title: "",
     description: "",
     category_id: "",
-    budget_min: "",
-    budget_max: "",
-    currency: "XAF",
     country: "Cameroon",
-    city: "",
   });
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -51,11 +47,7 @@ export default function PostRequestModal({
         title: "",
         description: "",
         category_id: "",
-        budget_min: "",
-        budget_max: "",
-        currency: "XAF",
         country: "Cameroon",
-        city: "",
       });
       setImage(null);
       setImagePreview(null);
@@ -99,8 +91,6 @@ export default function PostRequestModal({
         "Please provide a detailed description (at least 30 characters). Include all specifications so sellers know exactly what you need.",
       );
     }
-    if (!formData.city.trim()) return setError("Please enter your city.");
-
     setSubmitting(true);
     try {
       const fd = new FormData();
@@ -238,71 +228,13 @@ export default function PostRequestModal({
             </select>
           </div>
 
-          {/* Budget */}
+          {/* Location — fixed to Cameroon */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Budget Range (optional)
+              Country
             </label>
-            <div className="flex flex-col gap-2">
-              <select
-                name="currency"
-                value={formData.currency}
-                onChange={handleChange}
-                className="w-full sm:w-28 px-3 py-3 rounded-xl border border-gray-200 focus:border-amber-400 outline-none text-sm bg-white transition"
-              >
-                {["XAF", "USD", "EUR", "GBP", "NGN", "GHS"].map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
-              <div className="flex gap-2 items-center">
-                <input
-                  name="budget_min"
-                  type="number"
-                  min="0"
-                  value={formData.budget_min}
-                  onChange={handleChange}
-                  placeholder="Min"
-                  className="flex-1 min-w-0 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition"
-                />
-                <span className="text-gray-400 text-sm flex-shrink-0">to</span>
-                <input
-                  name="budget_max"
-                  type="number"
-                  min="0"
-                  value={formData.budget_max}
-                  onChange={handleChange}
-                  placeholder="Max"
-                  className="flex-1 min-w-0 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Location */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Country <span className="text-red-500">*</span>
-              </label>
-              <input
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                placeholder="e.g., Cameroon"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                City <span className="text-red-500">*</span>
-              </label>
-              <input
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                placeholder="e.g., Douala"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none text-sm transition"
-              />
+            <div className="w-full px-4 py-3 rounded-xl border border-gray-100 bg-gray-50 text-sm text-gray-600 select-none">
+              Cameroon
             </div>
           </div>
 

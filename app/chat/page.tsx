@@ -145,7 +145,7 @@ function ChatPageContent() {
     isMobileView === null
   ) {
     return (
-      <div className="fixed inset-x-0 top-16 bottom-16 md:bottom-0 z-10 bg-white flex items-center justify-center">
+      <div className="fixed inset-x-0 top-[6.5rem] bottom-16 md:bottom-0 z-10 bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
           {startingChat && (
@@ -157,9 +157,9 @@ function ChatPageContent() {
   }
 
   return (
-    // fixed between navbar (top-16) and mobile bottom nav (bottom-16) / desktop edge (bottom-0)
+    // fixed between navbar+walletbar (top-[6.5rem]) and mobile bottom nav (bottom-16) / desktop edge (bottom-0)
     // this guarantees height regardless of AppShell min-h-screen wrappers
-    <main className="fixed inset-x-0 top-16 bottom-16 md:bottom-0 z-10 flex overflow-hidden bg-white">
+    <main className="fixed inset-x-0 top-[6.5rem] bottom-16 md:bottom-0 z-10 flex overflow-hidden bg-white">
       {/* Desktop: conversations list + chat window side by side */}
       {!isMobileView && (
         <>

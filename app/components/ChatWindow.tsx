@@ -378,8 +378,10 @@ export default function ChatWindow({
         sender_id: msg.sender_id as number,
         content: msg.content as string | null,
         message_type:
-          (msg.message_type as "text" | "image" | "system") || "text",
+          (msg.message_type as "text" | "image" | "audio" | "video" | "system") || "text",
         image_url: msg.image_url as string | null,
+        audio_url: msg.audio_url as string | null | undefined,
+        media_duration: msg.media_duration as number | undefined,
         status: (msg.status as "sent" | "delivered" | "read") || "sent",
         created_at: msg.created_at as string,
         sender_name: msg.sender_name as string,

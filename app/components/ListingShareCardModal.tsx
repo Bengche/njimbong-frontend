@@ -35,14 +35,39 @@ const APP_URL =
     ? window.location.origin
     : "https://njimbong.com");
 
-// Convert a remote image URL to a base64 data URL to avoid CORS issues in html-to-image
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://njimbong-backend-production.up.railway.app";
+
+/**
+ * Converts any image URL to a base64 data URL so html-to-image can embed it
+ * without CORS canvas-taint issues.
+ *
+ * For absolute HTTP(S) URLs (e.g. Cloudinary CDN) we route through our own
+ * server-side proxy (/api/proxy-image) so Node.js performs the fetch — no
+ * browser CORS restrictions apply there.
+ *
+ * For same-origin paths (e.g. /logo.svg) we fetch directly.
+ */
 async function urlToDataUrl(src: string): Promise<string> {
-  const res = await fetch(src);
+  // Route absolute URLs through the server-side proxy (avoids Cloudinary CORS)
+  const effectiveSrc =
+    src.startsWith("http://") || src.startsWith("https://")
+      ? `${API_BASE}/api/proxy-image?url=${encodeURIComponent(src)}`
+      : src;
+
+  const res = await fetch(effectiveSrc, { credentials: "omit" });
+  if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${src}`);
   const blob = await res.blob();
-  return new Promise((resolve, reject) => {
+  if (!blob.size) throw new Error(`Empty response body for ${src}`);
+  return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
+    reader.onloadend = () => {
+      const result = reader.result as string;
+      if (result?.startsWith("data:")) resolve(result);
+      else reject(new Error("FileReader produced an invalid data URL"));
+    };
+    reader.onerror = () => reject(new Error("FileReader error"));
     reader.readAsDataURL(blob);
   });
 }
@@ -80,17 +105,20 @@ export default function ListingShareCardModal({
       if (listing.imageUrl) {
         try {
           imageDataUrl = await urlToDataUrl(listing.imageUrl);
-        } catch {
-          // Non-fatal — card renders without image
+        } catch (imgErr) {
+          console.warn("[ShareCard] Could not convert listing image:", imgErr);
           imageDataUrl = undefined;
         }
+      } else {
+        console.warn("[ShareCard] No imageUrl provided for listing", listing.id);
       }
 
       // 3. Convert the Njimbong logo to base64 so html-to-image can embed it
       let logoDataUrl: string | undefined;
       try {
         logoDataUrl = await urlToDataUrl("/logo.svg");
-      } catch {
+      } catch (logoErr) {
+        console.warn("[ShareCard] Could not convert logo:", logoErr);
         logoDataUrl = undefined;
       }
 

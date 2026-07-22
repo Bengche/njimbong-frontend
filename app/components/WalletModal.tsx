@@ -91,9 +91,12 @@ export default function WalletModal({
     (ref: string) => {
       const poll = async () => {
         try {
-          const r = await fetch(`${API_BASE}/api/wallet/deposit/${ref}/status`, {
-            credentials: "include",
-          });
+          const r = await fetch(
+            `${API_BASE}/api/wallet/deposit/${ref}/status`,
+            {
+              credentials: "include",
+            },
+          );
           if (!r.ok) return;
           const data = await r.json();
           const s: string = data.status ?? "";

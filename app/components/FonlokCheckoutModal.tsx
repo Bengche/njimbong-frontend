@@ -69,7 +69,9 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
         setWalletError("Payment did not complete. Please try again.");
       }
     } catch (err: unknown) {
-      const axiosErr = err as { response?: { status?: number; data?: { error?: string } } };
+      const axiosErr = err as {
+        response?: { status?: number; data?: { error?: string } };
+      };
       if (axiosErr.response?.status === 409) {
         setWalletError(
           axiosErr.response.data?.error ||
@@ -77,7 +79,8 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
         );
       } else {
         setWalletError(
-          axiosErr.response?.data?.error ?? "Wallet payment failed. Please try again.",
+          axiosErr.response?.data?.error ??
+            "Wallet payment failed. Please try again.",
         );
       }
     } finally {
@@ -210,7 +213,10 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
             <div className="flex rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
               <button
                 type="button"
-                onClick={() => { setPaymentMethod("momo"); setWalletError(""); }}
+                onClick={() => {
+                  setPaymentMethod("momo");
+                  setWalletError("");
+                }}
                 className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
                   paymentMethod === "momo"
                     ? "bg-emerald-600 text-white"
@@ -221,7 +227,10 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               </button>
               <button
                 type="button"
-                onClick={() => { setPaymentMethod("wallet"); setError(""); }}
+                onClick={() => {
+                  setPaymentMethod("wallet");
+                  setError("");
+                }}
                 className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
                   paymentMethod === "wallet"
                     ? "bg-emerald-600 text-white"
@@ -236,61 +245,64 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
             {paymentMethod === "momo" && (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Your email{" "}
-                <span className="text-gray-400 text-xs">
-                  (For receipt & release confirmation.)
-                </span>
-              </label>
-              <input
-                type="email"
-                value={emailInput}
-                required
-                onChange={(e) => setEmailInput(e.target.value)}
-                placeholder="you@example.com"
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-white dark:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-                disabled={loading}
-              />
-            </div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Your email{" "}
+                    <span className="text-gray-400 text-xs">
+                      (For receipt & release confirmation.)
+                    </span>
+                  </label>
+                  <input
+                    type="email"
+                    value={emailInput}
+                    required
+                    onChange={(e) => setEmailInput(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-white dark:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                    disabled={loading}
+                  />
+                </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Mobile Money number
-              </label>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 py-3 rounded-l-lg border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm font-medium select-none">
-                  +237
-                </span>
-                <input
-                  type="tel"
-                  value={phoneInput}
-                  onChange={(e) =>
-                    setPhoneInput(e.target.value.replace(/\D/g, "").slice(0, 9))
-                  }
-                  placeholder="670000000"
-                  className="flex-1 border border-gray-300 dark:border-gray-600 rounded-r-lg px-4 py-3 text-gray-900 dark:text-white dark:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-                  required
-                  disabled={loading}
-                />
-              </div>
-              <p className="text-xs text-gray-400 mt-1">
-                MTN or Orange Cameroon. Enter 9 digits starting with 6 (MTN) or
-                2 (Orange).
-              </p>
-            </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Mobile Money number
+                  </label>
+                  <div className="flex">
+                    <span className="inline-flex items-center px-3 py-3 rounded-l-lg border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm font-medium select-none">
+                      +237
+                    </span>
+                    <input
+                      type="tel"
+                      value={phoneInput}
+                      onChange={(e) =>
+                        setPhoneInput(
+                          e.target.value.replace(/\D/g, "").slice(0, 9),
+                        )
+                      }
+                      placeholder="670000000"
+                      className="flex-1 border border-gray-300 dark:border-gray-600 rounded-r-lg px-4 py-3 text-gray-900 dark:text-white dark:bg-gray-800 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
+                      required
+                      disabled={loading}
+                    />
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">
+                    MTN or Orange Cameroon. Enter 9 digits starting with 6 (MTN)
+                    or 2 (Orange).
+                  </p>
+                </div>
 
-            {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-                <p className="text-sm text-red-700 dark:text-red-400">
-                  {error}
-                </p>
-              </div>
-            )}
+                {error && (
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                    <p className="text-sm text-red-700 dark:text-red-400">
+                      {error}
+                    </p>
+                  </div>
+                )}
 
-            <div className="text-xs text-gray-500 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
-              Your payment will be held securely in escrow by Fonlok. Funds are
-              only released to the seller after you confirm receipt of the item.
-            </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
+                  Your payment will be held securely in escrow by Fonlok. Funds
+                  are only released to the seller after you confirm receipt of
+                  the item.
+                </div>
 
                 <button
                   type="submit"
@@ -309,7 +321,9 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
               <div className="space-y-4">
                 <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl px-4 py-3 text-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Wallet balance</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Wallet balance
+                    </span>
                     <span className="font-bold text-emerald-700 dark:text-emerald-400">
                       {walletBalance === null
                         ? "Loading…"
@@ -317,7 +331,9 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
                     </span>
                   </div>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-gray-600 dark:text-gray-400">Order total</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Order total
+                    </span>
                     <span className="font-bold text-gray-900 dark:text-white">
                       {listing.price.toLocaleString()} {listing.currency}
                     </span>
@@ -328,7 +344,8 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
                   <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2 text-sm text-amber-800 dark:text-amber-300">
                     Insufficient balance. You need{" "}
                     <strong>
-                      {(listing.price - walletBalance).toLocaleString("fr-CM")} XAF
+                      {(listing.price - walletBalance).toLocaleString("fr-CM")}{" "}
+                      XAF
                     </strong>{" "}
                     more.{" "}
                     <button
@@ -343,12 +360,15 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
 
                 {walletError && (
                   <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-                    <p className="text-sm text-red-700 dark:text-red-400">{walletError}</p>
+                    <p className="text-sm text-red-700 dark:text-red-400">
+                      {walletError}
+                    </p>
                   </div>
                 )}
 
                 <div className="text-xs text-gray-500 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
-                  Funds are deducted from your wallet instantly and held in escrow. No MoMo prompt will be sent.
+                  Funds are deducted from your wallet instantly and held in
+                  escrow. No MoMo prompt will be sent.
                 </div>
 
                 <button

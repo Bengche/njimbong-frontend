@@ -1825,6 +1825,7 @@ export default function Dashboard() {
                   const canWithdraw = [
                     "pending",
                     "countered",
+                    "accepted",
                     "declined",
                     "expired",
                   ].includes(offer.status);
@@ -2600,20 +2601,16 @@ export default function Dashboard() {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 text-base">
-                  {
-                    withdrawConfirmOffer.status === "pending" ||
-                    withdrawConfirmOffer.status === "countered"
-                      ? "Withdraw this offer?"
-                      : "Remove this offer?"
-                  }
+                  {withdrawConfirmOffer.status === "pending" ||
+                  withdrawConfirmOffer.status === "countered"
+                    ? "Withdraw this offer?"
+                    : "Remove this offer?"}
                 </h3>
                 <p className="text-sm text-gray-500 mt-1">
-                  {
-                    withdrawConfirmOffer.status === "pending" ||
-                    withdrawConfirmOffer.status === "countered"
-                      ? "The seller will no longer be able to respond. This action cannot be undone."
-                      : "This offer will be removed from your list. This action cannot be undone."
-                  }
+                  {withdrawConfirmOffer.status === "pending" ||
+                  withdrawConfirmOffer.status === "countered"
+                    ? "The seller will no longer be able to respond. This action cannot be undone."
+                    : "This offer will be removed from your list. This action cannot be undone."}
                 </p>
               </div>
             </div>
@@ -2628,12 +2625,10 @@ export default function Dashboard() {
                 onClick={confirmWithdrawOffer}
                 className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors"
               >
-                {
-                  withdrawConfirmOffer.status === "pending" ||
-                  withdrawConfirmOffer.status === "countered"
-                    ? "Yes, withdraw"
-                    : "Yes, remove"
-                }
+                {withdrawConfirmOffer.status === "pending" ||
+                withdrawConfirmOffer.status === "countered"
+                  ? "Yes, withdraw"
+                  : "Yes, remove"}
               </button>
             </div>
           </div>

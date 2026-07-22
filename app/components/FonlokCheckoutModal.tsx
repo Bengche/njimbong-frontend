@@ -48,10 +48,11 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
   // Fetch wallet balance when wallet tab is selected
   useEffect(() => {
     if (paymentMethod !== "wallet" || walletBalance !== null) return;
-    fetch("/api/wallet/balance", { credentials: "include" })
+    fetch(`${API_BASE}/api/wallet/balance`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
         if (d && typeof d.balance === "number") setWalletBalance(d.balance);
+        else setWalletBalance(0);
       })
       .catch(() => setWalletBalance(0));
   }, [paymentMethod, walletBalance]);

@@ -337,7 +337,8 @@ export default function WalletModal({
                   <li>
                     <strong>Deposit</strong> — Add funds via MoMo. A{" "}
                     <strong>1.5% fee</strong> is charged on top of your deposit
-                    amount.
+                    amount. Standard MTN / Orange operator charges may also
+                    apply.
                   </li>
                   <li>
                     <strong>Withdraw</strong> — Send funds to your MoMo number.{" "}
@@ -408,6 +409,9 @@ export default function WalletModal({
                             {formatXAF(depositTotal)}
                           </span>
                         </div>
+                        <p className="text-[11px] text-amber-700 pt-0.5">
+                          * Standard MoMo operator charges (MTN / Orange) may also apply on top of this amount.
+                        </p>
                       </div>
                     )}
                   </div>

@@ -33,6 +33,11 @@ function formatXAF(n: number): string {
   return n.toLocaleString("fr-CM") + " XAF";
 }
 
+function stripCountryCode(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  return digits.startsWith("237") ? digits.slice(3) : digits;
+}
+
 export default function WalletModal({
   initialTab,
   balance: initialBalance,
@@ -56,7 +61,7 @@ export default function WalletModal({
   useEffect(() => {
     fetch(`${API_BASE}/api/wallet/momo-phone`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => d?.phone && setSavedPhone(d.phone))
+      .then((d) => d?.phone && setSavedPhone(stripCountryCode(d.phone)))
       .catch(() => {});
   }, []);
 
@@ -141,10 +146,10 @@ export default function WalletModal({
       );
       return;
     }
-    const phone = normalizePhone(depositPhone);
+    const phone = "237" + depositPhone;
     if (!isValidPhone(phone)) {
       setDepositError(
-        "Enter a valid Cameroon MoMo number (e.g. 677 123 456 or 237677123456).",
+        "Enter a valid 9-digit MTN or Orange number (e.g. 677 123 456).",
       );
       return;
     }
@@ -212,10 +217,10 @@ export default function WalletModal({
       );
       return;
     }
-    const phone = normalizePhone(withdrawPhone);
+    const phone = "237" + withdrawPhone;
     if (!isValidPhone(phone)) {
       setWithdrawError(
-        "Enter a valid Cameroon MoMo number (e.g. 677 123 456 or 237677123456).",
+        "Enter a valid 9-digit MTN or Orange number (e.g. 677 123 456).",
       );
       return;
     }
@@ -421,16 +426,25 @@ export default function WalletModal({
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       MoMo Number
                     </label>
-                    <input
-                      type="tel"
-                      value={depositPhone}
-                      onChange={(e) => setDepositPhone(e.target.value)}
-                      placeholder="677 123 456"
-                      className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    />
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3 py-3 rounded-l-xl border border-r-0 border-gray-300 bg-gray-100 text-gray-600 text-sm font-medium select-none">
+                        +237
+                      </span>
+                      <input
+                        type="tel"
+                        value={depositPhone}
+                        onChange={(e) =>
+                          setDepositPhone(
+                            e.target.value.replace(/\D/g, "").slice(0, 9),
+                          )
+                        }
+                        placeholder="677 123 456"
+                        className="flex-1 border border-gray-300 rounded-r-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
                     <p className="text-xs text-gray-400 mt-1">
-                      MTN or Orange Cameroon number. Country code 237 is added
-                      automatically.
+                      MTN or Orange Cameroon. Enter 9 digits starting with 6
+                      (MTN) or 2 (Orange).
                     </p>
                   </div>
 
@@ -448,10 +462,10 @@ export default function WalletModal({
                       />
                     </svg>
                     <p className="text-xs text-blue-700 leading-relaxed">
-                      <strong>Important:</strong> Please ensure this MoMo
-                      number belongs to you. In the event of a dispute or
-                      required refund on any purchase made using your wallet
-                      balance, funds will be returned to this number.
+                      <strong>Important:</strong> Please ensure this MoMo number
+                      belongs to you. In the event of a dispute or required
+                      refund on any purchase made using your wallet balance,
+                      funds will be returned to this number.
                     </p>
                   </div>
 
@@ -500,7 +514,7 @@ export default function WalletModal({
                   </h3>
                   <p className="text-sm text-gray-500">
                     A payment prompt has been sent to{" "}
-                    <strong>{depositPhone}</strong>.<br />
+                      <strong>+237{depositPhone}</strong>.<br />
                     Approve it on your phone to complete the deposit.
                   </p>
                   <p className="text-xs text-gray-400">
@@ -618,7 +632,7 @@ export default function WalletModal({
                     <span className="font-bold text-emerald-700">
                       {formatXAF(withdrawSuccess)}
                     </span>{" "}
-                    is being sent to <strong>{withdrawPhone}</strong>.
+                    is being sent to <strong>+237{withdrawPhone}</strong>.
                   </p>
                   <p className="text-sm font-semibold text-emerald-700">
                     New balance: {formatXAF(liveBalance)}
@@ -661,16 +675,25 @@ export default function WalletModal({
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       MoMo Number
                     </label>
-                    <input
-                      type="tel"
-                      value={withdrawPhone}
-                      onChange={(e) => setWithdrawPhone(e.target.value)}
-                      placeholder="677 123 456"
-                      className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    />
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3 py-3 rounded-l-xl border border-r-0 border-gray-300 bg-gray-100 text-gray-600 text-sm font-medium select-none">
+                        +237
+                      </span>
+                      <input
+                        type="tel"
+                        value={withdrawPhone}
+                        onChange={(e) =>
+                          setWithdrawPhone(
+                            e.target.value.replace(/\D/g, "").slice(0, 9),
+                          )
+                        }
+                        placeholder="677 123 456"
+                        className="flex-1 border border-gray-300 rounded-r-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
                     <p className="text-xs text-gray-400 mt-1">
-                      MTN or Orange Cameroon number. Country code 237 is added
-                      automatically.
+                      MTN or Orange Cameroon. Enter 9 digits starting with 6
+                      (MTN) or 2 (Orange).
                     </p>
                   </div>
 

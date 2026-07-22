@@ -514,7 +514,7 @@ export default function WalletModal({
                   </h3>
                   <p className="text-sm text-gray-500">
                     A payment prompt has been sent to{" "}
-                      <strong>+237{depositPhone}</strong>.<br />
+                    <strong>+237{depositPhone}</strong>.<br />
                     Approve it on your phone to complete the deposit.
                   </p>
                   <p className="text-xs text-gray-400">

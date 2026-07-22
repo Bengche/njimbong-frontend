@@ -62,6 +62,7 @@ interface Listing {
   delivery_notes?: string;
   tags?: string[];
   seller_email?: string;
+  is_escrow_sold?: boolean;
 }
 
 interface UserLocation {
@@ -1366,6 +1367,12 @@ export default function Dashboard() {
                             : "Renew Listing"}
                         </button>
                       ) : listing.moderation_status === "approved" ? (
+                        // Escrow-sold listings cannot be relisted — show a read-only badge instead
+                        listing.is_escrow_sold && listing.status !== "Available" ? (
+                          <span className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-50 text-gray-400 border border-gray-200">
+                            Sold via Escrow
+                          </span>
+                        ) : (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1407,6 +1414,7 @@ export default function Dashboard() {
                             "Mark as Available"
                           )}
                         </button>
+                        )
                       ) : null}
                     </div>
 

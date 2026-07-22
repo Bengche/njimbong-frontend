@@ -86,6 +86,14 @@ export default function ListingShareCardModal({
         }
       }
 
+      // 3. Convert the Njimbong logo to base64 so html-to-image can embed it
+      let logoDataUrl: string | undefined;
+      try {
+        logoDataUrl = await urlToDataUrl("/logo.svg");
+      } catch {
+        logoDataUrl = undefined;
+      }
+
       setCardData({
         id: listing.id,
         title: listing.title,
@@ -96,6 +104,7 @@ export default function ListingShareCardModal({
         country: listing.country,
         category: listing.category,
         imageDataUrl,
+        logoDataUrl,
         listingUrl,
         qrDataUrl,
       });

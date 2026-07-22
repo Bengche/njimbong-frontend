@@ -18,6 +18,7 @@ export interface ShareCardData {
   country?: string;
   category?: string;
   imageDataUrl?: string; // base64 data URL of the first listing image
+  logoDataUrl?: string; // base64 data URL of the Njimbong logo
   listingUrl: string;
   qrDataUrl?: string; // base64 data URL of the QR code PNG
 }
@@ -51,6 +52,7 @@ export default function ListingShareCard({
     city,
     country,
     imageDataUrl,
+    logoDataUrl,
     qrDataUrl,
     category,
   } = data;
@@ -126,24 +128,46 @@ export default function ListingShareCard({
             border: "1px solid rgba(255,255,255,0.15)",
           }}
         >
-          <div
-            style={{
-              width: 30,
-              height: 30,
-              background: "#16a34a",
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 15,
-              fontWeight: 900,
-              color: "#ffffff",
-              letterSpacing: "-0.5px",
-              flexShrink: 0,
-            }}
-          >
-            N
-          </div>
+          {logoDataUrl ? (
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                background: "#ffffff",
+                borderRadius: 8,
+                overflow: "hidden",
+                flexShrink: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={logoDataUrl}
+                alt="Njimbong"
+                style={{ width: 26, height: 26, objectFit: "contain", display: "block" }}
+              />
+            </div>
+          ) : (
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                background: "#16a34a",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 15,
+                fontWeight: 900,
+                color: "#ffffff",
+                letterSpacing: "-0.5px",
+                flexShrink: 0,
+              }}
+            >
+              N
+            </div>
+          )}
           <span
             style={{
               color: "#ffffff",
@@ -432,23 +456,38 @@ export default function ListingShareCard({
                 gap: 6,
               }}
             >
-              <div
-                style={{
-                  width: 16,
-                  height: 16,
-                  background: "#16a34a",
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 9,
-                  fontWeight: 900,
-                  color: "#fff",
-                  flexShrink: 0,
-                }}
-              >
-                N
-              </div>
+              {logoDataUrl ? (
+                <img
+                  src={logoDataUrl}
+                  alt=""
+                  style={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: 3,
+                    display: "block",
+                    flexShrink: 0,
+                    objectFit: "contain",
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 16,
+                    height: 16,
+                    background: "#16a34a",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 9,
+                    fontWeight: 900,
+                    color: "#fff",
+                    flexShrink: 0,
+                  }}
+                >
+                  N
+                </div>
+              )}
               <span
                 style={{
                   fontSize: 12,

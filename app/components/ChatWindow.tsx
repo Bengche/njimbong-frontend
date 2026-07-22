@@ -387,7 +387,10 @@ export default function ChatWindow({
         image_url: msg.image_url as string | null,
         audio_url: msg.audio_url as string | null | undefined,
         video_url: msg.video_url as string | null | undefined,
-        video_thumbnail_url: msg.video_thumbnail_url as string | null | undefined,
+        video_thumbnail_url: msg.video_thumbnail_url as
+          | string
+          | null
+          | undefined,
         media_duration: msg.media_duration as number | undefined,
         status: (msg.status as "sent" | "delivered" | "read") || "sent",
         created_at: msg.created_at as string,

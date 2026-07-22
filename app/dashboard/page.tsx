@@ -249,6 +249,11 @@ export default function Dashboard() {
   const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
   const [myOffers, setMyOffers] = useState<any[]>([]);
   const [showMyOffers, setShowMyOffers] = useState(false);
+  const [withdrawConfirmOffer, setWithdrawConfirmOffer] = useState<{
+    id: number;
+    status: string;
+  } | null>(null);
+  const [withdrawingOffer, setWithdrawingOffer] = useState<number | null>(null);
   const [respondingOffer, setRespondingOffer] = useState<number | null>(null);
   const [incomingOffers, setIncomingOffers] = useState<any[]>([]);
   const [showIncomingOffers, setShowIncomingOffers] = useState(false);
@@ -957,18 +962,21 @@ export default function Dashboard() {
 
   // Buyer withdraws / dismisses an offer
   const withdrawOffer = async (offerId: number, status: string) => {
-    const isActive = status === "pending" || status === "countered";
-    const confirmed = window.confirm(
-      isActive
-        ? "Withdraw this offer? The seller will no longer be able to respond."
-        : "Remove this offer from your list?",
-    );
-    if (!confirmed) return;
+    setWithdrawConfirmOffer({ id: offerId, status });
+  };
+
+  const confirmWithdrawOffer = async () => {
+    if (!withdrawConfirmOffer) return;
+    const { id: offerId } = withdrawConfirmOffer;
+    setWithdrawingOffer(offerId);
+    setWithdrawConfirmOffer(null);
     try {
       await Axios.delete(`${API_BASE}/api/offers/${offerId}`);
       setMyOffers((prev) => prev.filter((o) => o.id !== offerId));
     } catch {
       alert("Could not withdraw the offer. Please try again.");
+    } finally {
+      setWithdrawingOffer(null);
     }
   };
 
@@ -1950,6 +1958,7 @@ export default function Dashboard() {
                                 onClick={() =>
                                   withdrawOffer(offer.id, offer.status)
                                 }
+                                disabled={withdrawingOffer === offer.id}
                                 className={`inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition ${
                                   offer.status === "pending" ||
                                   offer.status === "countered"
@@ -2563,6 +2572,72 @@ export default function Dashboard() {
           onClose={() => setShareCardListing(null)}
           listing={shareCardListing}
         />
+      )}
+
+      {/* Withdraw / Delete Offer Confirmation Modal */}
+      {withdrawConfirmOffer && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setWithdrawConfirmOffer(null);
+          }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full sm:max-w-sm p-6 space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-5 h-5 text-red-500"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9.401 3.003c.74-1.28 2.458-1.28 3.198 0l7.51 13.002c.74 1.28-.185 2.878-1.6 2.878H3.49c-1.414 0-2.339-1.598-1.6-2.878L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 text-base">
+                  {
+                    withdrawConfirmOffer.status === "pending" ||
+                    withdrawConfirmOffer.status === "countered"
+                      ? "Withdraw this offer?"
+                      : "Remove this offer?"
+                  }
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  {
+                    withdrawConfirmOffer.status === "pending" ||
+                    withdrawConfirmOffer.status === "countered"
+                      ? "The seller will no longer be able to respond. This action cannot be undone."
+                      : "This offer will be removed from your list. This action cannot be undone."
+                  }
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3 pt-1">
+              <button
+                onClick={() => setWithdrawConfirmOffer(null)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmWithdrawOffer}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors"
+              >
+                {
+                  withdrawConfirmOffer.status === "pending" ||
+                  withdrawConfirmOffer.status === "countered"
+                    ? "Yes, withdraw"
+                    : "Yes, remove"
+                }
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );

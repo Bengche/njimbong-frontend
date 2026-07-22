@@ -5,6 +5,7 @@ import WalletModal from "./WalletModal";
 
 type ModalTab = "overview" | "deposit" | "withdraw";
 
+const API_BASE = "https://njimbong-backend-production.up.railway.app";
 const BALANCE_POLL_INTERVAL = 60_000; // 60 seconds
 
 export default function WalletBar() {
@@ -17,7 +18,7 @@ export default function WalletBar() {
 
   // Check auth
   useEffect(() => {
-    fetch("/api/user/me", { credentials: "include" })
+    fetch(`${API_BASE}/api/user/me`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data?.id) setUserId(data.id);
@@ -29,7 +30,7 @@ export default function WalletBar() {
     if (!userId) return;
     setLoadingBalance(true);
     try {
-      const r = await fetch("/api/wallet/balance", { credentials: "include" });
+      const r = await fetch(`${API_BASE}/api/wallet/balance`, { credentials: "include" });
       if (r.ok) {
         const data = await r.json();
         setBalance(typeof data.balance === "number" ? data.balance : 0);
@@ -65,9 +66,7 @@ export default function WalletBar() {
   if (!userId) return null;
 
   const displayBalance =
-    balance === null
-      ? "—"
-      : `${balance.toLocaleString("fr-CM")} XAF`;
+    balance === null ? "—" : `${balance.toLocaleString("fr-CM")} XAF`;
 
   return (
     <>

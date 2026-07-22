@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+const API_BASE = "https://njimbong-backend-production.up.railway.app";
+
 type Tab = "overview" | "deposit" | "withdraw";
 
 interface Props {
@@ -10,12 +12,7 @@ interface Props {
   onClose: () => void;
 }
 
-type DepositStep =
-  | "form"
-  | "pending"
-  | "success"
-  | "failed"
-  | "timeout";
+type DepositStep = "form" | "pending" | "success" | "failed" | "timeout";
 
 const DEPOSIT_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 const POLL_INTERVAL_MS = 3_000;
@@ -36,22 +33,28 @@ function formatXAF(n: number): string {
   return n.toLocaleString("fr-CM") + " XAF";
 }
 
-export default function WalletModal({ initialTab, balance: initialBalance, onClose }: Props) {
+export default function WalletModal({
+  initialTab,
+  balance: initialBalance,
+  onClose,
+}: Props) {
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
   // ── Live balance (re-fetched when modal opens) ──────────────────────────────
   const [liveBalance, setLiveBalance] = useState<number>(initialBalance);
   useEffect(() => {
-    fetch("/api/wallet/balance", { credentials: "include" })
+    fetch(`${API_BASE}/api/wallet/balance`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => d && typeof d.balance === "number" && setLiveBalance(d.balance))
+      .then(
+        (d) => d && typeof d.balance === "number" && setLiveBalance(d.balance),
+      )
       .catch(() => {});
   }, []);
 
   // ── Saved MoMo phone ────────────────────────────────────────────────────────
   const [savedPhone, setSavedPhone] = useState("");
   useEffect(() => {
-    fetch("/api/wallet/momo-phone", { credentials: "include" })
+    fetch(`${API_BASE}/api/wallet/momo-phone`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => d?.phone && setSavedPhone(d.phone))
       .catch(() => {});
@@ -88,7 +91,7 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
     (ref: string) => {
       const poll = async () => {
         try {
-          const r = await fetch(`/api/wallet/deposit/${ref}/status`, {
+          const r = await fetch(`${API_BASE}/api/wallet/deposit/${ref}/status`, {
             credentials: "include",
           });
           if (!r.ok) return;
@@ -99,9 +102,14 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
             setCreditedAmount(data.amount ?? Number(depositAmount));
             setDepositStep("success");
             // Refresh live balance
-            fetch("/api/wallet/balance", { credentials: "include" })
+            fetch(`${API_BASE}/api/wallet/balance`, { credentials: "include" })
               .then((r2) => (r2.ok ? r2.json() : null))
-              .then((d) => d && typeof d.balance === "number" && setLiveBalance(d.balance))
+              .then(
+                (d) =>
+                  d &&
+                  typeof d.balance === "number" &&
+                  setLiveBalance(d.balance),
+              )
               .catch(() => {});
           } else if (s === "failed" || s === "expired") {
             stopPolling();
@@ -119,18 +127,27 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
   const handleDeposit = async () => {
     setDepositError("");
     const amount = Number(depositAmount);
-    if (!depositAmount || isNaN(amount) || amount < MIN_AMOUNT || amount > MAX_AMOUNT) {
-      setDepositError(`Amount must be between ${formatXAF(MIN_AMOUNT)} and ${formatXAF(MAX_AMOUNT)}.`);
+    if (
+      !depositAmount ||
+      isNaN(amount) ||
+      amount < MIN_AMOUNT ||
+      amount > MAX_AMOUNT
+    ) {
+      setDepositError(
+        `Amount must be between ${formatXAF(MIN_AMOUNT)} and ${formatXAF(MAX_AMOUNT)}.`,
+      );
       return;
     }
     const phone = normalizePhone(depositPhone);
     if (!isValidPhone(phone)) {
-      setDepositError("Enter a valid Cameroon MoMo number (e.g. 677 123 456 or 237677123456).");
+      setDepositError(
+        "Enter a valid Cameroon MoMo number (e.g. 677 123 456 or 237677123456).",
+      );
       return;
     }
     setDepositLoading(true);
     try {
-      const r = await fetch("/api/wallet/deposit/initiate", {
+      const r = await fetch(`${API_BASE}/api/wallet/deposit/initiate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -138,7 +155,9 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
       });
       const data = await r.json();
       if (!r.ok) {
-        setDepositError(data.error || "Failed to initiate deposit. Please try again.");
+        setDepositError(
+          data.error || "Failed to initiate deposit. Please try again.",
+        );
         return;
       }
       setDepositRef(data.reference);
@@ -173,22 +192,33 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
   const handleWithdraw = async () => {
     setWithdrawError("");
     const amount = Number(withdrawAmount);
-    if (!withdrawAmount || isNaN(amount) || amount < MIN_AMOUNT || amount > MAX_AMOUNT) {
-      setWithdrawError(`Amount must be between ${formatXAF(MIN_AMOUNT)} and ${formatXAF(MAX_AMOUNT)}.`);
+    if (
+      !withdrawAmount ||
+      isNaN(amount) ||
+      amount < MIN_AMOUNT ||
+      amount > MAX_AMOUNT
+    ) {
+      setWithdrawError(
+        `Amount must be between ${formatXAF(MIN_AMOUNT)} and ${formatXAF(MAX_AMOUNT)}.`,
+      );
       return;
     }
     if (amount > liveBalance) {
-      setWithdrawError(`Insufficient balance. Your current balance is ${formatXAF(liveBalance)}.`);
+      setWithdrawError(
+        `Insufficient balance. Your current balance is ${formatXAF(liveBalance)}.`,
+      );
       return;
     }
     const phone = normalizePhone(withdrawPhone);
     if (!isValidPhone(phone)) {
-      setWithdrawError("Enter a valid Cameroon MoMo number (e.g. 677 123 456 or 237677123456).");
+      setWithdrawError(
+        "Enter a valid Cameroon MoMo number (e.g. 677 123 456 or 237677123456).",
+      );
       return;
     }
     setWithdrawLoading(true);
     try {
-      const r = await fetch("/api/wallet/withdraw", {
+      const r = await fetch(`${API_BASE}/api/wallet/withdraw`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -209,7 +239,9 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
     }
   };
 
-  const depositFee = depositAmount ? Math.ceil(Number(depositAmount) * 0.015) : 0;
+  const depositFee = depositAmount
+    ? Math.ceil(Number(depositAmount) * 0.015)
+    : 0;
   const depositTotal = depositAmount ? Number(depositAmount) + depositFee : 0;
 
   // ── Backdrop click to close ─────────────────────────────────────────────────
@@ -234,10 +266,14 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-700 to-green-700 px-5 py-4 flex items-center justify-between">
           <div>
-            <h2 className="text-white text-lg font-bold tracking-tight">Njimbong Wallet</h2>
+            <h2 className="text-white text-lg font-bold tracking-tight">
+              Njimbong Wallet
+            </h2>
             <p className="text-emerald-100 text-xs mt-0.5">
               Balance:{" "}
-              <span className="font-semibold text-white">{formatXAF(liveBalance)}</span>
+              <span className="font-semibold text-white">
+                {formatXAF(liveBalance)}
+              </span>
             </p>
           </div>
           <button
@@ -245,7 +281,12 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
             className="text-white/70 hover:text-white transition-colors p-1"
             aria-label="Close wallet"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="w-5 h-5"
+            >
               <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
             </svg>
           </button>
@@ -280,20 +321,29 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
                 <p className="text-3xl font-bold text-emerald-800 tabular-nums">
                   {formatXAF(liveBalance)}
                 </p>
-                <p className="text-xs text-gray-400 mt-1">Central African Franc (XAF)</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Central African Franc (XAF)
+                </p>
               </div>
 
               <div className="bg-gray-50 rounded-xl p-4 space-y-3 text-sm text-gray-600">
-                <h3 className="font-semibold text-gray-800 text-base">How it works</h3>
+                <h3 className="font-semibold text-gray-800 text-base">
+                  How it works
+                </h3>
                 <ul className="space-y-2 list-disc list-inside">
                   <li>
-                    <strong>Deposit</strong> — Add funds via MoMo. A <strong>1.5% fee</strong> is charged on top of your deposit amount.
+                    <strong>Deposit</strong> — Add funds via MoMo. A{" "}
+                    <strong>1.5% fee</strong> is charged on top of your deposit
+                    amount.
                   </li>
                   <li>
-                    <strong>Withdraw</strong> — Send funds to your MoMo number. <strong>No withdrawal fee</strong>.
+                    <strong>Withdraw</strong> — Send funds to your MoMo number.{" "}
+                    <strong>No withdrawal fee</strong>.
                   </li>
                   <li>
-                    <strong>Secure purchases</strong> — Buy listings directly from your wallet. Funds are held safely in escrow until you confirm delivery.
+                    <strong>Secure purchases</strong> — Buy listings directly
+                    from your wallet. Funds are held safely in escrow until you
+                    confirm delivery.
                   </li>
                 </ul>
               </div>
@@ -337,15 +387,23 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
                       <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-800 space-y-0.5">
                         <div className="flex justify-between">
                           <span>Credited to wallet:</span>
-                          <span className="font-semibold">{formatXAF(Number(depositAmount))}</span>
+                          <span className="font-semibold">
+                            {formatXAF(Number(depositAmount))}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Processing fee (1.5%):</span>
-                          <span className="font-semibold">+{formatXAF(depositFee)}</span>
+                          <span className="font-semibold">
+                            +{formatXAF(depositFee)}
+                          </span>
                         </div>
                         <div className="flex justify-between border-t border-amber-200 pt-1 mt-1">
-                          <span className="font-medium">You will be charged:</span>
-                          <span className="font-bold">{formatXAF(depositTotal)}</span>
+                          <span className="font-medium">
+                            You will be charged:
+                          </span>
+                          <span className="font-bold">
+                            {formatXAF(depositTotal)}
+                          </span>
                         </div>
                       </div>
                     )}
@@ -363,12 +421,15 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
                       className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                     <p className="text-xs text-gray-400 mt-1">
-                      MTN or Orange Cameroon number. Country code 237 is added automatically.
+                      MTN or Orange Cameroon number. Country code 237 is added
+                      automatically.
                     </p>
                   </div>
 
                   {depositError && (
-                    <p className="text-red-600 text-sm bg-red-50 rounded-lg px-3 py-2">{depositError}</p>
+                    <p className="text-red-600 text-sm bg-red-50 rounded-lg px-3 py-2">
+                      {depositError}
+                    </p>
                   )}
 
                   <button
@@ -384,34 +445,69 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
               {depositStep === "pending" && (
                 <div className="text-center space-y-4 py-4">
                   <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto">
-                    <svg className="animate-spin w-7 h-7 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                    <svg
+                      className="animate-spin w-7 h-7 text-emerald-600"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      />
                     </svg>
                   </div>
-                  <h3 className="font-bold text-gray-800 text-lg">Awaiting MoMo approval</h3>
+                  <h3 className="font-bold text-gray-800 text-lg">
+                    Awaiting MoMo approval
+                  </h3>
                   <p className="text-sm text-gray-500">
-                    A payment prompt has been sent to <strong>{depositPhone}</strong>.<br />
+                    A payment prompt has been sent to{" "}
+                    <strong>{depositPhone}</strong>.<br />
                     Approve it on your phone to complete the deposit.
                   </p>
                   <p className="text-xs text-gray-400">
                     Reference: <span className="font-mono">{depositRef}</span>
                   </p>
-                  <p className="text-xs text-gray-400">This page will update automatically.</p>
+                  <p className="text-xs text-gray-400">
+                    This page will update automatically.
+                  </p>
                 </div>
               )}
 
               {depositStep === "success" && (
                 <div className="text-center space-y-4 py-4">
                   <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-emerald-600">
-                      <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.06-1.06l-3.97 3.97-1.72-1.72a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.06 0l4.5-4.5Z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-8 h-8 text-emerald-600"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.06-1.06l-3.97 3.97-1.72-1.72a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.06 0l4.5-4.5Z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
-                  <h3 className="font-bold text-gray-800 text-lg">Deposit successful!</h3>
+                  <h3 className="font-bold text-gray-800 text-lg">
+                    Deposit successful!
+                  </h3>
                   {creditedAmount !== null && (
                     <p className="text-sm text-gray-600">
-                      <span className="font-bold text-emerald-700">{formatXAF(creditedAmount)}</span> has been added to your wallet.
+                      <span className="font-bold text-emerald-700">
+                        {formatXAF(creditedAmount)}
+                      </span>{" "}
+                      has been added to your wallet.
                     </p>
                   )}
                   <p className="text-sm font-semibold text-emerald-700">
@@ -429,12 +525,23 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
               {(depositStep === "failed" || depositStep === "timeout") && (
                 <div className="text-center space-y-4 py-4">
                   <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-red-500">
-                      <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.03-4.28a.75.75 0 0 0-1.06 0L10 9.94l-2.22-2.22a.75.75 0 1 0-1.06 1.06L8.94 11l-2.22 2.22a.75.75 0 1 0 1.06 1.06L10 12.06l2.22 2.22a.75.75 0 1 0 1.06-1.06L11.06 11l2.22-2.22a.75.75 0 0 0 0-1.06Z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-8 h-8 text-red-500"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm11.03-4.28a.75.75 0 0 0-1.06 0L10 9.94l-2.22-2.22a.75.75 0 1 0-1.06 1.06L8.94 11l-2.22 2.22a.75.75 0 1 0 1.06 1.06L10 12.06l2.22 2.22a.75.75 0 1 0 1.06-1.06L11.06 11l2.22-2.22a.75.75 0 0 0 0-1.06Z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <h3 className="font-bold text-gray-800 text-lg">
-                    {depositStep === "timeout" ? "Deposit timed out" : "Deposit failed"}
+                    {depositStep === "timeout"
+                      ? "Deposit timed out"
+                      : "Deposit failed"}
                   </h3>
                   <p className="text-sm text-gray-500">
                     {depositStep === "timeout"
@@ -462,13 +569,27 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
               {withdrawSuccess !== null ? (
                 <div className="text-center space-y-4 py-4">
                   <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-emerald-600">
-                      <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.06-1.06l-3.97 3.97-1.72-1.72a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.06 0l4.5-4.5Z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-8 h-8 text-emerald-600"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.06-1.06l-3.97 3.97-1.72-1.72a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.06 0l4.5-4.5Z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
-                  <h3 className="font-bold text-gray-800 text-lg">Withdrawal initiated!</h3>
+                  <h3 className="font-bold text-gray-800 text-lg">
+                    Withdrawal initiated!
+                  </h3>
                   <p className="text-sm text-gray-600">
-                    <span className="font-bold text-emerald-700">{formatXAF(withdrawSuccess)}</span> is being sent to <strong>{withdrawPhone}</strong>.
+                    <span className="font-bold text-emerald-700">
+                      {formatXAF(withdrawSuccess)}
+                    </span>{" "}
+                    is being sent to <strong>{withdrawPhone}</strong>.
                   </p>
                   <p className="text-sm font-semibold text-emerald-700">
                     New balance: {formatXAF(liveBalance)}
@@ -484,8 +605,12 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
                 <>
                   <div className="bg-emerald-50 rounded-xl px-4 py-3 text-sm">
                     <span className="text-emerald-700">Available: </span>
-                    <span className="font-bold text-emerald-800">{formatXAF(liveBalance)}</span>
-                    <span className="text-gray-500 ml-2 text-xs">· No withdrawal fee</span>
+                    <span className="font-bold text-emerald-800">
+                      {formatXAF(liveBalance)}
+                    </span>
+                    <span className="text-gray-500 ml-2 text-xs">
+                      · No withdrawal fee
+                    </span>
                   </div>
 
                   <div>
@@ -515,12 +640,15 @@ export default function WalletModal({ initialTab, balance: initialBalance, onClo
                       className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                     <p className="text-xs text-gray-400 mt-1">
-                      MTN or Orange Cameroon number. Country code 237 is added automatically.
+                      MTN or Orange Cameroon number. Country code 237 is added
+                      automatically.
                     </p>
                   </div>
 
                   {withdrawError && (
-                    <p className="text-red-600 text-sm bg-red-50 rounded-lg px-3 py-2">{withdrawError}</p>
+                    <p className="text-red-600 text-sm bg-red-50 rounded-lg px-3 py-2">
+                      {withdrawError}
+                    </p>
                   )}
 
                   <button

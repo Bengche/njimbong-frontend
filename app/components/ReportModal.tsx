@@ -49,15 +49,15 @@ export default function ReportModal({
     const list = Array.isArray(raw)
       ? raw
       : typeof raw === "object" &&
-        raw !== null &&
-        Array.isArray((raw as any).reasons)
-      ? (raw as { reasons: unknown[] }).reasons
-      : [];
+          raw !== null &&
+          Array.isArray((raw as any).reasons)
+        ? (raw as { reasons: unknown[] }).reasons
+        : [];
 
     return list
       .filter(
         (reason): reason is RawReason =>
-          typeof reason === "object" && reason !== null
+          typeof reason === "object" && reason !== null,
       )
       .map((reason) => ({
         id: Number(reason.id),
@@ -68,8 +68,8 @@ export default function ReportModal({
             ? reason.severity >= 3
               ? "high"
               : reason.severity === 2
-              ? "medium"
-              : "low"
+                ? "medium"
+                : "low"
             : String(reason.severity || "low").toLowerCase(),
         category: reason.category ?? "Other",
       }));
@@ -83,7 +83,7 @@ export default function ReportModal({
         `${API_BASE}/api/reports/reasons?type=${targetType}`,
         {
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to fetch reasons");
@@ -168,14 +168,17 @@ export default function ReportModal({
   };
 
   // Group reasons by category
-  const groupedReasons = reasons.reduce((acc, reason) => {
-    const category = reason.category || "Other";
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(reason);
-    return acc;
-  }, {} as Record<string, ReportReason[]>);
+  const groupedReasons = reasons.reduce(
+    (acc, reason) => {
+      const category = reason.category || "Other";
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(reason);
+      return acc;
+    },
+    {} as Record<string, ReportReason[]>,
+  );
 
   if (!isOpen) return null;
 
@@ -296,7 +299,7 @@ export default function ReportModal({
                                     </span>
                                     <span
                                       className={`text-xs px-1.5 py-0.5 rounded ${getSeverityColor(
-                                        reason.severity
+                                        reason.severity,
                                       )}`}
                                     >
                                       {reason.severity}
@@ -312,7 +315,7 @@ export default function ReportModal({
                             ))}
                           </div>
                         </div>
-                      )
+                      ),
                     )
                   )}
                 </div>

@@ -70,6 +70,12 @@ export default function SellModal({
     category?: string;
     imageUrl?: string;
   } | null>(null);
+
+  // ── AI state ────────────────────────────────────────────────────────────────
+  const [aiAnalyzing, setAiAnalyzing] = useState(false);
+  const [aiFilled, setAiFilled] = useState(false);
+  const [aiEnhancingDesc, setAiEnhancingDesc] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -189,6 +195,73 @@ export default function SellModal({
       // Create preview URLs
       const previewUrls = fileArray.map((file) => URL.createObjectURL(file));
       setImagePreviews(previewUrls);
+      // Reset AI state when new images are chosen
+      setAiFilled(false);
+      setAiError(null);
+    }
+  };
+
+  // ── AI: Analyze image → auto-fill listing fields ─────────────────────────
+  const analyzeWithAI = async () => {
+    if (!images[0] || aiAnalyzing) return;
+    setAiAnalyzing(true);
+    setAiError(null);
+    try {
+      const fd = new FormData();
+      fd.append("image", images[0]);
+      const res = await fetch(`${API_BASE}/api/ai/analyze-listing-image`, {
+        method: "POST",
+        credentials: "include",
+        body: fd,
+      });
+      if (!res.ok) {
+        const e = await res.json().catch(() => ({}));
+        throw new Error(e.error || "AI analysis failed");
+      }
+      const data = await res.json();
+      const validConditions = ["new", "like new", "good", "fair", "poor"];
+      setFormData((prev) => ({
+        ...prev,
+        title: data.title || prev.title,
+        description: data.description || prev.description,
+        condition: validConditions.includes((data.condition || "").toLowerCase())
+          ? data.condition.toLowerCase()
+          : prev.condition,
+        categoryId: data.categoryId ? String(data.categoryId) : prev.categoryId,
+        tags: data.tags || prev.tags,
+      }));
+      setAiFilled(true);
+    } catch (err: any) {
+      setAiError(err.message || "Could not analyze image. Please fill in the details manually.");
+    } finally {
+      setAiAnalyzing(false);
+    }
+  };
+
+  // ── AI: Enhance description text ─────────────────────────────────────────
+  const enhanceDescription = async () => {
+    if (!formData.description.trim() || aiEnhancingDesc) return;
+    setAiEnhancingDesc(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/ai/enhance`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          text: formData.description,
+          context: "listing_description",
+          extraContext: formData.title ? `Product: ${formData.title}` : "",
+        }),
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      if (data.enhanced) {
+        setFormData((prev) => ({ ...prev, description: data.enhanced }));
+      }
+    } catch {
+      // Silently fail — user keeps their original text
+    } finally {
+      setAiEnhancingDesc(false);
     }
   };
 
@@ -469,6 +542,56 @@ export default function SellModal({
                 ))}
               </div>
             )}
+
+            {/* ── AI Auto-fill ──────────────────────────────────────────────── */}
+            {images.length > 0 && !editListing && (
+              <div className="mt-3">
+                {aiError && (
+                  <p className="text-xs text-red-500 mb-2 px-1">{aiError}</p>
+                )}
+                {aiFilled ? (
+                  <div className="flex items-start gap-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl">
+                    <svg className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-xs text-emerald-700 font-medium flex-1">
+                      Njimbong AI has filled in your listing details. Review and edit as needed.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setAiFilled(false)}
+                      className="text-emerald-400 hover:text-emerald-600 flex-shrink-0"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={analyzeWithAI}
+                    disabled={aiAnalyzing}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-slate-800 to-slate-900 text-white text-sm font-semibold rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all disabled:opacity-60 shadow-md"
+                  >
+                    {aiAnalyzing ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                        Analyzing with Njimbong AI...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+                        </svg>
+                        ✦ Auto-fill with Njimbong AI
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Title */}
@@ -509,12 +632,29 @@ export default function SellModal({
 
           {/* Description */}
           <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Description <span className="text-red-500">*</span>
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label
+                htmlFor="description"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                Description <span className="text-red-500">*</span>
+              </label>
+              <button
+                type="button"
+                onClick={enhanceDescription}
+                disabled={aiEnhancingDesc || !formData.description.trim()}
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 hover:text-white bg-slate-100 hover:bg-gradient-to-r hover:from-slate-800 hover:to-slate-900 px-2.5 py-1 rounded-lg transition-all disabled:opacity-40"
+              >
+                {aiEnhancingDesc ? (
+                  <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                  </svg>
+                )}
+                {aiEnhancingDesc ? "Enhancing..." : "✦ Enhance with AI"}
+              </button>
+            </div>
             <textarea
               id="description"
               name="description"

@@ -29,7 +29,7 @@ export default function SuspensionBanner({
   onAppealSubmitted,
 }: SuspensionBannerProps) {
   const [suspensionInfo, setSuspensionInfo] = useState<SuspensionInfo | null>(
-    null
+    null,
   );
   const [appeals, setAppeals] = useState<Appeal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,7 +66,7 @@ export default function SuspensionBanner({
           suspensionDetails?.starts_at || suspensionDetails?.created_at,
         expiresAt: suspensionDetails?.ends_at || null,
         hasPendingAppeal: (data.pendingAppeals || []).some(
-          (appeal: Appeal) => appeal.status === "pending"
+          (appeal: Appeal) => appeal.status === "pending",
         ),
       });
 
@@ -132,7 +132,7 @@ export default function SuspensionBanner({
 
       setSuccess(true);
       setSuccessMessage(
-        "Appeal submitted successfully. Our team will review it shortly."
+        "Appeal submitted successfully. Our team will review it shortly.",
       );
       setAppealReason("");
       setTimeout(() => setShowAppealForm(false), 1200);
@@ -383,8 +383,8 @@ export default function SuspensionBanner({
                             appeal.status === "pending"
                               ? "bg-yellow-100 text-yellow-800"
                               : appeal.status === "approved"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
                           }`}
                         >
                           {appeal.status}

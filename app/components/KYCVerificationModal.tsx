@@ -51,7 +51,7 @@ export default function KYCVerificationModal({
   ];
 
   const handleDocumentFrontChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -145,7 +145,7 @@ export default function KYCVerificationModal({
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       onSuccess();
@@ -158,7 +158,7 @@ export default function KYCVerificationModal({
       console.error("Error submitting KYC:", error);
       setError(
         error.response?.data?.error ||
-          "Failed to submit KYC verification. Please try again."
+          "Failed to submit KYC verification. Please try again.",
       );
     } finally {
       setLoading(false);

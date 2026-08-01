@@ -9,6 +9,7 @@ import AppShellWrapper from "./components/AppShellWrapper";
 import ClientPolyfills from "./components/ClientPolyfills";
 import AuthClientInit from "./components/AuthClientInit";
 import MobileBottomNav from "./components/MobileBottomNav";
+import NjimbongChat from "./components/NjimbongChat";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -106,6 +107,7 @@ export default function RootLayout({
         <WalletBar />
         <AppShellWrapper>{children}</AppShellWrapper>
         <MobileBottomNav />
+        <NjimbongChat />
         <Footer />
       </body>
     </html>

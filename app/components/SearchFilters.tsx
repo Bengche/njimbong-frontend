@@ -1,4 +1,5 @@
 "use client";
+import { useState, useRef } from "react";
 import { currencies } from "../constants/currencies";
 import { countries } from "../constants/countries";
 
@@ -25,7 +26,10 @@ interface SearchFiltersProps {
   onSearch: () => void;
   onReset: () => void;
   onSaveSearch?: () => void;
+  onVisualSearchResults?: (data: { searchQuery: string; listings: unknown[]; productDescription?: string }) => void;
 }
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
 export default function SearchFilters({
   filters,
@@ -34,7 +38,43 @@ export default function SearchFilters({
   onSearch,
   onReset,
   onSaveSearch,
+  onVisualSearchResults,
 }: SearchFiltersProps) {
+  const [visualSearching, setVisualSearching] = useState(false);
+  const [visualBanner, setVisualBanner] = useState<string | null>(null);
+  const visualInputRef = useRef<HTMLInputElement>(null);
+
+  const handleVisualSearch = async (file: File) => {
+    if (!file || visualSearching) return;
+    setVisualSearching(true);
+    setVisualBanner(null);
+    try {
+      const fd = new FormData();
+      fd.append("image", file);
+      const res = await fetch(`${API_BASE}/api/ai/visual-search`, {
+        method: "POST",
+        credentials: "include",
+        body: fd,
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      if (data.searchQuery) {
+        // Update the search filter with the AI-extracted query
+        onFilterChange({ target: { name: "search", value: data.searchQuery } } as React.ChangeEvent<HTMLInputElement>);
+        setVisualBanner(data.productDescription || `Searching for: ${data.searchQuery}`);
+        if (onVisualSearchResults) {
+          onVisualSearchResults(data);
+        }
+        // Auto-trigger the search
+        setTimeout(() => onSearch(), 100);
+      }
+    } catch {
+      setVisualBanner("Could not analyze image. Please search manually.");
+    } finally {
+      setVisualSearching(false);
+      if (visualInputRef.current) visualInputRef.current.value = "";
+    }
+  };
   return (
     <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8 animate-slide-down">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
@@ -55,19 +95,64 @@ export default function SearchFilters({
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        {/* Search */}
+        {/* Search with Visual Search */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             Search
           </label>
-          <input
-            type="text"
-            name="search"
-            value={filters.search}
-            onChange={onFilterChange}
-            placeholder="Search by title or description..."
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
-          />
+
+          {/* Visual search banner */}
+          {visualBanner && (
+            <div className="mb-2 flex items-center gap-2 px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600">
+              <svg className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="flex-1 truncate">{visualBanner}</span>
+              <button onClick={() => setVisualBanner(null)} className="text-slate-400 hover:text-slate-600 flex-shrink-0">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/></svg>
+              </button>
+            </div>
+          )}
+
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              name="search"
+              value={filters.search}
+              onChange={onFilterChange}
+              placeholder="Search by title or description..."
+              className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
+            />
+            {/* Visual Search Button */}
+            <button
+              type="button"
+              title="Search by image (Visual Search)"
+              onClick={() => visualInputRef.current?.click()}
+              disabled={visualSearching}
+              className="absolute right-2 w-7 h-7 flex items-center justify-center rounded-md text-gray-400 hover:text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50"
+            >
+              {visualSearching ? (
+                <span className="w-4 h-4 border-2 border-slate-400 border-t-slate-700 rounded-full animate-spin" />
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                </svg>
+              )}
+            </button>
+            <input
+              ref={visualInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handleVisualSearch(f);
+              }}
+            />
+          </div>
+          <p className="text-[10px] text-gray-400 mt-1 pl-1">Tip: click the camera icon to search by image</p>
         </div>
 
         {/* Category */}

@@ -249,7 +249,9 @@ export default function Dashboard() {
   const [deletingListing, setDeletingListing] = useState<number | null>(null);
   const [trendingSearches, setTrendingSearches] = useState<string[]>([]);
   const [myOffers, setMyOffers] = useState<any[]>([]);
-  const [activePanel, setActivePanel] = useState<"offers" | "my-offers" | "searches" | "insights" | null>(null);
+  const [activePanel, setActivePanel] = useState<
+    "offers" | "my-offers" | "searches" | "insights" | null
+  >(null);
   const [withdrawConfirmOffer, setWithdrawConfirmOffer] = useState<{
     id: number;
     status: string;
@@ -1600,147 +1602,358 @@ export default function Dashboard() {
       {/* ── Quick Access Cards ─────────────────────────────────────────────── */}
       <div className="mb-5">
         <div className="flex flex-wrap gap-2.5">
-
           {/* Received Offers chip */}
           {incomingOffers.length > 0 && (
             <button
-              onClick={() => setActivePanel((p) => (p === "offers" ? null : "offers"))}
+              onClick={() =>
+                setActivePanel((p) => (p === "offers" ? null : "offers"))
+              }
               className={`flex-1 basis-[calc(50%-5px)] sm:basis-auto flex items-center gap-3 p-3.5 rounded-2xl border transition-all text-left ${
                 activePanel === "offers"
                   ? "bg-emerald-50 border-emerald-200 shadow-sm"
                   : "bg-white border-gray-100 shadow-sm hover:shadow hover:border-gray-200"
               }`}
             >
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${activePanel === "offers" ? "bg-emerald-100 text-emerald-600" : "bg-gray-100 text-gray-400"}`}>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0l-8 4.5L4 13" /></svg>
+              <div
+                className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${activePanel === "offers" ? "bg-emerald-100 text-emerald-600" : "bg-gray-100 text-gray-400"}`}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0l-8 4.5L4 13"
+                  />
+                </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-gray-900 leading-tight">Received Offers</p>
-                <p className="text-xs text-gray-400 mt-0.5">{incomingOffers.length} offer{incomingOffers.length !== 1 ? "s" : ""}</p>
+                <p className="text-xs font-bold text-gray-900 leading-tight">
+                  Received Offers
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {incomingOffers.length} offer
+                  {incomingOffers.length !== 1 ? "s" : ""}
+                </p>
               </div>
-              {incomingOffers.filter((o) => o.status === "pending").length > 0 && (
+              {incomingOffers.filter((o) => o.status === "pending").length >
+                0 && (
                 <span className="w-5 h-5 bg-emerald-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center flex-shrink-0">
                   {incomingOffers.filter((o) => o.status === "pending").length}
                 </span>
               )}
-              <svg className={`w-4 h-4 flex-shrink-0 transition-transform ${activePanel === "offers" ? "rotate-180 text-emerald-500" : "text-gray-300"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              <svg
+                className={`w-4 h-4 flex-shrink-0 transition-transform ${activePanel === "offers" ? "rotate-180 text-emerald-500" : "text-gray-300"}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
             </button>
           )}
 
           {/* My Offers chip */}
           {myOffers.filter((o) => o.status !== "withdrawn").length > 0 && (
             <button
-              onClick={() => setActivePanel((p) => (p === "my-offers" ? null : "my-offers"))}
+              onClick={() =>
+                setActivePanel((p) => (p === "my-offers" ? null : "my-offers"))
+              }
               className={`flex-1 basis-[calc(50%-5px)] sm:basis-auto flex items-center gap-3 p-3.5 rounded-2xl border transition-all text-left ${
                 activePanel === "my-offers"
                   ? "bg-amber-50 border-amber-200 shadow-sm"
                   : "bg-white border-gray-100 shadow-sm hover:shadow hover:border-gray-200"
               }`}
             >
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${activePanel === "my-offers" ? "bg-amber-100 text-amber-600" : "bg-gray-100 text-gray-400"}`}>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
+              <div
+                className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${activePanel === "my-offers" ? "bg-amber-100 text-amber-600" : "bg-gray-100 text-gray-400"}`}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                  />
+                </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-gray-900 leading-tight">My Offers</p>
-                <p className="text-xs text-gray-400 mt-0.5">{myOffers.filter((o) => o.status !== "withdrawn").length} sent</p>
+                <p className="text-xs font-bold text-gray-900 leading-tight">
+                  My Offers
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {myOffers.filter((o) => o.status !== "withdrawn").length} sent
+                </p>
               </div>
               {myOffers.filter((o) => o.status === "countered").length > 0 && (
                 <span className="w-5 h-5 bg-amber-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center flex-shrink-0">
                   {myOffers.filter((o) => o.status === "countered").length}
                 </span>
               )}
-              <svg className={`w-4 h-4 flex-shrink-0 transition-transform ${activePanel === "my-offers" ? "rotate-180 text-amber-500" : "text-gray-300"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              <svg
+                className={`w-4 h-4 flex-shrink-0 transition-transform ${activePanel === "my-offers" ? "rotate-180 text-amber-500" : "text-gray-300"}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
             </button>
           )}
 
           {/* Saved Searches chip */}
           <button
-            onClick={() => setActivePanel((p) => (p === "searches" ? null : "searches"))}
+            onClick={() =>
+              setActivePanel((p) => (p === "searches" ? null : "searches"))
+            }
             className={`flex-1 basis-[calc(50%-5px)] sm:basis-auto flex items-center gap-3 p-3.5 rounded-2xl border transition-all text-left ${
               activePanel === "searches"
                 ? "bg-blue-50 border-blue-200 shadow-sm"
                 : "bg-white border-gray-100 shadow-sm hover:shadow hover:border-gray-200"
             }`}
           >
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${activePanel === "searches" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-400"}`}>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${activePanel === "searches" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-400"}`}
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
+              </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-gray-900 leading-tight">Saved Searches</p>
-              <p className="text-xs text-gray-400 mt-0.5">{savedSearches.length} alert{savedSearches.length !== 1 ? "s" : ""}</p>
+              <p className="text-xs font-bold text-gray-900 leading-tight">
+                Saved Searches
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">
+                {savedSearches.length} alert
+                {savedSearches.length !== 1 ? "s" : ""}
+              </p>
             </div>
             {savedSearches.filter((s) => s.notify_new_listings).length > 0 && (
               <span className="w-5 h-5 bg-blue-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center flex-shrink-0">
                 {savedSearches.filter((s) => s.notify_new_listings).length}
               </span>
             )}
-            <svg className={`w-4 h-4 flex-shrink-0 transition-transform ${activePanel === "searches" ? "rotate-180 text-blue-500" : "text-gray-300"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            <svg
+              className={`w-4 h-4 flex-shrink-0 transition-transform ${activePanel === "searches" ? "rotate-180 text-blue-500" : "text-gray-300"}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
           </button>
 
           {/* Performance Insights chip */}
           <button
-            onClick={() => setActivePanel((p) => (p === "insights" ? null : "insights"))}
+            onClick={() =>
+              setActivePanel((p) => (p === "insights" ? null : "insights"))
+            }
             className={`flex-1 basis-[calc(50%-5px)] sm:basis-auto flex items-center gap-3 p-3.5 rounded-2xl border transition-all text-left ${
               activePanel === "insights"
                 ? "bg-violet-50 border-violet-200 shadow-sm"
                 : "bg-white border-gray-100 shadow-sm hover:shadow hover:border-gray-200"
             }`}
           >
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${activePanel === "insights" ? "bg-violet-100 text-violet-600" : "bg-gray-100 text-gray-400"}`}>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4V7m-9 8h12" /></svg>
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${activePanel === "insights" ? "bg-violet-100 text-violet-600" : "bg-gray-100 text-gray-400"}`}
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 17v-2m3 2v-4m3 4V7m-9 8h12"
+                />
+              </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-gray-900 leading-tight">Performance</p>
-              <p className="text-xs text-gray-400 mt-0.5">Analytics &amp; insights</p>
+              <p className="text-xs font-bold text-gray-900 leading-tight">
+                Performance
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Analytics &amp; insights
+              </p>
             </div>
-            <svg className={`w-4 h-4 flex-shrink-0 transition-transform ${activePanel === "insights" ? "rotate-180 text-violet-500" : "text-gray-300"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            <svg
+              className={`w-4 h-4 flex-shrink-0 transition-transform ${activePanel === "insights" ? "rotate-180 text-violet-500" : "text-gray-300"}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
           </button>
         </div>
 
         {/* ── Expanded panel ──────────────────────────────────────────────── */}
         {activePanel && (
           <div className="mt-2.5 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-
             {/* Received Offers panel */}
             {activePanel === "offers" && incomingOffers.length > 0 && (
               <div className="p-4 sm:p-5 space-y-3">
                 {incomingOffers.map((offer) => (
-                  <div key={offer.id} className={`rounded-xl border p-3 ${offer.status === "pending" ? "border-emerald-200 bg-emerald-50" : "border-gray-100 bg-gray-50"}`}>
+                  <div
+                    key={offer.id}
+                    className={`rounded-xl border p-3 ${offer.status === "pending" ? "border-emerald-200 bg-emerald-50" : "border-gray-100 bg-gray-50"}`}
+                  >
                     <div className="flex items-start gap-3">
-                      {offer.listing_image && <img src={offer.listing_image} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+                      {offer.listing_image && (
+                        <img
+                          src={offer.listing_image}
+                          alt=""
+                          className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                        />
+                      )}
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-800 truncate text-sm">{offer.listing_title}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">From <span className="font-medium text-gray-700">{offer.buyer_name}</span></p>
-                        <p className="text-sm font-bold text-emerald-700 mt-1">
-                          {Number(offer.amount).toLocaleString()} {offer.currency}
-                          <span className="text-xs font-normal text-gray-500 ml-1">(asking {Number(offer.listing_price).toLocaleString()})</span>
+                        <p className="font-semibold text-gray-800 truncate text-sm">
+                          {offer.listing_title}
                         </p>
-                        {offer.message && <p className="text-xs text-gray-600 mt-1 italic">"{offer.message}"</p>}
-                        <span className={`inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full font-medium ${offer.status === "pending" ? "bg-emerald-100 text-emerald-700" : offer.status === "accepted" ? "bg-blue-100 text-blue-700" : offer.status === "declined" ? "bg-red-100 text-red-600" : offer.status === "countered" ? "bg-amber-100 text-amber-700" : "bg-gray-200 text-gray-600"}`}>
-                          {offer.status === "countered" ? `You countered: ${Number(offer.counter_amount).toLocaleString()} ${offer.currency}` : offer.status}
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          From{" "}
+                          <span className="font-medium text-gray-700">
+                            {offer.buyer_name}
+                          </span>
+                        </p>
+                        <p className="text-sm font-bold text-emerald-700 mt-1">
+                          {Number(offer.amount).toLocaleString()}{" "}
+                          {offer.currency}
+                          <span className="text-xs font-normal text-gray-500 ml-1">
+                            (asking{" "}
+                            {Number(offer.listing_price).toLocaleString()})
+                          </span>
+                        </p>
+                        {offer.message && (
+                          <p className="text-xs text-gray-600 mt-1 italic">
+                            "{offer.message}"
+                          </p>
+                        )}
+                        <span
+                          className={`inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full font-medium ${offer.status === "pending" ? "bg-emerald-100 text-emerald-700" : offer.status === "accepted" ? "bg-blue-100 text-blue-700" : offer.status === "declined" ? "bg-red-100 text-red-600" : offer.status === "countered" ? "bg-amber-100 text-amber-700" : "bg-gray-200 text-gray-600"}`}
+                        >
+                          {offer.status === "countered"
+                            ? `You countered: ${Number(offer.counter_amount).toLocaleString()} ${offer.currency}`
+                            : offer.status}
                         </span>
                       </div>
-                      {offer.status === "pending" && counteringOfferId !== offer.id && (
-                        <div className="flex flex-col gap-1.5 flex-shrink-0">
-                          <button onClick={() => respondToOffer(offer.id, "accept")} disabled={sellerRespondingOffer === offer.id} className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50">Accept</button>
-                          <button onClick={() => { setCounteringOfferId(offer.id); setCounterAmount(""); setCounterMessage(""); }} className="px-3 py-1.5 text-xs font-semibold border border-amber-400 text-amber-700 rounded-lg hover:bg-amber-50">Counter</button>
-                          <button onClick={() => respondToOffer(offer.id, "decline")} disabled={sellerRespondingOffer === offer.id} className="px-3 py-1.5 text-xs font-semibold border border-red-300 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50">Decline</button>
+                      {offer.status === "pending" &&
+                        counteringOfferId !== offer.id && (
+                          <div className="flex flex-col gap-1.5 flex-shrink-0">
+                            <button
+                              onClick={() => respondToOffer(offer.id, "accept")}
+                              disabled={sellerRespondingOffer === offer.id}
+                              className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
+                            >
+                              Accept
+                            </button>
+                            <button
+                              onClick={() => {
+                                setCounteringOfferId(offer.id);
+                                setCounterAmount("");
+                                setCounterMessage("");
+                              }}
+                              className="px-3 py-1.5 text-xs font-semibold border border-amber-400 text-amber-700 rounded-lg hover:bg-amber-50"
+                            >
+                              Counter
+                            </button>
+                            <button
+                              onClick={() =>
+                                respondToOffer(offer.id, "decline")
+                              }
+                              disabled={sellerRespondingOffer === offer.id}
+                              className="px-3 py-1.5 text-xs font-semibold border border-red-300 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50"
+                            >
+                              Decline
+                            </button>
+                          </div>
+                        )}
+                    </div>
+                    {offer.status === "pending" &&
+                      counteringOfferId === offer.id && (
+                        <div className="mt-3 pt-3 border-t border-gray-200 space-y-2">
+                          <div className="flex rounded-lg border border-gray-300 overflow-hidden focus-within:ring-2 focus-within:ring-amber-400">
+                            <span className="flex items-center px-3 bg-gray-50 border-r border-gray-200 text-gray-500 text-xs font-medium select-none whitespace-nowrap">
+                              {offer.currency}
+                            </span>
+                            <input
+                              type="number"
+                              min="1"
+                              value={counterAmount}
+                              onChange={(e) => setCounterAmount(e.target.value)}
+                              placeholder="Your counter amount"
+                              className="flex-1 px-3 py-2 outline-none text-sm font-semibold bg-transparent"
+                            />
+                          </div>
+                          <input
+                            type="text"
+                            value={counterMessage}
+                            onChange={(e) => setCounterMessage(e.target.value)}
+                            placeholder="Optional message to buyer"
+                            maxLength={300}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-400"
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() =>
+                                respondToOffer(offer.id, "counter")
+                              }
+                              disabled={sellerRespondingOffer === offer.id}
+                              className="flex-1 py-2 text-xs font-semibold bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50"
+                            >
+                              Send Counter
+                            </button>
+                            <button
+                              onClick={() => setCounteringOfferId(null)}
+                              className="px-4 py-2 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         </div>
                       )}
-                    </div>
-                    {offer.status === "pending" && counteringOfferId === offer.id && (
-                      <div className="mt-3 pt-3 border-t border-gray-200 space-y-2">
-                        <div className="flex rounded-lg border border-gray-300 overflow-hidden focus-within:ring-2 focus-within:ring-amber-400">
-                          <span className="flex items-center px-3 bg-gray-50 border-r border-gray-200 text-gray-500 text-xs font-medium select-none whitespace-nowrap">{offer.currency}</span>
-                          <input type="number" min="1" value={counterAmount} onChange={(e) => setCounterAmount(e.target.value)} placeholder="Your counter amount" className="flex-1 px-3 py-2 outline-none text-sm font-semibold bg-transparent" />
-                        </div>
-                        <input type="text" value={counterMessage} onChange={(e) => setCounterMessage(e.target.value)} placeholder="Optional message to buyer" maxLength={300} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-400" />
-                        <div className="flex gap-2">
-                          <button onClick={() => respondToOffer(offer.id, "counter")} disabled={sellerRespondingOffer === offer.id} className="flex-1 py-2 text-xs font-semibold bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50">Send Counter</button>
-                          <button onClick={() => setCounteringOfferId(null)} className="px-4 py-2 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">Cancel</button>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
@@ -1749,58 +1962,193 @@ export default function Dashboard() {
             {/* My Offers panel */}
             {activePanel === "my-offers" && (
               <div className="p-4 sm:p-5 space-y-3">
-                {myOffers.filter((o) => o.status !== "withdrawn").map((offer) => {
-                  const statusConfig: Record<string, { label: string; classes: string }> = {
-                    pending: { label: "Awaiting response", classes: "bg-gray-100 text-gray-600" },
-                    countered: { label: "Counter-offer received", classes: "bg-amber-100 text-amber-800" },
-                    accepted: { label: "Accepted", classes: "bg-emerald-100 text-emerald-700" },
-                    declined: { label: "Declined", classes: "bg-red-100 text-red-600" },
-                    expired: { label: "Expired", classes: "bg-gray-100 text-gray-500" },
-                  };
-                  const st = statusConfig[offer.status] ?? { label: offer.status, classes: "bg-gray-100 text-gray-500" };
-                  const canWithdraw = ["pending", "countered", "accepted", "declined", "expired"].includes(offer.status);
-                  return (
-                    <div key={offer.id} className={`rounded-xl border p-3 sm:p-4 ${offer.status === "countered" ? "border-amber-200 bg-amber-50" : offer.status === "accepted" ? "border-emerald-200 bg-emerald-50" : offer.status === "declined" || offer.status === "expired" ? "border-gray-100 bg-gray-50 opacity-80" : "border-gray-100 bg-gray-50"}`}>
-                      <div className="flex items-start gap-3">
-                        {offer.listing_image && <img src={offer.listing_image} alt="" className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0" />}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2 flex-wrap">
-                            <p className="font-semibold text-gray-900 text-sm truncate cursor-pointer hover:text-emerald-700 transition-colors" onClick={() => router.push(`/listing/${offer.listing_id}`)}>{offer.listing_title}</p>
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium flex-shrink-0 ${st.classes}`}>{st.label}</span>
-                          </div>
-                          <p className="text-sm text-gray-700 font-semibold mt-1">
-                            {Number(offer.amount).toLocaleString()} {offer.currency}
-                            {offer.message && <span className="text-xs font-normal text-gray-400 ml-2">— "{offer.message}"</span>}
-                          </p>
-                          {offer.status === "countered" && offer.counter_amount && (
-                            <div className="mt-1.5 flex items-center gap-1.5 text-xs text-amber-700">
-                              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
-                              <span className="font-semibold">Counter: {Number(offer.counter_amount).toLocaleString()} {offer.currency}</span>
-                              {offer.counter_message && <span className="font-normal text-amber-600">— "{offer.counter_message}"</span>}
-                            </div>
+                {myOffers
+                  .filter((o) => o.status !== "withdrawn")
+                  .map((offer) => {
+                    const statusConfig: Record<
+                      string,
+                      { label: string; classes: string }
+                    > = {
+                      pending: {
+                        label: "Awaiting response",
+                        classes: "bg-gray-100 text-gray-600",
+                      },
+                      countered: {
+                        label: "Counter-offer received",
+                        classes: "bg-amber-100 text-amber-800",
+                      },
+                      accepted: {
+                        label: "Accepted",
+                        classes: "bg-emerald-100 text-emerald-700",
+                      },
+                      declined: {
+                        label: "Declined",
+                        classes: "bg-red-100 text-red-600",
+                      },
+                      expired: {
+                        label: "Expired",
+                        classes: "bg-gray-100 text-gray-500",
+                      },
+                    };
+                    const st = statusConfig[offer.status] ?? {
+                      label: offer.status,
+                      classes: "bg-gray-100 text-gray-500",
+                    };
+                    const canWithdraw = [
+                      "pending",
+                      "countered",
+                      "accepted",
+                      "declined",
+                      "expired",
+                    ].includes(offer.status);
+                    return (
+                      <div
+                        key={offer.id}
+                        className={`rounded-xl border p-3 sm:p-4 ${offer.status === "countered" ? "border-amber-200 bg-amber-50" : offer.status === "accepted" ? "border-emerald-200 bg-emerald-50" : offer.status === "declined" || offer.status === "expired" ? "border-gray-100 bg-gray-50 opacity-80" : "border-gray-100 bg-gray-50"}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          {offer.listing_image && (
+                            <img
+                              src={offer.listing_image}
+                              alt=""
+                              className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0"
+                            />
                           )}
-                          <div className="flex items-center gap-2 mt-2.5 flex-wrap">
-                            {offer.status === "countered" && (
-                              <>
-                                <button onClick={() => respondToCounter(offer.id, "accept_counter")} disabled={respondingOffer === offer.id} className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition">{respondingOffer === offer.id ? "…" : "Accept counter"}</button>
-                                <button onClick={() => respondToCounter(offer.id, "decline_counter")} disabled={respondingOffer === offer.id} className="px-3 py-1.5 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition">Decline</button>
-                              </>
-                            )}
-                            {offer.status === "accepted" && (
-                              <button onClick={() => router.push(`/listing/${offer.listing_id}`)} className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Buy now</button>
-                            )}
-                            {canWithdraw && (
-                              <button onClick={() => withdrawOffer(offer.id, offer.status)} disabled={withdrawingOffer === offer.id} className={`inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition ${offer.status === "pending" || offer.status === "countered" ? "border-red-200 text-red-500 hover:bg-red-50" : "border-gray-200 text-gray-400 hover:bg-gray-100"}`} title={offer.status === "pending" || offer.status === "countered" ? "Withdraw offer" : "Remove from list"}>
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                                {offer.status === "pending" || offer.status === "countered" ? "Withdraw" : "Dismiss"}
-                              </button>
-                            )}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2 flex-wrap">
+                              <p
+                                className="font-semibold text-gray-900 text-sm truncate cursor-pointer hover:text-emerald-700 transition-colors"
+                                onClick={() =>
+                                  router.push(`/listing/${offer.listing_id}`)
+                                }
+                              >
+                                {offer.listing_title}
+                              </p>
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium flex-shrink-0 ${st.classes}`}
+                              >
+                                {st.label}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-700 font-semibold mt-1">
+                              {Number(offer.amount).toLocaleString()}{" "}
+                              {offer.currency}
+                              {offer.message && (
+                                <span className="text-xs font-normal text-gray-400 ml-2">
+                                  — "{offer.message}"
+                                </span>
+                              )}
+                            </p>
+                            {offer.status === "countered" &&
+                              offer.counter_amount && (
+                                <div className="mt-1.5 flex items-center gap-1.5 text-xs text-amber-700">
+                                  <svg
+                                    className="w-3.5 h-3.5 flex-shrink-0"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                                    />
+                                  </svg>
+                                  <span className="font-semibold">
+                                    Counter:{" "}
+                                    {Number(
+                                      offer.counter_amount,
+                                    ).toLocaleString()}{" "}
+                                    {offer.currency}
+                                  </span>
+                                  {offer.counter_message && (
+                                    <span className="font-normal text-amber-600">
+                                      — "{offer.counter_message}"
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            <div className="flex items-center gap-2 mt-2.5 flex-wrap">
+                              {offer.status === "countered" && (
+                                <>
+                                  <button
+                                    onClick={() =>
+                                      respondToCounter(
+                                        offer.id,
+                                        "accept_counter",
+                                      )
+                                    }
+                                    disabled={respondingOffer === offer.id}
+                                    className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition"
+                                  >
+                                    {respondingOffer === offer.id
+                                      ? "…"
+                                      : "Accept counter"}
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      respondToCounter(
+                                        offer.id,
+                                        "decline_counter",
+                                      )
+                                    }
+                                    disabled={respondingOffer === offer.id}
+                                    className="px-3 py-1.5 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition"
+                                  >
+                                    Decline
+                                  </button>
+                                </>
+                              )}
+                              {offer.status === "accepted" && (
+                                <button
+                                  onClick={() =>
+                                    router.push(`/listing/${offer.listing_id}`)
+                                  }
+                                  className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition"
+                                >
+                                  Buy now
+                                </button>
+                              )}
+                              {canWithdraw && (
+                                <button
+                                  onClick={() =>
+                                    withdrawOffer(offer.id, offer.status)
+                                  }
+                                  disabled={withdrawingOffer === offer.id}
+                                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition ${offer.status === "pending" || offer.status === "countered" ? "border-red-200 text-red-500 hover:bg-red-50" : "border-gray-200 text-gray-400 hover:bg-gray-100"}`}
+                                  title={
+                                    offer.status === "pending" ||
+                                    offer.status === "countered"
+                                      ? "Withdraw offer"
+                                      : "Remove from list"
+                                  }
+                                >
+                                  <svg
+                                    className="w-3.5 h-3.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
+                                  </svg>
+                                  {offer.status === "pending" ||
+                                  offer.status === "countered"
+                                    ? "Withdraw"
+                                    : "Dismiss"}
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             )}
 
@@ -1808,25 +2156,61 @@ export default function Dashboard() {
             {activePanel === "searches" && (
               <div className="p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-3 mb-4">
-                  <p className="text-sm text-gray-500">Save filters and get notified when new listings match.</p>
-                  <button onClick={openSaveSearchModal} className="flex-shrink-0 px-3.5 py-2 bg-amber-500 text-white text-xs font-semibold rounded-xl hover:bg-amber-600 transition">Save Current Search</button>
+                  <p className="text-sm text-gray-500">
+                    Save filters and get notified when new listings match.
+                  </p>
+                  <button
+                    onClick={openSaveSearchModal}
+                    className="flex-shrink-0 px-3.5 py-2 bg-amber-500 text-white text-xs font-semibold rounded-xl hover:bg-amber-600 transition"
+                  >
+                    Save Current Search
+                  </button>
                 </div>
                 {savedSearches.length === 0 ? (
-                  <p className="text-sm text-gray-400 text-center py-4">No saved searches yet. Apply filters and save them.</p>
+                  <p className="text-sm text-gray-400 text-center py-4">
+                    No saved searches yet. Apply filters and save them.
+                  </p>
                 ) : (
                   <div className="space-y-2">
                     {savedSearches.map((savedSearch) => (
-                      <div key={savedSearch.id} className="border border-gray-100 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-gray-50">
+                      <div
+                        key={savedSearch.id}
+                        className="border border-gray-100 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-gray-50"
+                      >
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-800 text-sm">{savedSearch.name}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{formatSavedSearchSummary(savedSearch.filters)}</p>
+                          <p className="font-semibold text-gray-800 text-sm">
+                            {savedSearch.name}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {formatSavedSearchSummary(savedSearch.filters)}
+                          </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
-                          <button onClick={() => applySavedSearch(savedSearch)} className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Apply</button>
-                          <button onClick={() => toggleSavedSearchAlerts(savedSearch.id, !savedSearch.notify_new_listings)} className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition ${savedSearch.notify_new_listings ? "border-blue-300 text-blue-600 bg-blue-50" : "border-gray-300 text-gray-500 hover:bg-gray-100"}`}>
-                            {savedSearch.notify_new_listings ? "Alerts on" : "Alerts off"}
+                          <button
+                            onClick={() => applySavedSearch(savedSearch)}
+                            className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition"
+                          >
+                            Apply
                           </button>
-                          <button onClick={() => deleteSavedSearch(savedSearch.id)} className="px-3 py-1.5 text-xs font-semibold text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition">Delete</button>
+                          <button
+                            onClick={() =>
+                              toggleSavedSearchAlerts(
+                                savedSearch.id,
+                                !savedSearch.notify_new_listings,
+                              )
+                            }
+                            className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition ${savedSearch.notify_new_listings ? "border-blue-300 text-blue-600 bg-blue-50" : "border-gray-300 text-gray-500 hover:bg-gray-100"}`}
+                          >
+                            {savedSearch.notify_new_listings
+                              ? "Alerts on"
+                              : "Alerts off"}
+                          </button>
+                          <button
+                            onClick={() => deleteSavedSearch(savedSearch.id)}
+                            className="px-3 py-1.5 text-xs font-semibold text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -1839,12 +2223,26 @@ export default function Dashboard() {
             {activePanel === "insights" && (
               <div>
                 <div className="flex flex-col sm:flex-row gap-2 px-4 sm:px-5 pt-4 pb-3">
-                  <button type="button" onClick={() => setInsightsTab("analytics")} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition ${insightsTab === "analytics" ? "bg-violet-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>Performance Analytics</button>
-                  <button type="button" onClick={() => setInsightsTab("top-sellers")} className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition ${insightsTab === "top-sellers" ? "bg-violet-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>Top Sellers by Category</button>
+                  <button
+                    type="button"
+                    onClick={() => setInsightsTab("analytics")}
+                    className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition ${insightsTab === "analytics" ? "bg-violet-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                  >
+                    Performance Analytics
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setInsightsTab("top-sellers")}
+                    className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold transition ${insightsTab === "top-sellers" ? "bg-violet-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                  >
+                    Top Sellers by Category
+                  </button>
                 </div>
                 <div className="px-4 sm:px-5 pb-5">
                   {insightsTab === "analytics" && <AnalyticsDashboard />}
-                  {insightsTab === "top-sellers" && <TopSellers className="mb-0" />}
+                  {insightsTab === "top-sellers" && (
+                    <TopSellers className="mb-0" />
+                  )}
                 </div>
               </div>
             )}
@@ -1911,10 +2309,6 @@ export default function Dashboard() {
       )}
 
       {/* Listings Grid */}
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        {loading ? "Loading..." : `${listings.length} Listings Found`}
-      </h2>
-
       {userLocation && !loading && (
         <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-gray-600">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">

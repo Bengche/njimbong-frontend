@@ -11,7 +11,6 @@ import {
   ReviewSummary,
   WriteReviewModal,
 } from "../../components/Reviews";
-import PageHeader from "../../components/PageHeader";
 import LoadingArt from "../../components/LoadingArt";
 
 // ============================================
@@ -504,585 +503,357 @@ export default function PublicProfilePage() {
   }
 
   const memberSinceLabel = formatMonthYear(getMemberSinceValue(user)) || "N/A";
+  const trustColor =
+    trustScore >= 75
+      ? "text-emerald-600"
+      : trustScore >= 45
+        ? "text-amber-500"
+        : "text-red-500";
+  const trustBg =
+    trustScore >= 75
+      ? "bg-emerald-50 border-emerald-200"
+      : trustScore >= 45
+        ? "bg-amber-50 border-amber-200"
+        : "bg-red-50 border-red-200";
 
   // ============================================
   // Render: Profile
   // ============================================
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:py-10">
-      <PageHeader
-        title={user.name}
-        description={`Member since ${memberSinceLabel}`}
-        actions={
+    <div className="min-h-screen bg-[#f7f8fa]">
+
+      {/* ── HERO COVER ──────────────────────────────────────────────────────── */}
+      <div className="relative">
+        <div className="h-36 sm:h-48 bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-400 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-4 left-8 w-32 h-32 rounded-full bg-white" />
+            <div className="absolute -bottom-8 right-16 w-48 h-48 rounded-full bg-white" />
+            <div className="absolute top-6 right-1/3 w-20 h-20 rounded-full bg-white" />
+          </div>
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+            className="absolute top-4 left-4 flex items-center gap-1.5 text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium transition-all"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back
           </button>
-        }
-      />
+        </div>
 
-      <div className="mt-6 rounded-2xl border border-emerald-100 bg-white p-4 sm:p-6 shadow-sm">
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-          {/* Profile Picture */}
-          <div className="relative">
-            {user.profilepicture ? (
-              <Image
-                src={getImageUrl(user.profilepicture) || ""}
-                alt={user.name}
-                width={160}
-                height={160}
-                className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white shadow-md"
-              />
-            ) : (
-              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-white flex items-center justify-center border-4 border-white shadow-md">
-                <span className="text-4xl md:text-5xl font-bold text-green-600">
-                  {getInitials(user.name)}
-                </span>
-              </div>
-            )}
-            {(user.is_verified || user.kyc_status === "approved") && (
-              <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-2 border-4 border-white shadow">
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            )}
-          </div>
-
-          {/* User Info */}
-          <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2 text-gray-900">
-              {user.name}
-            </h1>
-            <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
-              {user.kyc_status === "approved" && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Identity Verified
-                </span>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:gap-5 -mt-14 sm:-mt-16 pb-4">
+            {/* Avatar */}
+            <div className="relative flex-shrink-0 self-center sm:self-auto">
+              {user.profilepicture ? (
+                <Image
+                  src={getImageUrl(user.profilepicture) || ""}
+                  alt={user.name}
+                  width={128}
+                  height={128}
+                  className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover border-4 border-white shadow-xl"
+                />
+              ) : (
+                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl border-4 border-white shadow-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+                  <span className="text-3xl sm:text-4xl font-bold text-white">{getInitials(user.name)}</span>
+                </div>
               )}
-              {user.is_verified && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              {(user.is_verified || user.kyc_status === "approved") && (
+                <div className="absolute -bottom-1.5 -right-1.5 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center border-2 border-white shadow-md">
+                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  Verified Seller
-                </span>
-              )}
-              {user.is_suspended && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-red-100 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700">
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.536-9.879a1 1 0 00-1.414-1.414L10 8.828 7.879 6.707a1 1 0 10-1.414 1.414L8.586 10l-2.121 2.121a1 1 0 101.414 1.414L10 11.172l2.121 2.121a1 1 0 001.414-1.414L11.414 10l2.122-2.121z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Account Suspended
-                </span>
+                </div>
               )}
             </div>
-            <div className="flex flex-wrap gap-4 justify-center md:justify-start text-gray-600 text-sm">
-              {user.country && (
-                <span className="flex items-center gap-1.5">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  {user.country}
-                </span>
-              )}
-            </div>
-          </div>
 
-          {/* Action Buttons - Only show for other users, not own profile */}
-          {!isOwnProfile && (
-            <div className="flex flex-col gap-2 w-full sm:w-auto">
-              <button
-                onClick={async () => {
-                  setFollowLoading(true);
-                  try {
-                    const endpoint = `${API_BASE}/api/users/${userId}/follow`;
-                    const res = await fetch(endpoint, {
-                      method: isFollowing ? "DELETE" : "POST",
-                      credentials: "include",
-                    });
-                    if (res.ok) setIsFollowing(!isFollowing);
-                  } catch {
-                    /* ignore */
-                  }
-                  setFollowLoading(false);
-                }}
-                disabled={followLoading}
-                className={`w-full sm:w-auto px-6 py-2.5 rounded-lg transition font-medium flex items-center gap-2 shadow-sm disabled:opacity-60 ${
-                  isFollowing
-                    ? "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
-                    : "bg-blue-600 text-white hover:bg-blue-700"
-                }`}
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d={
-                      isFollowing
-                        ? "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                        : "M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                    }
-                  />
-                </svg>
-                {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
-              </button>
-              <button
-                onClick={() => router.push(`/chat?userId=${user.id}`)}
-                className="w-full sm:w-auto bg-emerald-600 text-white px-6 py-2.5 rounded-lg hover:bg-emerald-700 transition font-medium flex items-center gap-2 shadow-sm"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-                Message
-              </button>
-              <button
-                onClick={() => setShowReportModal(true)}
-                className="w-full sm:w-auto border border-red-200 text-red-600 px-6 py-2.5 rounded-lg hover:bg-red-50 transition font-medium flex items-center gap-2"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
-                  />
-                </svg>
-                Report
-              </button>
-              <button
-                onClick={toggleFavorite}
-                disabled={favoriteLoading}
-                className={`w-full sm:w-auto px-6 py-2.5 rounded-lg transition font-medium flex items-center gap-2 border ${
-                  isFavorited
-                    ? "bg-amber-100 border-amber-200 text-amber-800 hover:bg-amber-200"
-                    : "bg-white border-emerald-100 text-emerald-700 hover:bg-emerald-50"
-                }`}
-              >
-                {favoriteLoading ? (
-                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <svg
-                    className="w-5 h-5"
-                    fill={isFavorited ? "currentColor" : "none"}
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                    />
-                  </svg>
+            {/* Name + meta */}
+            <div className="flex-1 mt-3 sm:mt-0 sm:mb-1 text-center sm:text-left">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">{user.name}</h1>
+                {user.kyc_status === "approved" && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    ID Verified
+                  </span>
                 )}
-                {isFavorited ? "Favorited" : "Add to Favorites"}
-              </button>
+                {user.is_suspended && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">Suspended</span>
+                )}
+              </div>
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-sm text-gray-500">
+                {user.country && (
+                  <span className="flex items-center gap-1">
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    </svg>
+                    {user.country}
+                  </span>
+                )}
+                <span className="flex items-center gap-1">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Joined {memberSinceLabel}
+                </span>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* Stats Section */}
-      <div className="mt-6 rounded-2xl border border-emerald-100 bg-white p-4 sm:p-6 shadow-sm">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <StatCard
-            icon={
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                />
-              </svg>
-            }
-            value={stats?.active_listings || 0}
-            label="Active Listings"
-          />
-          <StatCard
-            icon={
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                />
-              </svg>
-            }
-            value={`${trustScore}%`}
-            label="Trust Score"
-          />
-          <StatCard
-            icon={
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-            }
-            value={formatMonthYear(getMemberSinceValue(user)) || "N/A"}
-            label="Joined"
-          />
-          <StatCard
-            icon={
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            }
-            value={user.country || "N/A"}
-            label="Location"
-          />
-        </div>
-        <div className="mt-6 border-t border-gray-100 pt-6">
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">
-            Trust Indicators
-          </h3>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <TrustIndicator
-              passed={user.kyc_status === "approved"}
-              label="ID Verified"
-            />
-            <TrustIndicator passed={user.is_verified} label="Email Verified" />
-            <TrustIndicator passed={!!user.phone} label="Phone Added" />
-            <TrustIndicator
-              passed={user.months_as_member >= 3}
-              label="3+ Months Member"
-            />
+            {/* Desktop action buttons */}
+            {!isOwnProfile && (
+              <div className="hidden sm:flex items-center gap-2 sm:mb-1 flex-shrink-0">
+                <button
+                  onClick={async () => {
+                    setFollowLoading(true);
+                    try {
+                      const res = await fetch(`${API_BASE}/api/users/${userId}/follow`, { method: isFollowing ? "DELETE" : "POST", credentials: "include" });
+                      if (res.ok) setIsFollowing(!isFollowing);
+                    } catch { /* ignore */ }
+                    setFollowLoading(false);
+                  }}
+                  disabled={followLoading}
+                  className={`h-9 px-4 rounded-xl text-sm font-semibold flex items-center gap-1.5 transition-all border disabled:opacity-60 ${isFollowing ? "bg-gray-100 border-gray-200 text-gray-700 hover:bg-gray-200" : "bg-blue-600 border-blue-600 text-white hover:bg-blue-700"}`}
+                >
+                  {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+                </button>
+                <button
+                  onClick={() => router.push(`/chat?userId=${user.id}`)}
+                  className="h-9 px-4 rounded-xl text-sm font-semibold flex items-center gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700 transition-all"
+                >
+                  Message
+                </button>
+                <button
+                  onClick={toggleFavorite}
+                  disabled={favoriteLoading}
+                  className={`h-9 px-4 rounded-xl text-sm font-semibold flex items-center gap-1.5 border transition-all disabled:opacity-60 ${isFavorited ? "bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100" : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"}`}
+                >
+                  {isFavorited ? "Saved" : "Save"}
+                </button>
+                <button
+                  onClick={() => setShowReportModal(true)}
+                  className="h-9 w-9 rounded-xl flex items-center justify-center border border-gray-200 bg-white text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all"
+                  title="Report"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="max-w-5xl mx-auto px-4 mt-8">
-        <div className="flex flex-wrap justify-center sm:justify-start gap-2 bg-gray-100 p-2 rounded-xl w-full sm:w-fit">
-          <button
-            onClick={() => setActiveTab("listings")}
-            className={`w-full sm:w-auto px-4 py-2 text-sm sm:px-6 sm:py-2.5 sm:text-base rounded-lg font-medium transition ${
-              activeTab === "listings"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Listings ({stats?.active_listings || 0})
-          </button>
-          <button
-            onClick={() => setActiveTab("reviews")}
-            className={`w-full sm:w-auto px-4 py-2 text-sm sm:px-6 sm:py-2.5 sm:text-base rounded-lg font-medium transition ${
-              activeTab === "reviews"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            Reviews {reviewStats ? `(${reviewStats.total})` : ""}
-          </button>
-          <button
-            onClick={() => setActiveTab("about")}
-            className={`w-full sm:w-auto px-4 py-2 text-sm sm:px-6 sm:py-2.5 sm:text-base rounded-lg font-medium transition ${
-              activeTab === "about"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            About
-          </button>
+      {/* Mobile action strip */}
+      {!isOwnProfile && (
+        <div className="sm:hidden max-w-5xl mx-auto px-4 mt-1 mb-4">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={async () => {
+                setFollowLoading(true);
+                try {
+                  const res = await fetch(`${API_BASE}/api/users/${userId}/follow`, { method: isFollowing ? "DELETE" : "POST", credentials: "include" });
+                  if (res.ok) setIsFollowing(!isFollowing);
+                } catch { /* ignore */ }
+                setFollowLoading(false);
+              }}
+              disabled={followLoading}
+              className={`flex-1 h-10 rounded-xl text-sm font-semibold flex items-center justify-center transition-all border disabled:opacity-60 ${isFollowing ? "bg-gray-100 border-gray-200 text-gray-700" : "bg-blue-600 border-blue-600 text-white"}`}
+            >
+              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+            </button>
+            <button onClick={() => router.push(`/chat?userId=${user.id}`)} className="flex-1 h-10 rounded-xl text-sm font-semibold flex items-center justify-center bg-emerald-600 text-white">Message</button>
+            <button
+              onClick={toggleFavorite}
+              disabled={favoriteLoading}
+              className={`flex-1 h-10 rounded-xl text-sm font-semibold flex items-center justify-center border transition-all disabled:opacity-60 ${isFavorited ? "bg-amber-50 border-amber-200 text-amber-700" : "bg-white border-gray-200 text-gray-700"}`}
+            >
+              {isFavorited ? "Saved" : "Save"}
+            </button>
+            <button onClick={() => setShowReportModal(true)} className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center border border-gray-200 bg-white text-gray-400">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── STATS STRIP ─────────────────────────────────────────────────────── */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xl font-bold text-gray-900 leading-none">{stats?.active_listings || 0}</p>
+              <p className="text-xs text-gray-500 mt-0.5">Active Listings</p>
+            </div>
+          </div>
+          <div className={`rounded-2xl border shadow-sm p-4 flex items-center gap-3 ${trustBg}`}>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${trustScore >= 75 ? "bg-emerald-100" : trustScore >= 45 ? "bg-amber-100" : "bg-red-100"}`}>
+              <svg className={`w-5 h-5 ${trustColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <p className={`text-xl font-bold leading-none ${trustColor}`}>{trustScore}%</p>
+              <p className="text-xs text-gray-500 mt-0.5">Trust Score</p>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-900 leading-tight">{memberSinceLabel}</p>
+              <p className="text-xs text-gray-500 mt-0.5">Member Since</p>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <p className="text-xs text-gray-500 mb-2">Verifications</p>
+            <div className="flex flex-wrap gap-1.5">
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.kyc_status === "approved" ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}>
+                {user.kyc_status === "approved" ? "✓" : "✗"} ID
+              </span>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.is_verified ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}>
+                {user.is_verified ? "✓" : "✗"} Email
+              </span>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.phone ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}>
+                {user.phone ? "✓" : "✗"} Phone
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 pb-12">
-        {activeTab === "listings" && listings.length === 0 && (
-          <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-12 text-center">
-            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg
-                className="w-10 h-10 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+      {/* ── STICKY TABS ─────────────────────────────────────────────────────── */}
+      <div className="sticky top-0 z-20 bg-[#f7f8fa]/95 backdrop-blur-sm border-b border-gray-100 mt-5">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center overflow-x-auto">
+            {(["listings", "reviews", "about"] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`relative flex-shrink-0 px-5 py-3.5 text-sm font-semibold capitalize transition-colors ${activeTab === tab ? "text-emerald-600" : "text-gray-500 hover:text-gray-800"}`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                />
+                {tab === "listings"
+                  ? `Listings${stats?.active_listings ? ` (${stats.active_listings})` : ""}`
+                  : tab === "reviews"
+                    ? `Reviews${reviewStats?.total ? ` (${reviewStats.total})` : ""}`
+                    : "About"}
+                {activeTab === tab && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-t-full" />}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── CONTENT ─────────────────────────────────────────────────────────── */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 pb-16">
+
+        {/* LISTINGS */}
+        {activeTab === "listings" && listings.length === 0 && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No listings yet
-            </h3>
-            <p className="text-gray-500">
-              {isOwnProfile
-                ? "You haven't posted any listings yet. Start selling today!"
-                : `${user.name} hasn't posted any listings yet.`}
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">No listings yet</h3>
+            <p className="text-sm text-gray-500">
+              {isOwnProfile ? "You haven't posted any listings yet." : `${user.name} hasn't posted any listings yet.`}
             </p>
             {isOwnProfile && (
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="mt-6 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition font-medium"
-              >
-                Create Listing
+              <button onClick={() => router.push("/dashboard")} className="mt-5 bg-emerald-600 text-white px-5 py-2.5 rounded-xl hover:bg-emerald-700 transition text-sm font-semibold">
+                Create your first listing
               </button>
             )}
           </div>
         )}
 
         {activeTab === "listings" && listings.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {listings.map((listing) => (
               <a
                 key={listing.id}
                 href={`/listing/${listing.id}`}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
+                className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col"
               >
-                <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
+                <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
                   {listing.images && listing.images[0] ? (
                     <Image
                       src={getImageUrl(listing.images[0]) || ""}
                       alt={listing.title}
-                      width={640}
-                      height={480}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      width={400}
+                      height={300}
+                      className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300">
-                      <svg
-                        className="w-16 h-16"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1}
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
+                    <div className="w-full h-full flex items-center justify-center text-gray-200">
+                      <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
                   )}
-                  <div className="absolute top-3 left-3">
-                    <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                        listing.condition === "new"
-                          ? "bg-green-500 text-white"
-                          : "bg-gray-700 text-white"
-                      }`}
-                    >
-                      {listing.condition === "new" ? "New" : "Used"}
-                    </span>
-                  </div>
-                  {user.is_suspended && (
-                    <div className="absolute bottom-3 left-3">
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-600 text-white">
-                        Seller Suspended
-                      </span>
-                    </div>
-                  )}
+                  <span className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm ${listing.condition === "new" ? "bg-emerald-500 text-white" : "bg-gray-800/80 text-white"}`}>
+                    {listing.condition === "new" ? "New" : "Used"}
+                  </span>
                   {listing.category_name && (
-                    <div className="absolute top-3 right-3">
-                      <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-white/90 text-gray-700 backdrop-blur-sm">
-                        {listing.category_name}
-                      </span>
-                    </div>
+                    <span className="absolute top-2 right-2 text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/90 text-gray-600 backdrop-blur-sm shadow-sm">
+                      {listing.category_name}
+                    </span>
                   )}
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 group-hover:text-green-600 transition">
+                <div className="p-3 flex flex-col flex-1">
+                  <p className="text-xs font-semibold text-gray-900 line-clamp-2 leading-snug mb-1.5 group-hover:text-emerald-600 transition-colors">
                     {listing.title}
-                  </h3>
-                  <p className="text-xl font-bold text-green-600 mb-2">
+                  </p>
+                  <p className="text-base font-bold text-emerald-600 mt-auto">
                     {formatPrice(listing.price, listing.currency)}
                   </p>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                    </svg>
-                    {listing.city}, {listing.country}
-                  </div>
+                  {listing.city && (
+                    <p className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-0.5">
+                      <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      </svg>
+                      {listing.city}
+                    </p>
+                  )}
                 </div>
               </a>
             ))}
           </div>
         )}
 
-        {/* Reviews Tab */}
+        {/* REVIEWS */}
         {activeTab === "reviews" && (
-          <div className="space-y-6">
-            {/* Header with Write Review button */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <h2 className="text-2xl font-bold text-gray-900">
-                Reviews for {user.name}
-              </h2>
+          <div className="space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <h2 className="text-xl font-bold text-gray-900">Reviews for {user.name}</h2>
               {!isOwnProfile && (
                 <button
                   onClick={() => setShowWriteReview(true)}
-                  className="inline-flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition font-medium"
+                  className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-xl hover:bg-emerald-700 transition text-sm font-semibold shadow-sm"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    />
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                   Write a Review
                 </button>
               )}
             </div>
-
-            {/* Review Summary */}
-            {reviewStats && reviewStats.total > 0 && (
-              <ReviewSummary stats={reviewStats} />
-            )}
-
-            {/* Review List */}
+            {reviewStats && reviewStats.total > 0 && <ReviewSummary stats={reviewStats} />}
             <ReviewList
               reviews={reviews}
-              stats={
-                reviewStats || {
-                  total: 0,
-                  positive: 0,
-                  neutral: 0,
-                  negative: 0,
-                  averageRating: 0,
-                  distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-                }
-              }
+              stats={reviewStats || { total: 0, positive: 0, neutral: 0, negative: 0, averageRating: 0, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } }}
               loading={reviewsLoading}
               apiBase={API_BASE}
               onFilterChange={handleFilterChange}
@@ -1091,217 +862,110 @@ export default function PublicProfilePage() {
           </div>
         )}
 
-        {/* About Tab */}
+        {/* ABOUT */}
         {activeTab === "about" && (
-          <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              About {user.name}
-            </h2>
-            <div className="grid md:grid-cols-2 gap-8">
+          <div className="space-y-4">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-6 grid sm:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
-                  Contact Information
-                </h3>
-                <div className="space-y-4">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Contact</p>
+                <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
+                    <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Email</p>
-                      <p className="font-medium text-gray-900">{user.email}</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Email</p>
+                      <p className="text-sm font-medium text-gray-900">{user.email}</p>
                     </div>
                   </div>
                   {user.phone && (
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                          />
+                      <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Phone</p>
-                        <p className="font-medium text-gray-900">
-                          {user.phone}
-                        </p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">Phone</p>
+                        <p className="text-sm font-medium text-gray-900">{user.phone}</p>
                       </div>
                     </div>
                   )}
                   {user.country && (
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
+                      <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Location</p>
-                        <p className="font-medium text-gray-900">
-                          {user.country}
-                        </p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">Location</p>
+                        <p className="text-sm font-medium text-gray-900">{user.country}</p>
                       </div>
                     </div>
                   )}
                 </div>
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
-                  Account Details
-                </h3>
-                <div className="space-y-4">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Account</p>
+                <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
+                    <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Member Since</p>
-                      <p className="font-medium text-gray-900">
-                        {formatFullDate(getMemberSinceValue(user)) ||
-                          formatMonthYear(getMemberSinceValue(user)) ||
-                          "N/A"}
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Member Since</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {formatFullDate(getMemberSinceValue(user)) || formatMonthYear(getMemberSinceValue(user)) || "N/A"}
                       </p>
-                      <p className="text-xs text-gray-500">
-                        Member since{" "}
-                        {formatMemberDuration(user.months_as_member)}
+                      <p className="text-[10px] text-gray-400">{formatMemberDuration(user.months_as_member)}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Verification</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.kyc_status === "approved" ? "Identity Verified" : user.kyc_status === "pending" ? "Pending" : "Not Verified"}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                        />
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${trustScore >= 75 ? "bg-emerald-50" : trustScore >= 45 ? "bg-amber-50" : "bg-red-50"}`}>
+                      <svg className={`w-4 h-4 ${trustColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">
-                        Verification Status
-                      </p>
-                      <p className="font-medium text-gray-900">
-                        {user.kyc_status === "approved"
-                          ? "Identity Verified ✓"
-                          : user.kyc_status === "pending"
-                            ? "Verification Pending"
-                            : "Not Verified"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Trust Score</p>
-                      <p className="font-medium text-gray-900">{trustScore}%</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Trust Score</p>
+                      <p className={`text-sm font-bold ${trustColor}`}>{trustScore}%</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="mt-8 pt-8 border-t border-gray-100">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
-                Safety Tips
-              </h3>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <div className="flex gap-3">
-                  <svg
-                    className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                    />
-                  </svg>
-                  <div>
-                    <p className="font-medium text-amber-800 mb-1">
-                      Stay Safe When Trading
-                    </p>
-                    <ul className="text-sm text-amber-700 space-y-1">
-                      <li>• Meet in public places for transactions</li>
-                      <li>• Verify items before making payment</li>
-                      <li>• Use secure payment methods when possible</li>
-                      <li>
-                        • Trust your instincts - if something feels wrong, walk
-                        away
-                      </li>
-                    </ul>
-                  </div>
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+              <div className="flex gap-3">
+                <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-amber-800 mb-1.5">Stay Safe When Trading</p>
+                  <ul className="text-xs text-amber-700 space-y-1">
+                    <li>• Meet in public places for transactions</li>
+                    <li>• Verify items before making payment</li>
+                    <li>• Use secure payment methods when possible</li>
+                    <li>• Trust your instincts — if something feels wrong, walk away</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -1317,7 +981,6 @@ export default function PublicProfilePage() {
         targetName={user.name}
       />
 
-      {/* Write Review Modal */}
       <WriteReviewModal
         isOpen={showWriteReview}
         onClose={() => setShowWriteReview(false)}
@@ -1327,6 +990,6 @@ export default function PublicProfilePage() {
         canReview={canReview}
         canReviewReason={canReviewReason}
       />
-    </main>
+    </div>
   );
 }

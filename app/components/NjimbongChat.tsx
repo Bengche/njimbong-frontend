@@ -176,8 +176,8 @@ export default function NjimbongChat() {
             response.status === 503
               ? errData.error || "Njimbong AI is not available right now."
               : response.status === 429
-              ? "Too many requests — please wait a moment and try again."
-              : errData.error || "Njimbong AI is temporarily unavailable.";
+                ? "Too many requests — please wait a moment and try again."
+                : errData.error || "Njimbong AI is temporarily unavailable.";
           throw new Error(statusMsg);
         }
 
@@ -294,11 +294,6 @@ export default function NjimbongChat() {
               d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"
             />
           </svg>
-        )}
-
-        {/* Pulse ring when closed */}
-        {!isOpen && (
-          <span className="absolute inset-0 rounded-full bg-emerald-400/25 animate-ping pointer-events-none" />
         )}
       </button>
 

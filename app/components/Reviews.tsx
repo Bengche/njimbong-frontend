@@ -164,21 +164,21 @@ const RatingBar = ({
 // ============================================
 export const ReviewSummary: React.FC<ReviewSummaryProps> = ({ stats }) => {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-6">
-      <div className="flex flex-col md:flex-row gap-8">
+    <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 p-5">
+      <div className="flex flex-col sm:flex-row gap-5">
         {/* Average Rating */}
-        <div className="flex flex-col items-center justify-center md:w-48">
-          <div className="text-5xl font-bold text-gray-900">
+        <div className="flex flex-col items-center justify-center sm:w-32 gap-1">
+          <div className="text-4xl font-extrabold text-gray-900 tracking-tight">
             {stats.averageRating.toFixed(1)}
           </div>
           <StarRating rating={Math.round(stats.averageRating)} size="lg" />
-          <div className="text-sm text-gray-500 mt-2">
-            Based on {stats.total} review{stats.total !== 1 ? "s" : ""}
+          <div className="text-xs text-gray-400 mt-0.5">
+            {stats.total} review{stats.total !== 1 ? "s" : ""}
           </div>
         </div>
 
         {/* Rating Distribution */}
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 space-y-1.5">
           {[5, 4, 3, 2, 1].map((stars) => (
             <RatingBar
               key={stars}
@@ -192,11 +192,11 @@ export const ReviewSummary: React.FC<ReviewSummaryProps> = ({ stats }) => {
         </div>
 
         {/* Sentiment Summary */}
-        <div className="flex flex-row md:flex-col gap-4 md:w-40 justify-center">
+        <div className="flex flex-row sm:flex-col gap-2 sm:gap-3 sm:w-32 flex-wrap justify-center sm:justify-start">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
               <svg
-                className="w-5 h-5 text-green-600"
+                className="w-4 h-4 text-emerald-600"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -210,16 +210,16 @@ export const ReviewSummary: React.FC<ReviewSummaryProps> = ({ stats }) => {
               </svg>
             </div>
             <div>
-              <div className="font-semibold text-gray-900">
+              <div className="text-sm font-bold text-gray-900">
                 {stats.positive}
               </div>
-              <div className="text-xs text-gray-500">Positive</div>
+              <div className="text-[11px] text-gray-400">Positive</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
               <svg
-                className="w-5 h-5 text-gray-500"
+                className="w-4 h-4 text-gray-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -233,14 +233,14 @@ export const ReviewSummary: React.FC<ReviewSummaryProps> = ({ stats }) => {
               </svg>
             </div>
             <div>
-              <div className="font-semibold text-gray-900">{stats.neutral}</div>
-              <div className="text-xs text-gray-500">Neutral</div>
+              <div className="text-sm font-bold text-gray-900">{stats.neutral}</div>
+              <div className="text-[11px] text-gray-400">Neutral</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
               <svg
-                className="w-5 h-5 text-red-500"
+                className="w-4 h-4 text-red-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -254,10 +254,10 @@ export const ReviewSummary: React.FC<ReviewSummaryProps> = ({ stats }) => {
               </svg>
             </div>
             <div>
-              <div className="font-semibold text-gray-900">
+              <div className="text-sm font-bold text-gray-900">
                 {stats.negative}
               </div>
-              <div className="text-xs text-gray-500">Negative</div>
+              <div className="text-[11px] text-gray-400">Negative</div>
             </div>
           </div>
         </div>
@@ -278,9 +278,9 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
   const isLongReview = review.text.length > 300;
 
   const getRatingColor = (rating: number) => {
-    if (rating >= 4) return "bg-green-100 text-green-700";
-    if (rating === 3) return "bg-yellow-100 text-yellow-700";
-    return "bg-red-100 text-red-700";
+    if (rating >= 4) return "bg-emerald-50 text-emerald-700";
+    if (rating === 3) return "bg-amber-50 text-amber-700";
+    return "bg-red-50 text-red-700";
   };
 
   const getRatingLabel = (rating: number) => {
@@ -301,16 +301,16 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
   const sentiment = getSentiment();
   const sentimentStyles =
     sentiment === "positive"
-      ? "bg-green-100 text-green-700"
+      ? "bg-emerald-50 text-emerald-700"
       : sentiment === "neutral"
-      ? "bg-gray-100 text-gray-700"
-      : "bg-red-100 text-red-700";
+      ? "bg-gray-100 text-gray-600"
+      : "bg-red-50 text-red-700";
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-md transition-shadow">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
+    <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 hover:shadow-sm hover:border-gray-200 transition-all duration-200">
+      {/* Header: reviewer info (left) | report button (right, never beside stars) */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-3 min-w-0">
           {/* Reviewer Avatar */}
           {review.reviewer.picture ? (
             <Image
@@ -318,22 +318,22 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
               alt={review.reviewer.name}
               width={40}
               height={40}
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-xl object-cover flex-shrink-0"
             />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-semibold">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
               {review.reviewer.name.charAt(0).toUpperCase()}
             </div>
           )}
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-gray-900">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-semibold text-gray-900 text-sm">
                 {review.reviewer.name}
               </span>
               {review.reviewer.isVerified && (
-                <span className="inline-flex items-center gap-1 text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
+                <span className="inline-flex items-center gap-0.5 text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full font-medium">
                   <svg
-                    className="w-3 h-3"
+                    className="w-2.5 h-2.5"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -347,38 +347,35 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
                 </span>
               )}
             </div>
-            <div className="text-xs text-gray-500">
+            <p className="text-xs text-gray-400 mt-0.5">
               {formatTimeAgo(review.createdAt)}
-            </div>
+            </p>
           </div>
         </div>
 
-        {/* Rating Badge */}
-        <div className="flex items-center gap-2">
-          {onReport && (
-            <button
-              onClick={() => onReport(review)}
-              className="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline"
-            >
-              Report
-            </button>
-          )}
-          <div
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-sm font-medium ${getRatingColor(
-              review.rating
-            )}`}
+        {/* Report button — top-right corner, unobtrusive, never beside stars */}
+        {onReport && (
+          <button
+            onClick={() => onReport(review)}
+            className="flex-shrink-0 text-[11px] font-medium text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors px-2 py-1 rounded-lg leading-none"
           >
-            <StarRating rating={review.rating} size="sm" />
-            <span className="hidden sm:inline ml-1">
-              {getRatingLabel(review.rating)}
-            </span>
-          </div>
-        </div>
+            Report
+          </button>
+        )}
       </div>
 
+      {/* Rating + Sentiment — always on their own dedicated row, never next to Report */}
       <div className="flex items-center gap-2 mb-3">
+        <div
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${getRatingColor(
+            review.rating
+          )}`}
+        >
+          <StarRating rating={review.rating} size="sm" />
+          <span>{getRatingLabel(review.rating)}</span>
+        </div>
         <span
-          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${sentimentStyles}`}
+          className={`px-2 py-0.5 rounded-full text-xs font-medium ${sentimentStyles}`}
         >
           {sentiment.charAt(0).toUpperCase() + sentiment.slice(1)}
         </span>
@@ -390,13 +387,13 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
       )}
 
       {/* Review Text */}
-      <p className="text-gray-600 leading-relaxed">
+      <p className="text-sm text-gray-600 leading-relaxed">
         {isLongReview && !expanded ? (
           <>
             {review.text.substring(0, 300)}...
             <button
               onClick={() => setExpanded(true)}
-              className="text-green-600 hover:text-green-700 font-medium ml-1"
+              className="text-emerald-600 hover:text-emerald-700 font-medium ml-1"
             >
               Read more
             </button>
@@ -407,7 +404,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         {isLongReview && expanded && (
           <button
             onClick={() => setExpanded(false)}
-            className="text-green-600 hover:text-green-700 font-medium ml-1"
+            className="text-emerald-600 hover:text-emerald-700 font-medium ml-1"
           >
             Show less
           </button>
@@ -416,7 +413,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
 
       {/* Listing Reference */}
       {review.listing && (
-        <div className="mt-4 flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+        <div className="mt-3 flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
           {review.listing.image && (
             <Image
               src={getImageUrl(review.listing.image, apiBase) || ""}
@@ -437,7 +434,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
 
       {/* Seller Response */}
       {review.sellerResponse && (
-        <div className="mt-4 pl-4 border-l-3 border-green-500 bg-green-50 rounded-r-lg p-4">
+        <div className="mt-3 pl-3 border-l-2 border-emerald-400 bg-emerald-50 rounded-r-xl p-3">
           <div className="flex items-center gap-2 mb-2">
             <svg
               className="w-4 h-4 text-green-600"
@@ -452,7 +449,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
                 d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
               />
             </svg>
-            <span className="text-sm font-medium text-green-700">
+            <span className="text-xs font-semibold text-emerald-700">
               Seller Response
             </span>
             {review.sellerResponseAt && (
@@ -461,7 +458,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-600">{review.sellerResponse}</p>
+          <p className="text-xs text-gray-600 leading-relaxed">{review.sellerResponse}</p>
         </div>
       )}
     </div>
@@ -495,10 +492,10 @@ export const ReviewList: React.FC<ReviewListProps> = ({
           <button
             key={filter.key}
             onClick={() => onFilterChange(filter.key)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
               activeFilter === filter.key
-                ? "bg-green-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             {filter.label} ({filter.count})

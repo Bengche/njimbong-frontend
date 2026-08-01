@@ -475,20 +475,37 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#f7f8fa]">
-
       {/* ── TOAST MESSAGES ──────────────────────────────────────────────────── */}
       {successMessage && (
         <div className="fixed top-4 right-4 z-50 flex items-center gap-2.5 bg-emerald-600 text-white px-4 py-3 rounded-2xl shadow-xl text-sm font-medium max-w-xs animate-slide-in">
-          <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          <svg
+            className="w-4 h-4 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+              clipRule="evenodd"
+            />
           </svg>
           {successMessage}
         </div>
       )}
       {errorMessage && !showPasswordModal && (
         <div className="fixed top-4 right-4 z-50 flex items-center gap-2.5 bg-red-600 text-white px-4 py-3 rounded-2xl shadow-xl text-sm font-medium max-w-xs">
-          <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <svg
+            className="w-4 h-4 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
           </svg>
           {errorMessage}
         </div>
@@ -506,8 +523,18 @@ export default function ProfilePage() {
             onClick={() => router.push("/dashboard")}
             className="absolute top-4 left-4 flex items-center gap-1.5 text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium transition-all"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Dashboard
           </button>
@@ -528,24 +555,59 @@ export default function ProfilePage() {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-400 to-teal-500 text-white text-3xl sm:text-4xl font-bold">
-                    {user.name.split(" ").map((n) => n.charAt(0)).slice(0, 2).join("")}
+                    {user.name
+                      .split(" ")
+                      .map((n) => n.charAt(0))
+                      .slice(0, 2)
+                      .join("")}
                   </div>
                 )}
               </div>
               {(user.verified || kycStatus?.status === "approved") && (
                 <div className="absolute -bottom-1.5 -right-1.5 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center border-2 border-white shadow-md">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
               )}
               {editMode && (
-                <label htmlFor="profilePicture" className="absolute -bottom-1.5 -left-1.5 w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-emerald-200 shadow-md cursor-pointer hover:bg-emerald-50 transition-colors">
-                  <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                <label
+                  htmlFor="profilePicture"
+                  className="absolute -bottom-1.5 -left-1.5 w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-emerald-200 shadow-md cursor-pointer hover:bg-emerald-50 transition-colors"
+                >
+                  <svg
+                    className="w-4 h-4 text-emerald-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
                   </svg>
-                  <input type="file" id="profilePicture" accept="image/*" onChange={handleProfilePictureChange} className="hidden" />
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    accept="image/*"
+                    onChange={handleProfilePictureChange}
+                    className="hidden"
+                  />
                 </label>
               )}
             </div>
@@ -553,7 +615,9 @@ export default function ProfilePage() {
             {/* Name + meta */}
             <div className="flex-1 mt-3 sm:mt-0 sm:mb-1 text-center sm:text-left">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">{user.name}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+                  {user.name}
+                </h1>
                 {kycLoading ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500 border border-gray-200">
                     <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
@@ -561,8 +625,16 @@ export default function ProfilePage() {
                   </span>
                 ) : user.verified || kycStatus?.status === "approved" ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     Verified
                   </span>
@@ -576,7 +648,9 @@ export default function ProfilePage() {
                   </span>
                 ) : null}
                 {suspensionStatus?.isSuspended && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">Suspended</span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
+                    Suspended
+                  </span>
                 )}
               </div>
               <p className="text-sm text-gray-500">{user.email}</p>
@@ -591,16 +665,26 @@ export default function ProfilePage() {
                     disabled={isSavingProfile}
                     className="h-9 px-4 rounded-xl text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all flex items-center gap-1.5 disabled:opacity-60"
                   >
-                    {isSavingProfile ? <span className="w-3.5 h-3.5 border-2 border-white/70 border-t-transparent rounded-full animate-spin" /> : null}
+                    {isSavingProfile ? (
+                      <span className="w-3.5 h-3.5 border-2 border-white/70 border-t-transparent rounded-full animate-spin" />
+                    ) : null}
                     {isSavingProfile ? "Saving..." : "Save"}
                   </button>
                   <button
                     onClick={() => {
                       setEditMode(false);
-                      setFormData({ name: user.name, phone: user.phone, country: user.country });
+                      setFormData({
+                        name: user.name,
+                        phone: user.phone,
+                        country: user.country,
+                      });
                       setProfilePictureFile(null);
                       const profileUrl = user.profilepictureurl;
-                      setProfilePicturePreview(profileUrl && !profileUrl.startsWith("http") ? `${API_BASE}${profileUrl.startsWith("/") ? "" : "/"}${profileUrl}` : profileUrl || "");
+                      setProfilePicturePreview(
+                        profileUrl && !profileUrl.startsWith("http")
+                          ? `${API_BASE}${profileUrl.startsWith("/") ? "" : "/"}${profileUrl}`
+                          : profileUrl || "",
+                      );
                       setErrorMessage("");
                     }}
                     disabled={isSavingProfile}
@@ -614,8 +698,18 @@ export default function ProfilePage() {
                   onClick={() => setEditMode(true)}
                   className="h-9 px-4 rounded-xl text-sm font-semibold bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-1.5 shadow-sm"
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
                   </svg>
                   Edit Profile
                 </button>
@@ -629,12 +723,26 @@ export default function ProfilePage() {
       {kycStatus?.status === "rejected" && kycStatus.rejectionreason && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-3">
           <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
-            <svg className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            <svg
+              className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
             </svg>
             <div className="flex-1">
-              <p className="text-xs font-semibold text-red-700">Verification Rejected</p>
-              <p className="text-xs text-red-600 mt-0.5">{kycStatus.rejectionreason}</p>
+              <p className="text-xs font-semibold text-red-700">
+                Verification Rejected
+              </p>
+              <p className="text-xs text-red-600 mt-0.5">
+                {kycStatus.rejectionreason}
+              </p>
             </div>
             <button
               onClick={() => setShowKYCModal(true)}
@@ -649,57 +757,115 @@ export default function ProfilePage() {
       {/* ── STATS STRIP ─────────────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className={`rounded-2xl border shadow-sm p-4 flex items-center gap-3 ${trustScore >= 75 ? "bg-emerald-50 border-emerald-200" : trustScore >= 45 ? "bg-amber-50 border-amber-200" : "bg-white border-gray-100"}`}>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${trustScore >= 75 ? "bg-emerald-100" : trustScore >= 45 ? "bg-amber-100" : "bg-gray-100"}`}>
-              <svg className={`w-5 h-5 ${trustScore >= 75 ? "text-emerald-600" : trustScore >= 45 ? "text-amber-500" : "text-gray-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          <div
+            className={`rounded-2xl border shadow-sm p-4 flex items-center gap-3 ${trustScore >= 75 ? "bg-emerald-50 border-emerald-200" : trustScore >= 45 ? "bg-amber-50 border-amber-200" : "bg-white border-gray-100"}`}
+          >
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${trustScore >= 75 ? "bg-emerald-100" : trustScore >= 45 ? "bg-amber-100" : "bg-gray-100"}`}
+            >
+              <svg
+                className={`w-5 h-5 ${trustScore >= 75 ? "text-emerald-600" : trustScore >= 45 ? "text-amber-500" : "text-gray-400"}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
             </div>
             <div>
-              <p className={`text-xl font-bold leading-none ${trustScore >= 75 ? "text-emerald-600" : trustScore >= 45 ? "text-amber-500" : "text-gray-400"}`}>
+              <p
+                className={`text-xl font-bold leading-none ${trustScore >= 75 ? "text-emerald-600" : trustScore >= 45 ? "text-amber-500" : "text-gray-400"}`}
+              >
                 {trustLoading ? "..." : `${trustScore}%`}
               </p>
               <p className="text-xs text-gray-500 mt-0.5">Trust Score</p>
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${user.verified || kycStatus?.status === "approved" ? "bg-emerald-100" : kycStatus?.status === "pending" ? "bg-amber-100" : "bg-gray-100"}`}>
-              <svg className={`w-5 h-5 ${user.verified || kycStatus?.status === "approved" ? "text-emerald-600" : kycStatus?.status === "pending" ? "text-amber-500" : "text-gray-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${user.verified || kycStatus?.status === "approved" ? "bg-emerald-100" : kycStatus?.status === "pending" ? "bg-amber-100" : "bg-gray-100"}`}
+            >
+              <svg
+                className={`w-5 h-5 ${user.verified || kycStatus?.status === "approved" ? "text-emerald-600" : kycStatus?.status === "pending" ? "text-amber-500" : "text-gray-400"}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
+                />
               </svg>
             </div>
             <div>
               <p className="text-sm font-bold text-gray-900 leading-tight">
-                {user.verified || kycStatus?.status === "approved" ? "Verified" : kycStatus?.status === "pending" ? "Pending" : "Not Verified"}
+                {user.verified || kycStatus?.status === "approved"
+                  ? "Verified"
+                  : kycStatus?.status === "pending"
+                    ? "Pending"
+                    : "Not Verified"}
               </p>
               <p className="text-xs text-gray-500 mt-0.5">KYC Status</p>
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg
+                className="w-5 h-5 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
             </div>
             <div>
               <p className="text-sm font-bold text-gray-900 leading-tight">
-                {new Date(user.updatedat).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                {new Date(user.updatedat).toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                })}
               </p>
               <p className="text-xs text-gray-500 mt-0.5">Member Since</p>
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+              <svg
+                className="w-5 h-5 text-violet-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                />
               </svg>
             </div>
             <div>
               <p className="text-sm font-bold text-gray-900 leading-tight">
-                {reviewStats?.total ?? 0} review{(reviewStats?.total ?? 0) !== 1 ? "s" : ""}
+                {reviewStats?.total ?? 0} review
+                {(reviewStats?.total ?? 0) !== 1 ? "s" : ""}
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
-                {reviewStats && reviewStats.averageRating > 0 ? `${reviewStats.averageRating.toFixed(1)} avg rating` : "No ratings yet"}
+                {reviewStats && reviewStats.averageRating > 0
+                  ? `${reviewStats.averageRating.toFixed(1)} avg rating`
+                  : "No ratings yet"}
               </p>
             </div>
           </div>
@@ -708,18 +874,31 @@ export default function ProfilePage() {
 
       {/* ── MAIN CONTENT ────────────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-5 pb-16 space-y-4">
-
         {/* KYC CTA (if not verified and not pending) */}
         {!user.verified && !kycStatus && (
           <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              <svg
+                className="w-5 h-5 text-emerald-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-emerald-900">Verify your identity to build trust</p>
-              <p className="text-xs text-emerald-700 mt-0.5">Verified sellers get more visibility and buyer confidence.</p>
+              <p className="text-sm font-semibold text-emerald-900">
+                Verify your identity to build trust
+              </p>
+              <p className="text-xs text-emerald-700 mt-0.5">
+                Verified sellers get more visibility and buyer confidence.
+              </p>
             </div>
             <button
               onClick={() => setShowKYCModal(true)}
@@ -734,10 +913,14 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Personal Information */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Personal</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+              Personal
+            </p>
             <div className="space-y-4">
               <div>
-                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Full Name</label>
+                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                  Full Name
+                </label>
                 {editMode ? (
                   <input
                     type="text"
@@ -747,23 +930,35 @@ export default function ProfilePage() {
                     className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-gray-50"
                   />
                 ) : (
-                  <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {user.name}
+                  </p>
                 )}
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Email</label>
-                <p className="text-sm font-semibold text-gray-900">{user.email}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">Cannot be changed</p>
+                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                  Email
+                </label>
+                <p className="text-sm font-semibold text-gray-900">
+                  {user.email}
+                </p>
+                <p className="text-[10px] text-gray-400 mt-0.5">
+                  Cannot be changed
+                </p>
               </div>
             </div>
           </div>
 
           {/* Contact Information */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Contact</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+              Contact
+            </p>
             <div className="space-y-4">
               <div>
-                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Phone Number</label>
+                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                  Phone Number
+                </label>
                 {editMode ? (
                   <input
                     type="tel"
@@ -773,11 +968,17 @@ export default function ProfilePage() {
                     className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-gray-50"
                   />
                 ) : (
-                  <p className="text-sm font-semibold text-gray-900">{user.phone || <span className="text-gray-400 font-normal">Not set</span>}</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {user.phone || (
+                      <span className="text-gray-400 font-normal">Not set</span>
+                    )}
+                  </p>
                 )}
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Country</label>
+                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                  Country
+                </label>
                 {editMode ? (
                   <select
                     name="country"
@@ -787,11 +988,17 @@ export default function ProfilePage() {
                   >
                     <option value="">Select Country</option>
                     {countries.map((country) => (
-                      <option key={country} value={country}>{country}</option>
+                      <option key={country} value={country}>
+                        {country}
+                      </option>
                     ))}
                   </select>
                 ) : (
-                  <p className="text-sm font-semibold text-gray-900">{user.country || <span className="text-gray-400 font-normal">Not set</span>}</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {user.country || (
+                      <span className="text-gray-400 font-normal">Not set</span>
+                    )}
+                  </p>
                 )}
               </div>
             </div>
@@ -801,13 +1008,25 @@ export default function ProfilePage() {
         {/* Security */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
-            <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <svg
+              className="w-5 h-5 text-amber-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
             </svg>
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-gray-900">Password</p>
-            <p className="text-xs text-gray-400 mt-0.5">Keep your account secure with a strong password</p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Keep your account secure with a strong password
+            </p>
           </div>
           <button
             onClick={() => setShowPasswordModal(true)}
@@ -820,16 +1039,31 @@ export default function ProfilePage() {
         {/* Reviews */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">My Reviews</p>
-            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${trustScore >= 75 ? "bg-emerald-100 text-emerald-700" : trustScore >= 45 ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-500"}`}>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+              My Reviews
+            </p>
+            <span
+              className={`text-xs font-semibold px-2.5 py-1 rounded-full ${trustScore >= 75 ? "bg-emerald-100 text-emerald-700" : trustScore >= 45 ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-500"}`}
+            >
               {trustLoading ? "..." : `${trustScore}% trust`}
             </span>
           </div>
-          {reviewStats && reviewStats.total > 0 && <ReviewSummary stats={reviewStats} />}
+          {reviewStats && reviewStats.total > 0 && (
+            <ReviewSummary stats={reviewStats} />
+          )}
           <div className="mt-4">
             <ReviewList
               reviews={reviews}
-              stats={reviewStats || { total: 0, positive: 0, neutral: 0, negative: 0, averageRating: 0, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } }}
+              stats={
+                reviewStats || {
+                  total: 0,
+                  positive: 0,
+                  neutral: 0,
+                  negative: 0,
+                  averageRating: 0,
+                  distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+                }
+              }
               loading={reviewsLoading}
               apiBase={API_BASE}
               onFilterChange={handleReviewFilterChange}
@@ -838,42 +1072,81 @@ export default function ProfilePage() {
             />
           </div>
         </div>
-
       </div>
 
       {/* ── PASSWORD MODAL ───────────────────────────────────────────────────── */}
       {showPasswordModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full sm:max-w-md p-6">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                  <svg
+                    className="w-4 h-4 text-amber-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900">Change Password</h3>
+                <h3 className="text-lg font-bold text-gray-900">
+                  Change Password
+                </h3>
               </div>
               <button
-                onClick={() => { setShowPasswordModal(false); setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" }); setErrorMessage(""); }}
+                onClick={() => {
+                  setShowPasswordModal(false);
+                  setPasswordData({
+                    currentPassword: "",
+                    newPassword: "",
+                    confirmPassword: "",
+                  });
+                  setErrorMessage("");
+                }}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
             <div className="space-y-4">
               {successMessage && (
-                <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5">{successMessage}</div>
+                <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5">
+                  {successMessage}
+                </div>
               )}
               {errorMessage && (
-                <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">{errorMessage}</div>
+                <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">
+                  {errorMessage}
+                </div>
               )}
-              {(["currentPassword", "newPassword", "confirmPassword"] as const).map((field) => (
+              {(
+                ["currentPassword", "newPassword", "confirmPassword"] as const
+              ).map((field) => (
                 <div key={field}>
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
-                    {field === "currentPassword" ? "Current Password" : field === "newPassword" ? "New Password" : "Confirm New Password"}
+                    {field === "currentPassword"
+                      ? "Current Password"
+                      : field === "newPassword"
+                        ? "New Password"
+                        : "Confirm New Password"}
                   </label>
                   <input
                     type="password"
@@ -889,7 +1162,9 @@ export default function ProfilePage() {
                 disabled={isUpdatingPassword}
                 className="w-full h-11 rounded-xl text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
-                {isUpdatingPassword ? <span className="w-4 h-4 border-2 border-white/70 border-t-transparent rounded-full animate-spin" /> : null}
+                {isUpdatingPassword ? (
+                  <span className="w-4 h-4 border-2 border-white/70 border-t-transparent rounded-full animate-spin" />
+                ) : null}
                 {isUpdatingPassword ? "Updating..." : "Update Password"}
               </button>
             </div>
@@ -912,19 +1187,43 @@ export default function ProfilePage() {
 
       {/* ── REPORT REVIEW MODAL ─────────────────────────────────────────────── */}
       {reportReview && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full sm:max-w-md p-6">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-gray-900">Report Review</h3>
-              <button onClick={() => setReportReview(null)} className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <button
+                onClick={() => setReportReview(null)}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
-            <p className="text-sm text-gray-500 mb-4">Describe why this review should be moderated. Our safety team will review it.</p>
-            {reportError && <div className="mb-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">{reportError}</div>}
-            {reportSuccess && <div className="mb-3 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">{reportSuccess}</div>}
+            <p className="text-sm text-gray-500 mb-4">
+              Describe why this review should be moderated. Our safety team will
+              review it.
+            </p>
+            {reportError && (
+              <div className="mb-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+                {reportError}
+              </div>
+            )}
+            {reportSuccess && (
+              <div className="mb-3 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
+                {reportSuccess}
+              </div>
+            )}
             <textarea
               value={reportReason}
               onChange={(event) => setReportReason(event.target.value)}
@@ -933,10 +1232,18 @@ export default function ProfilePage() {
               placeholder="Harassment, spam, false claim..."
             />
             <div className="mt-4 flex gap-3">
-              <button onClick={() => setReportReview(null)} disabled={reportSubmitting} className="flex-1 h-10 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+              <button
+                onClick={() => setReportReview(null)}
+                disabled={reportSubmitting}
+                className="flex-1 h-10 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+              >
                 Cancel
               </button>
-              <button onClick={submitReviewReport} disabled={reportSubmitting} className="flex-1 h-10 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors disabled:opacity-70">
+              <button
+                onClick={submitReviewReport}
+                disabled={reportSubmitting}
+                className="flex-1 h-10 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors disabled:opacity-70"
+              >
                 {reportSubmitting ? "Submitting..." : "Submit Report"}
               </button>
             </div>
@@ -946,16 +1253,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

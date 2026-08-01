@@ -96,12 +96,12 @@ export default function OnboardingModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center px-3 pt-3 pb-20 sm:px-4 sm:pt-4 md:pb-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       {/* Modal */}
-      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeIn flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeIn flex flex-col max-h-[calc(100dvh-6rem)] md:max-h-[90vh]">
         {/* Header with gradient */}
         <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 px-4 py-5 text-white sm:px-8 sm:py-6">
           <div className="flex items-center gap-3">

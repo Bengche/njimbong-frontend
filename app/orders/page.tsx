@@ -66,7 +66,7 @@ function ConfirmReleaseModal({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div
         className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
           visible ? "opacity-100" : "opacity-0"
@@ -239,7 +239,7 @@ function ReleaseSuccessOverlay({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-gradient-to-br from-emerald-950 via-emerald-900 to-green-900">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-gradient-to-br from-emerald-950 via-emerald-900 to-green-900">
       <div className="w-full max-w-xs text-center select-none">
         {/* Animated ring + checkmark */}
         <div className="relative flex items-center justify-center mb-8">

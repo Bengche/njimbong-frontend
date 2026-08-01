@@ -233,7 +233,9 @@ export const ReviewSummary: React.FC<ReviewSummaryProps> = ({ stats }) => {
               </svg>
             </div>
             <div>
-              <div className="text-sm font-bold text-gray-900">{stats.neutral}</div>
+              <div className="text-sm font-bold text-gray-900">
+                {stats.neutral}
+              </div>
               <div className="text-[11px] text-gray-400">Neutral</div>
             </div>
           </div>
@@ -303,8 +305,8 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
     sentiment === "positive"
       ? "bg-emerald-50 text-emerald-700"
       : sentiment === "neutral"
-      ? "bg-gray-100 text-gray-600"
-      : "bg-red-50 text-red-700";
+        ? "bg-gray-100 text-gray-600"
+        : "bg-red-50 text-red-700";
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 hover:shadow-sm hover:border-gray-200 transition-all duration-200">
@@ -368,7 +370,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
       <div className="flex items-center gap-2 mb-3">
         <div
           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${getRatingColor(
-            review.rating
+            review.rating,
           )}`}
         >
           <StarRating rating={review.rating} size="sm" />
@@ -458,7 +460,9 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
               </span>
             )}
           </div>
-          <p className="text-xs text-gray-600 leading-relaxed">{review.sellerResponse}</p>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            {review.sellerResponse}
+          </p>
         </div>
       )}
     </div>
@@ -649,7 +653,7 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
   };
 
   const getSentimentLabel = (
-    sentiment: "positive" | "neutral" | "negative"
+    sentiment: "positive" | "neutral" | "negative",
   ) => {
     if (sentiment === "positive") return "Positive";
     if (sentiment === "neutral") return "Neutral";
@@ -657,7 +661,7 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
   };
 
   const getSentimentStyle = (
-    sentiment: "positive" | "neutral" | "negative"
+    sentiment: "positive" | "neutral" | "negative",
   ) => {
     if (sentiment === "positive")
       return "border-green-200 bg-green-50 text-green-700";
@@ -667,8 +671,8 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50">
-      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center px-3 pt-3 pb-20 sm:px-4 sm:pt-4 md:pb-4 bg-black/50">
+      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[calc(100dvh-6rem)] md:max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-5 border-b">
           <h2 className="text-xl font-bold text-gray-900">Write a Review</h2>
@@ -742,8 +746,8 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
                               star >= 4
                                 ? "positive"
                                 : star === 3
-                                ? "neutral"
-                                : "negative"
+                                  ? "neutral"
+                                  : "negative",
                             );
                           }
                         }}
@@ -794,7 +798,7 @@ export const WriteReviewModal: React.FC<WriteReviewModalProps> = ({
                       >
                         {getSentimentLabel(sentiment)}
                       </button>
-                    )
+                    ),
                   )}
                 </div>
                 <p className="text-xs text-gray-400 mt-1">

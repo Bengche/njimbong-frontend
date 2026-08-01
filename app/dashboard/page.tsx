@@ -2513,8 +2513,8 @@ export default function Dashboard() {
         </>
       )}
       {showSaveSearchModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+        <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 pb-20 md:pb-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-y-auto max-h-[calc(100dvh-6rem)] md:max-h-[90vh]">
             <div className="p-4 sm:p-6 border-b">
               <h3 className="text-xl font-bold text-gray-900">Save Search</h3>
               <p className="text-sm text-gray-500">
@@ -2619,7 +2619,7 @@ export default function Dashboard() {
       {/* Withdraw / Delete Offer Confirmation Modal */}
       {withdrawConfirmOffer && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-4"
+          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/60 p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) setWithdrawConfirmOffer(null);
           }}

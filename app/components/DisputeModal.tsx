@@ -83,12 +83,12 @@ export default function DisputeModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 pb-20 md:pb-4">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={handleClose}
       />
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[calc(100dvh-6rem)] md:max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-red-600 to-red-500 px-6 py-5 text-white flex-shrink-0">
           <div className="flex items-center justify-between">

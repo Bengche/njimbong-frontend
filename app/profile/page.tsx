@@ -513,12 +513,7 @@ export default function ProfilePage() {
 
       {/* ── HERO COVER ──────────────────────────────────────────────────────── */}
       <div className="relative">
-        <div className="h-36 sm:h-48 bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-400 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-8 w-32 h-32 rounded-full bg-white" />
-            <div className="absolute -bottom-8 right-16 w-48 h-48 rounded-full bg-white" />
-            <div className="absolute top-6 right-1/3 w-20 h-20 rounded-full bg-white" />
-          </div>
+        <div className="h-36 sm:h-48 bg-slate-900 relative overflow-hidden">
           <button
             onClick={() => router.push("/dashboard")}
             className="absolute top-4 left-4 flex items-center gap-1.5 text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium transition-all"
@@ -1076,8 +1071,8 @@ export default function ProfilePage() {
 
       {/* ── PASSWORD MODAL ───────────────────────────────────────────────────── */}
       {showPasswordModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4 pb-20 md:pb-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 overflow-y-auto max-h-[calc(100dvh-6rem)] md:max-h-[90vh]">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center">
@@ -1187,8 +1182,8 @@ export default function ProfilePage() {
 
       {/* ── REPORT REVIEW MODAL ─────────────────────────────────────────────── */}
       {reportReview && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4 pb-20 md:pb-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 overflow-y-auto max-h-[calc(100dvh-6rem)] md:max-h-[90vh]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-gray-900">Report Review</h3>
               <button

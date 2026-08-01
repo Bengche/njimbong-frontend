@@ -161,12 +161,12 @@ export default function FonlokCheckoutModal({ listing, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4 pb-20 md:pb-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-6">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-6 overflow-y-auto max-h-[calc(100dvh-6rem)] md:max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>

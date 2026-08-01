@@ -521,21 +521,25 @@ export default function PublicProfilePage() {
   // ============================================
   return (
     <div className="min-h-screen bg-[#f7f8fa]">
-
       {/* ── HERO COVER ──────────────────────────────────────────────────────── */}
       <div className="relative">
-        <div className="h-36 sm:h-48 bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-400 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-8 w-32 h-32 rounded-full bg-white" />
-            <div className="absolute -bottom-8 right-16 w-48 h-48 rounded-full bg-white" />
-            <div className="absolute top-6 right-1/3 w-20 h-20 rounded-full bg-white" />
-          </div>
+        <div className="h-36 sm:h-48 bg-slate-900 relative overflow-hidden">
           <button
             onClick={() => router.back()}
             className="absolute top-4 left-4 flex items-center gap-1.5 text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium transition-all"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Back
           </button>
@@ -555,13 +559,23 @@ export default function PublicProfilePage() {
                 />
               ) : (
                 <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl border-4 border-white shadow-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
-                  <span className="text-3xl sm:text-4xl font-bold text-white">{getInitials(user.name)}</span>
+                  <span className="text-3xl sm:text-4xl font-bold text-white">
+                    {getInitials(user.name)}
+                  </span>
                 </div>
               )}
               {(user.is_verified || user.kyc_status === "approved") && (
                 <div className="absolute -bottom-1.5 -right-1.5 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center border-2 border-white shadow-md">
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
               )}
@@ -570,31 +584,63 @@ export default function PublicProfilePage() {
             {/* Name + meta */}
             <div className="flex-1 mt-3 sm:mt-0 sm:mb-1 text-center sm:text-left">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">{user.name}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+                  {user.name}
+                </h1>
                 {user.kyc_status === "approved" && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     ID Verified
                   </span>
                 )}
                 {user.is_suspended && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">Suspended</span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
+                    Suspended
+                  </span>
                 )}
               </div>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-sm text-gray-500">
                 {user.country && (
                   <span className="flex items-center gap-1">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <svg
+                      className="w-3.5 h-3.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
                     </svg>
                     {user.country}
                   </span>
                 )}
                 <span className="flex items-center gap-1">
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
                   </svg>
                   Joined {memberSinceLabel}
                 </span>
@@ -608,9 +654,17 @@ export default function PublicProfilePage() {
                   onClick={async () => {
                     setFollowLoading(true);
                     try {
-                      const res = await fetch(`${API_BASE}/api/users/${userId}/follow`, { method: isFollowing ? "DELETE" : "POST", credentials: "include" });
+                      const res = await fetch(
+                        `${API_BASE}/api/users/${userId}/follow`,
+                        {
+                          method: isFollowing ? "DELETE" : "POST",
+                          credentials: "include",
+                        },
+                      );
                       if (res.ok) setIsFollowing(!isFollowing);
-                    } catch { /* ignore */ }
+                    } catch {
+                      /* ignore */
+                    }
                     setFollowLoading(false);
                   }}
                   disabled={followLoading}
@@ -636,8 +690,18 @@ export default function PublicProfilePage() {
                   className="h-9 w-9 rounded-xl flex items-center justify-center border border-gray-200 bg-white text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all"
                   title="Report"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
+                    />
                   </svg>
                 </button>
               </div>
@@ -654,9 +718,17 @@ export default function PublicProfilePage() {
               onClick={async () => {
                 setFollowLoading(true);
                 try {
-                  const res = await fetch(`${API_BASE}/api/users/${userId}/follow`, { method: isFollowing ? "DELETE" : "POST", credentials: "include" });
+                  const res = await fetch(
+                    `${API_BASE}/api/users/${userId}/follow`,
+                    {
+                      method: isFollowing ? "DELETE" : "POST",
+                      credentials: "include",
+                    },
+                  );
                   if (res.ok) setIsFollowing(!isFollowing);
-                } catch { /* ignore */ }
+                } catch {
+                  /* ignore */
+                }
                 setFollowLoading(false);
               }}
               disabled={followLoading}
@@ -664,7 +736,12 @@ export default function PublicProfilePage() {
             >
               {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
             </button>
-            <button onClick={() => router.push(`/chat?userId=${user.id}`)} className="flex-1 h-10 rounded-xl text-sm font-semibold flex items-center justify-center bg-emerald-600 text-white">Message</button>
+            <button
+              onClick={() => router.push(`/chat?userId=${user.id}`)}
+              className="flex-1 h-10 rounded-xl text-sm font-semibold flex items-center justify-center bg-emerald-600 text-white"
+            >
+              Message
+            </button>
             <button
               onClick={toggleFavorite}
               disabled={favoriteLoading}
@@ -672,9 +749,22 @@ export default function PublicProfilePage() {
             >
               {isFavorited ? "Saved" : "Save"}
             </button>
-            <button onClick={() => setShowReportModal(true)} className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center border border-gray-200 bg-white text-gray-400">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+            <button
+              onClick={() => setShowReportModal(true)}
+              className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center border border-gray-200 bg-white text-gray-400"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
+                />
               </svg>
             </button>
           </div>
@@ -686,47 +776,93 @@ export default function PublicProfilePage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              <svg
+                className="w-5 h-5 text-emerald-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                />
               </svg>
             </div>
             <div>
-              <p className="text-xl font-bold text-gray-900 leading-none">{stats?.active_listings || 0}</p>
+              <p className="text-xl font-bold text-gray-900 leading-none">
+                {stats?.active_listings || 0}
+              </p>
               <p className="text-xs text-gray-500 mt-0.5">Active Listings</p>
             </div>
           </div>
-          <div className={`rounded-2xl border shadow-sm p-4 flex items-center gap-3 ${trustBg}`}>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${trustScore >= 75 ? "bg-emerald-100" : trustScore >= 45 ? "bg-amber-100" : "bg-red-100"}`}>
-              <svg className={`w-5 h-5 ${trustColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          <div
+            className={`rounded-2xl border shadow-sm p-4 flex items-center gap-3 ${trustBg}`}
+          >
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${trustScore >= 75 ? "bg-emerald-100" : trustScore >= 45 ? "bg-amber-100" : "bg-red-100"}`}
+            >
+              <svg
+                className={`w-5 h-5 ${trustColor}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
             </div>
             <div>
-              <p className={`text-xl font-bold leading-none ${trustColor}`}>{trustScore}%</p>
+              <p className={`text-xl font-bold leading-none ${trustColor}`}>
+                {trustScore}%
+              </p>
               <p className="text-xs text-gray-500 mt-0.5">Trust Score</p>
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg
+                className="w-5 h-5 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-900 leading-tight">{memberSinceLabel}</p>
+              <p className="text-sm font-bold text-gray-900 leading-tight">
+                {memberSinceLabel}
+              </p>
               <p className="text-xs text-gray-500 mt-0.5">Member Since</p>
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
             <p className="text-xs text-gray-500 mb-2">Verifications</p>
             <div className="flex flex-wrap gap-1.5">
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.kyc_status === "approved" ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}>
+              <span
+                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.kyc_status === "approved" ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}
+              >
                 {user.kyc_status === "approved" ? "✓" : "✗"} ID
               </span>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.is_verified ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}>
+              <span
+                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.is_verified ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}
+              >
                 {user.is_verified ? "✓" : "✗"} Email
               </span>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.phone ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}>
+              <span
+                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${user.phone ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-gray-50 border-gray-200 text-gray-400"}`}
+              >
                 {user.phone ? "✓" : "✗"} Phone
               </span>
             </div>
@@ -749,7 +885,9 @@ export default function PublicProfilePage() {
                   : tab === "reviews"
                     ? `Reviews${reviewStats?.total ? ` (${reviewStats.total})` : ""}`
                     : "About"}
-                {activeTab === tab && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-t-full" />}
+                {activeTab === tab && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 rounded-t-full" />
+                )}
               </button>
             ))}
           </div>
@@ -758,21 +896,37 @@ export default function PublicProfilePage() {
 
       {/* ── CONTENT ─────────────────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 pb-16">
-
         {/* LISTINGS */}
         {activeTab === "listings" && listings.length === 0 && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              <svg
+                className="w-8 h-8 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">No listings yet</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">
+              No listings yet
+            </h3>
             <p className="text-sm text-gray-500">
-              {isOwnProfile ? "You haven't posted any listings yet." : `${user.name} hasn't posted any listings yet.`}
+              {isOwnProfile
+                ? "You haven't posted any listings yet."
+                : `${user.name} hasn't posted any listings yet.`}
             </p>
             {isOwnProfile && (
-              <button onClick={() => router.push("/dashboard")} className="mt-5 bg-emerald-600 text-white px-5 py-2.5 rounded-xl hover:bg-emerald-700 transition text-sm font-semibold">
+              <button
+                onClick={() => router.push("/dashboard")}
+                className="mt-5 bg-emerald-600 text-white px-5 py-2.5 rounded-xl hover:bg-emerald-700 transition text-sm font-semibold"
+              >
                 Create your first listing
               </button>
             )}
@@ -798,12 +952,24 @@ export default function PublicProfilePage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-200">
-                      <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <svg
+                        className="w-12 h-12"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
                     </div>
                   )}
-                  <span className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm ${listing.condition === "new" ? "bg-emerald-500 text-white" : "bg-gray-800/80 text-white"}`}>
+                  <span
+                    className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm ${listing.condition === "new" ? "bg-emerald-500 text-white" : "bg-gray-800/80 text-white"}`}
+                  >
                     {listing.condition === "new" ? "New" : "Used"}
                   </span>
                   {listing.category_name && (
@@ -821,8 +987,18 @@ export default function PublicProfilePage() {
                   </p>
                   {listing.city && (
                     <p className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-0.5">
-                      <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <svg
+                        className="w-2.5 h-2.5 flex-shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
                       </svg>
                       {listing.city}
                     </p>
@@ -837,23 +1013,46 @@ export default function PublicProfilePage() {
         {activeTab === "reviews" && (
           <div className="space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <h2 className="text-xl font-bold text-gray-900">Reviews for {user.name}</h2>
+              <h2 className="text-xl font-bold text-gray-900">
+                Reviews for {user.name}
+              </h2>
               {!isOwnProfile && (
                 <button
                   onClick={() => setShowWriteReview(true)}
                   className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-xl hover:bg-emerald-700 transition text-sm font-semibold shadow-sm"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
                   </svg>
                   Write a Review
                 </button>
               )}
             </div>
-            {reviewStats && reviewStats.total > 0 && <ReviewSummary stats={reviewStats} />}
+            {reviewStats && reviewStats.total > 0 && (
+              <ReviewSummary stats={reviewStats} />
+            )}
             <ReviewList
               reviews={reviews}
-              stats={reviewStats || { total: 0, positive: 0, neutral: 0, negative: 0, averageRating: 0, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } }}
+              stats={
+                reviewStats || {
+                  total: 0,
+                  positive: 0,
+                  neutral: 0,
+                  negative: 0,
+                  averageRating: 0,
+                  distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+                }
+              }
               loading={reviewsLoading}
               apiBase={API_BASE}
               onFilterChange={handleFilterChange}
@@ -867,87 +1066,185 @@ export default function PublicProfilePage() {
           <div className="space-y-4">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-6 grid sm:grid-cols-2 gap-6">
               <div>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Contact</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+                  Contact
+                </p>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      <svg
+                        className="w-4 h-4 text-emerald-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Email</p>
-                      <p className="text-sm font-medium text-gray-900">{user.email}</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">
+                        Email
+                      </p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.email}
+                      </p>
                     </div>
                   </div>
                   {user.phone && (
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                        <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        <svg
+                          className="w-4 h-4 text-emerald-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                          />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">Phone</p>
-                        <p className="text-sm font-medium text-gray-900">{user.phone}</p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">
+                          Phone
+                        </p>
+                        <p className="text-sm font-medium text-gray-900">
+                          {user.phone}
+                        </p>
                       </div>
                     </div>
                   )}
                   {user.country && (
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                        <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg
+                          className="w-4 h-4 text-emerald-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">Location</p>
-                        <p className="text-sm font-medium text-gray-900">{user.country}</p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">
+                          Location
+                        </p>
+                        <p className="text-sm font-medium text-gray-900">
+                          {user.country}
+                        </p>
                       </div>
                     </div>
                   )}
                 </div>
               </div>
               <div>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Account</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+                  Account
+                </p>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <svg
+                        className="w-4 h-4 text-blue-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Member Since</p>
-                      <p className="text-sm font-medium text-gray-900">
-                        {formatFullDate(getMemberSinceValue(user)) || formatMonthYear(getMemberSinceValue(user)) || "N/A"}
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">
+                        Member Since
                       </p>
-                      <p className="text-[10px] text-gray-400">{formatMemberDuration(user.months_as_member)}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {formatFullDate(getMemberSinceValue(user)) ||
+                          formatMonthYear(getMemberSinceValue(user)) ||
+                          "N/A"}
+                      </p>
+                      <p className="text-[10px] text-gray-400">
+                        {formatMemberDuration(user.months_as_member)}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      <svg
+                        className="w-4 h-4 text-purple-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                        />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Verification</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">
+                        Verification
+                      </p>
                       <p className="text-sm font-medium text-gray-900">
-                        {user.kyc_status === "approved" ? "Identity Verified" : user.kyc_status === "pending" ? "Pending" : "Not Verified"}
+                        {user.kyc_status === "approved"
+                          ? "Identity Verified"
+                          : user.kyc_status === "pending"
+                            ? "Pending"
+                            : "Not Verified"}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${trustScore >= 75 ? "bg-emerald-50" : trustScore >= 45 ? "bg-amber-50" : "bg-red-50"}`}>
-                      <svg className={`w-4 h-4 ${trustColor}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${trustScore >= 75 ? "bg-emerald-50" : trustScore >= 45 ? "bg-amber-50" : "bg-red-50"}`}
+                    >
+                      <svg
+                        className={`w-4 h-4 ${trustColor}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                        />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Trust Score</p>
-                      <p className={`text-sm font-bold ${trustColor}`}>{trustScore}%</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">
+                        Trust Score
+                      </p>
+                      <p className={`text-sm font-bold ${trustColor}`}>
+                        {trustScore}%
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -955,16 +1252,31 @@ export default function PublicProfilePage() {
             </div>
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
               <div className="flex gap-3">
-                <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                <svg
+                  className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
                 </svg>
                 <div>
-                  <p className="text-sm font-semibold text-amber-800 mb-1.5">Stay Safe When Trading</p>
+                  <p className="text-sm font-semibold text-amber-800 mb-1.5">
+                    Stay Safe When Trading
+                  </p>
                   <ul className="text-xs text-amber-700 space-y-1">
                     <li>• Meet in public places for transactions</li>
                     <li>• Verify items before making payment</li>
                     <li>• Use secure payment methods when possible</li>
-                    <li>• Trust your instincts — if something feels wrong, walk away</li>
+                    <li>
+                      • Trust your instincts — if something feels wrong, walk
+                      away
+                    </li>
                   </ul>
                 </div>
               </div>

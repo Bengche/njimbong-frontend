@@ -1268,7 +1268,7 @@ export default function ListingDetailPage() {
       {/* Full Image Modal */}
       {showFullImage && (
         <div
-          className="fixed inset-0 bg-black/95 z-50 flex flex-col"
+          className="fixed inset-0 bg-black/95 z-[60] flex flex-col"
           onClick={() => setShowFullImage(false)}
         >
           {/* Header */}

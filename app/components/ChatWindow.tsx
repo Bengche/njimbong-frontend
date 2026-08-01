@@ -1849,7 +1849,7 @@ export default function ChatWindow({
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4 pb-20 md:pb-4">
           <div className="bg-white rounded-lg p-4 sm:p-6 max-w-sm w-full shadow-xl">
             <h3 className="text-lg font-semibold mb-2">Delete Message?</h3>
             <p className="text-gray-600 mb-4">

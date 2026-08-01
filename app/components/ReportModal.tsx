@@ -180,8 +180,8 @@ export default function ReportModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] px-3 pt-3 pb-20 sm:px-4 sm:pt-4 md:pb-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[calc(100dvh-6rem)] md:max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 sm:p-6 border-b bg-gradient-to-r from-red-500 to-orange-500 text-white">
           <div className="flex justify-between items-start">

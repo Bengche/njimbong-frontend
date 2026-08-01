@@ -27,15 +27,37 @@ const QUICK_SUGGESTIONS = [
 ];
 
 const PAGE_SUGGESTIONS: Record<string, string[]> = {
-  "/dashboard": ["Find me a good deal", "What's trending?", "Tips to sell faster"],
-  "/listing": ["Is this a fair price?", "How do I contact the seller?", "Tips for safe buying"],
-  "/profile": ["How to boost my trust score", "Tips for my listings", "How to get verified"],
-  "/chat": ["Help me write a message", "Summarize this conversation", "Negotiation tips"],
-  "/sell": ["Help me write a description", "What price should I set?", "Best category for my item"],
+  "/dashboard": [
+    "Find me a good deal",
+    "What's trending?",
+    "Tips to sell faster",
+  ],
+  "/listing": [
+    "Is this a fair price?",
+    "How do I contact the seller?",
+    "Tips for safe buying",
+  ],
+  "/profile": [
+    "How to boost my trust score",
+    "Tips for my listings",
+    "How to get verified",
+  ],
+  "/chat": [
+    "Help me write a message",
+    "Summarize this conversation",
+    "Negotiation tips",
+  ],
+  "/sell": [
+    "Help me write a description",
+    "What price should I set?",
+    "Best category for my item",
+  ],
 };
 
 function getPageSuggestions(pathname: string): string[] {
-  const match = Object.keys(PAGE_SUGGESTIONS).find((k) => pathname?.includes(k));
+  const match = Object.keys(PAGE_SUGGESTIONS).find((k) =>
+    pathname?.includes(k),
+  );
   return match ? PAGE_SUGGESTIONS[match] : QUICK_SUGGESTIONS;
 }
 
@@ -92,13 +114,17 @@ export default function NjimbongChat() {
 
   const buildPageContext = () => {
     const page = pathname || "";
-    if (page.includes("/listing/")) return "User is viewing a product listing page.";
+    if (page.includes("/listing/"))
+      return "User is viewing a product listing page.";
     if (page.includes("/profile")) return "User is on a profile page.";
     if (page.includes("/chat")) return "User is in the messaging/chat section.";
-    if (page.includes("/dashboard")) return "User is on the main marketplace dashboard browsing listings.";
-    if (page.includes("/favorites")) return "User is viewing their favorite saved items.";
+    if (page.includes("/dashboard"))
+      return "User is on the main marketplace dashboard browsing listings.";
+    if (page.includes("/favorites"))
+      return "User is viewing their favorite saved items.";
     if (page.includes("/orders")) return "User is viewing their orders.";
-    if (page.includes("/safety")) return "User is on the safety and trust page.";
+    if (page.includes("/safety"))
+      return "User is on the safety and trust page.";
     return "User is browsing the Njimbong Marketplace.";
   };
 
@@ -146,7 +172,13 @@ export default function NjimbongChat() {
 
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
-          throw new Error(errData.error || `HTTP ${response.status}`);
+          const statusMsg =
+            response.status === 503
+              ? errData.error || "Njimbong AI is not available right now."
+              : response.status === 429
+              ? "Too many requests — please wait a moment and try again."
+              : errData.error || "Njimbong AI is temporarily unavailable.";
+          throw new Error(statusMsg);
         }
 
         const reader = response.body!.getReader();
@@ -188,7 +220,10 @@ export default function NjimbongChat() {
       } catch (err: any) {
         if (err.name === "AbortError") return;
         console.error("NjimbongChat error:", err);
-        setError(err.message || "Njimbong AI is temporarily unavailable. Please try again.");
+        setError(
+          err.message ||
+            "Njimbong AI is temporarily unavailable. Please try again.",
+        );
         setMessages((prev) => prev.filter((m) => m.id !== streamId));
       } finally {
         setIsStreaming(false);
@@ -227,13 +262,37 @@ export default function NjimbongChat() {
         style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.35)" }}
       >
         {isOpen ? (
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className="w-6 h-6 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         ) : (
-          <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+          <svg
+            className="w-7 h-7 text-white"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"
+            />
           </svg>
         )}
 
@@ -251,21 +310,38 @@ export default function NjimbongChat() {
         style={isOpen ? { boxShadow: "0 24px 64px rgba(0,0,0,0.28)" } : {}}
       >
         <div className="flex flex-col h-full bg-white md:rounded-2xl overflow-hidden border border-gray-200/60">
-
           {/* Header */}
           <div className="flex-shrink-0 bg-gradient-to-r from-slate-900 to-slate-800 px-4 py-3.5 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+                <svg
+                  className="w-5 h-5 text-white"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"
+                  />
                 </svg>
               </div>
               <div>
-                <p className="text-white font-semibold text-sm leading-none">Njimbong AI</p>
+                <p className="text-white font-semibold text-sm leading-none">
+                  Njimbong AI
+                </p>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
-                  <span className="text-white/60 text-[11px]">Online · Smart Marketplace Assistant</span>
+                  <span className="text-white/60 text-[11px]">
+                    Online · Smart Marketplace Assistant
+                  </span>
                 </div>
               </div>
             </div>
@@ -275,16 +351,36 @@ export default function NjimbongChat() {
                 title="Clear chat"
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
                 </svg>
               </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors md:hidden"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -300,17 +396,28 @@ export default function NjimbongChat() {
                 {/* AI avatar */}
                 {msg.role === "assistant" && (
                   <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
-                    <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    <svg
+                      className="w-3.5 h-3.5 text-white"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+                      />
                     </svg>
                   </div>
                 )}
 
                 <div
                   className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 shadow-sm
-                    ${msg.role === "user"
-                      ? "bg-emerald-600 text-white rounded-br-md"
-                      : "bg-white text-gray-800 border border-gray-100 rounded-bl-md"
+                    ${
+                      msg.role === "user"
+                        ? "bg-emerald-600 text-white rounded-br-md"
+                        : "bg-white text-gray-800 border border-gray-100 rounded-bl-md"
                     }`}
                 >
                   {msg.streaming && msg.content === "" ? (
@@ -318,10 +425,14 @@ export default function NjimbongChat() {
                   ) : msg.role === "assistant" ? (
                     <div
                       className="text-sm leading-relaxed prose-sm [&_strong]:font-semibold [&_em]:italic [&_code]:bg-gray-100 [&_code]:px-1 [&_code]:rounded [&_p]:mb-1 [&_p:last-child]:mb-0"
-                      dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }}
+                      dangerouslySetInnerHTML={{
+                        __html: renderMarkdown(msg.content),
+                      }}
                     />
                   ) : (
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      {msg.content}
+                    </p>
                   )}
                   {msg.streaming && msg.content !== "" && (
                     <span className="inline-block w-0.5 h-3.5 bg-slate-400 ml-0.5 animate-pulse align-middle" />
@@ -333,8 +444,16 @@ export default function NjimbongChat() {
             {/* Error message */}
             {error && (
               <div className="bg-red-50 border border-red-100 rounded-xl px-3 py-2.5 text-xs text-red-600 flex items-start gap-2">
-                <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                <svg
+                  className="w-3.5 h-3.5 mt-0.5 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 {error}
               </div>
@@ -371,7 +490,9 @@ export default function NjimbongChat() {
                 placeholder="Ask Njimbong AI anything..."
                 rows={1}
                 className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none resize-none max-h-24 leading-relaxed disabled:opacity-60"
-                style={{ overflowY: input.split("\n").length > 2 ? "auto" : "hidden" }}
+                style={{
+                  overflowY: input.split("\n").length > 2 ? "auto" : "hidden",
+                }}
               />
               <button
                 onClick={() => sendMessage(input)}
@@ -381,7 +502,11 @@ export default function NjimbongChat() {
                 {isStreaming ? (
                   <span className="w-3.5 h-3.5 border-2 border-white/60 border-t-white rounded-full animate-spin" />
                 ) : (
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
                   </svg>
                 )}

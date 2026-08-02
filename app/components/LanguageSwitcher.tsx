@@ -2,61 +2,43 @@
 
 import { useLanguage } from "../i18n/LanguageContext";
 
-const LANGS = [
-  { code: "en", flag: "🇬🇧", label: "EN" },
-  { code: "fr", flag: "🇫🇷", label: "FR" },
-] as const;
+const OTHER = { en: { code: "fr", flag: "🇫🇷", label: "FR" }, fr: { code: "en", flag: "🇬🇧", label: "EN" } } as const;
 
 /**
- * Compact sliding-pill language toggle.
- * variant="full" renders a wider labelled version for the mobile drawer.
+ * variant="compact" — desktop navbar pill (hidden on mobile).
+ * variant="full"    — mobile drawer row.
  */
-export default function LanguageSwitcher({
-  variant = "compact",
-}: {
-  variant?: "compact" | "full";
-}) {
+export default function LanguageSwitcher({ variant = "compact" }: { variant?: "compact" | "full" }) {
   const { lang, setLang } = useLanguage();
-  const activeIdx = LANGS.findIndex((l) => l.code === lang);
+  const next = OTHER[lang];
 
+  /* ── Full (mobile drawer) ──────────────────────────────────────── */
   if (variant === "full") {
     return (
-      <div className="flex items-center justify-between px-4 py-3">
-        {/* Left label */}
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-base">
-            🌐
-          </span>
-          <span className="text-sm font-semibold text-gray-700">Language</span>
+      <div className="flex items-center justify-between px-4 py-3.5">
+        <div className="flex items-center gap-3">
+          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253M3 12c0 .778.099 1.533.284 2.253" />
+          </svg>
+          <span className="text-sm font-medium text-gray-700">Language</span>
         </div>
 
-        {/* Pill toggle */}
-        <div
-          role="group"
-          aria-label="Language selector"
-          className="relative flex items-center p-0.5 rounded-full bg-gray-100 border border-gray-200/80"
-          style={{ isolation: "isolate" }}
-        >
-          {/* Sliding indicator */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute top-0.5 bottom-0.5 rounded-full bg-white shadow border border-gray-200/60 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
-            style={{
-              width: "calc(50% - 2px)",
-              left: activeIdx === 0 ? "2px" : "calc(50%)",
-            }}
-          />
-          {LANGS.map((l) => (
+        {/* Segmented pill */}
+        <div role="group" aria-label="Language selector" className="flex items-center rounded-full bg-gray-100 p-0.5 gap-px">
+          {(["en", "fr"] as const).map((code) => (
             <button
-              key={l.code}
-              onClick={() => setLang(l.code)}
-              aria-pressed={lang === l.code}
-              className={`relative z-10 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide transition-colors duration-200 select-none ${
-                lang === l.code ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
-              }`}
+              key={code}
+              onClick={() => setLang(code)}
+              aria-pressed={lang === code}
+              className={[
+                "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all duration-200 select-none",
+                lang === code
+                  ? "bg-white shadow text-gray-900"
+                  : "text-gray-400 hover:text-gray-600",
+              ].join(" ")}
             >
-              <span className="text-sm leading-none">{l.flag}</span>
-              <span>{l.label}</span>
+              <span className="text-sm leading-none">{code === "en" ? "🇬🇧" : "🇫🇷"}</span>
+              <span>{code.toUpperCase()}</span>
             </button>
           ))}
         </div>
@@ -64,48 +46,21 @@ export default function LanguageSwitcher({
     );
   }
 
-  /* ── Compact (desktop nav) ─────────────────────────────────────── */
+  /* ── Compact (desktop nav only — hidden on mobile) ─────────────── */
   return (
-    <div
-      role="group"
-      aria-label="Language selector"
-      className="relative flex items-center p-0.5 rounded-full bg-gray-100/90 border border-gray-200/70 shadow-sm"
-      style={{ isolation: "isolate" }}
+    <button
+      onClick={() => setLang(next.code)}
+      aria-label={`Switch to ${next.label}`}
+      title={`Switch to ${next.label}`}
+      className={[
+        "hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full",
+        "text-[11px] font-semibold tracking-wide text-gray-500",
+        "border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700",
+        "shadow-sm transition-all duration-150 active:scale-95 select-none",
+      ].join(" ")}
     >
-      {/* Globe icon */}
-      <span
-        aria-hidden="true"
-        className="flex-shrink-0 ml-1.5 mr-0.5 text-[13px] text-gray-400 select-none pointer-events-none"
-      >
-        🌐
-      </span>
-
-      {/* Sliding white pill */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute top-0.5 bottom-0.5 rounded-full bg-white shadow-sm border border-gray-200/60 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
-        style={{
-          width: "calc(50% - 14px)",
-          left:
-            activeIdx === 0
-              ? "calc(14px + 2px)"
-              : "calc(50% + 2px)",
-        }}
-      />
-
-      {LANGS.map((l) => (
-        <button
-          key={l.code}
-          onClick={() => setLang(l.code)}
-          aria-pressed={lang === l.code}
-          className={`relative z-10 flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase transition-colors duration-200 select-none ${
-            lang === l.code ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
-          }`}
-        >
-          <span className="text-xs leading-none">{l.flag}</span>
-          <span>{l.label}</span>
-        </button>
-      ))}
-    </div>
+      <span className="text-sm leading-none">{next.flag}</span>
+      <span>{next.label}</span>
+    </button>
   );
 }

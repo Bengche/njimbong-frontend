@@ -222,7 +222,6 @@ export default function Navbar() {
             {/* Mobile right cluster: notifications bell + hamburger */}
             <div className="flex items-center gap-1 md:hidden">
               {user && <Notifications userId={user.id} />}
-              <LanguageSwitcher />
               <button
                 className="relative z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-100 bg-white text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50 active:scale-95"
                 onClick={() => setIsOpen(!isOpen)}

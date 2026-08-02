@@ -53,7 +53,7 @@ export default function FulfillRequestModal({
     city: "",
     country: "Cameroon",
     seller_email: "",
-    seller_phone: "",
+    seller_phone_local: "",
     delivery_type: "pickup",
     delivery_notes: "",
     message: "",
@@ -70,7 +70,7 @@ export default function FulfillRequestModal({
         city: request.city || "",
         country: request.country || "Cameroon",
         seller_email: "",
-        seller_phone: "",
+        seller_phone_local: "",
         delivery_type: "pickup",
         delivery_notes: "",
         message: "",
@@ -100,7 +100,7 @@ export default function FulfillRequestModal({
     ) {
       return setError("Please enter a valid price.");
     }
-    if (!formData.seller_phone.trim()) {
+    if (!formData.seller_phone_local.trim()) {
       return setError("A contact phone number is required.");
     }
     if (!formData.city.trim() || !formData.country.trim()) {
@@ -109,9 +109,14 @@ export default function FulfillRequestModal({
 
     setSubmitting(true);
     try {
+      const payload = {
+        ...formData,
+        seller_phone: "237" + formData.seller_phone_local.replace(/\D/g, ""),
+      };
+      delete (payload as any).seller_phone_local;
       const response = await Axios.post(
         `${API_BASE}/api/requests/${request.id}/fulfill`,
-        formData,
+        payload,
         { withCredentials: true },
       );
       onSuccess(response.data.listing_id);
@@ -327,13 +332,20 @@ export default function FulfillRequestModal({
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                   Contact Phone <span className="text-red-500">*</span>
                 </label>
-                <input
-                  name="seller_phone"
-                  value={formData.seller_phone}
-                  onChange={handleChange}
-                  placeholder="e.g., 237 6XX XXX XXX"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 outline-none text-sm transition"
-                />
+                <div className="flex rounded-xl border border-gray-200 focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-100 overflow-hidden transition">
+                  <span className="flex items-center px-3 bg-gray-50 border-r border-gray-200 text-gray-600 text-sm font-medium select-none flex-shrink-0">
+                    +237
+                  </span>
+                  <input
+                    name="seller_phone_local"
+                    type="tel"
+                    value={formData.seller_phone_local}
+                    onChange={handleChange}
+                    placeholder="6XX XXX XXX"
+                    maxLength={9}
+                    className="flex-1 px-4 py-3 outline-none text-sm bg-white"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">

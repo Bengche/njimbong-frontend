@@ -217,116 +217,56 @@ export default function NjimbongChat() {
   };
 
   const suggestions = getPageSuggestions(pathname || "");
-  const isChatPage = pathname?.startsWith("/chat");
 
   if (hidden) return null;
 
   return (
     <>
-      {/* ── Trigger: vertical edge tab on /chat, floating button everywhere else ── */}
-      {isChatPage ? (
-        <button
-          onClick={() => setIsOpen((v) => !v)}
-          aria-label={ai.openTitle}
-          className={`fixed right-0 top-1/2 -translate-y-1/2 z-[70]
+      {/* ── Trigger: vertical edge tab pinned to right side ─────────────────────── */}
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        aria-label={ai.openTitle}
+        className={`fixed right-0 top-1/2 -translate-y-1/2 z-[70]
             flex flex-col items-center justify-center gap-2
             w-8 py-5 rounded-l-2xl
             border border-r-0 border-slate-600/30
             shadow-[-4px_0_20px_rgba(0,0,0,0.25)]
             transition-all duration-300
-            ${isOpen
-              ? "bg-slate-700 w-9"
-              : "bg-gradient-to-b from-slate-800 to-slate-900 hover:w-10"}`}
-        >
-          <svg
-            className="w-3.5 h-3.5 text-white flex-shrink-0"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-          </svg>
-          <span className="text-white/80 text-[9px] font-bold tracking-[0.2em] [writing-mode:vertical-rl] rotate-180 select-none">
-            AI
-          </span>
-        </button>
-      ) : (
-      <button
-        onClick={() => setIsOpen((v) => !v)}
-        aria-label={ai.openTitle}
-        className={`fixed z-[70] bottom-20 right-4 md:bottom-7 md:right-7 w-14 h-14 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center group
-          ${isOpen ? "bg-slate-700 rotate-0 scale-95" : "bg-gradient-to-br from-slate-800 to-slate-900 hover:scale-110"}`}
-        style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.35)" }}
+            ${
+              isOpen
+                ? "bg-slate-700 w-9"
+                : "bg-gradient-to-b from-slate-800 to-slate-900 hover:w-10"
+            }`}
       >
-        {isOpen ? (
-          <svg
-            className="w-6 h-6 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            strokeWidth={2.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        ) : (
-          <svg
-            className="w-7 h-7 text-white"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"
-            />
-          </svg>
-        )}
+        <svg
+          className="w-3.5 h-3.5 text-white flex-shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.5}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+          />
+        </svg>
+        <span className="text-white/80 text-[9px] font-bold tracking-[0.2em] [writing-mode:vertical-rl] rotate-180 select-none">
+          AI
+        </span>
       </button>
-      )} {/* end isChatPage ternary */}
-
-      {/* ── Chat Panel ───────────────────────────────────────────────────────── */}
+      {/* ── Chat Panel: right side-sheet on desktop, full screen on mobile ─────── */}
       <div
         className={`fixed z-[70] transition-all duration-300 ease-in-out
+          inset-0 md:inset-auto md:top-[6.5rem] md:right-0 md:bottom-0 md:w-[360px]
           ${
-            isChatPage
-              ? // On /chat: slide in as a right side-sheet below the navbar
-                `inset-0 md:inset-auto md:top-[6.5rem] md:right-0 md:bottom-0 md:w-[360px]
-                 ${
-                   isOpen
-                     ? "translate-x-0 opacity-100 pointer-events-auto"
-                     : "translate-x-full opacity-0 pointer-events-none"
-                 }`
-              : // Everywhere else: float above page
-                `inset-0 md:inset-auto md:bottom-28 md:right-7 md:w-[390px] md:h-[580px]
-                 ${
-                   isOpen
-                     ? "opacity-100 pointer-events-auto translate-y-0"
-                     : "opacity-0 pointer-events-none translate-y-4 md:translate-y-6"
-                 }`
+            isOpen
+              ? "translate-x-0 opacity-100 pointer-events-auto"
+              : "translate-x-full opacity-0 pointer-events-none"
           }`}
-        style={
-          isOpen
-            ? isChatPage
-              ? { boxShadow: "-8px 0 40px rgba(0,0,0,0.18)" }
-              : { boxShadow: "0 24px 64px rgba(0,0,0,0.28)" }
-            : {}
-        }
+        style={isOpen ? { boxShadow: "-8px 0 40px rgba(0,0,0,0.18)" } : {}}
       >
-        <div className={`flex flex-col h-full bg-white overflow-hidden border border-gray-200/60 ${
-          isChatPage ? "md:border-r-0 md:border-t-0 md:border-b-0 md:border-l" : "md:rounded-2xl"
-        }`}>
+        <div className="flex flex-col h-full bg-white overflow-hidden border border-gray-200/60 md:border-r-0 md:border-t-0 md:border-b-0 md:border-l">
           {/* Header */}
           <div className="flex-shrink-0 bg-gradient-to-r from-slate-900 to-slate-800 px-4 py-3.5 flex items-center justify-between">
             <div className="flex items-center gap-3">

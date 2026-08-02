@@ -259,7 +259,7 @@ export default function Navbar() {
       {/* â”€â”€ MOBILE SLIDE-OVER DRAWER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-40 bg-gray-900/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-[75] bg-gray-900/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
           isOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -275,7 +275,7 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
-        className={`fixed top-0 right-0 bottom-0 z-50 w-72 max-w-[85vw] flex flex-col bg-white shadow-2xl transition-transform duration-350 ease-[cubic-bezier(0.32,0,0.67,0)] md:hidden ${
+        className={`fixed top-0 right-0 bottom-0 z-[80] w-72 max-w-[85vw] flex flex-col bg-white shadow-2xl transition-transform duration-350 ease-[cubic-bezier(0.32,0,0.67,0)] md:hidden ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

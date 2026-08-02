@@ -7,7 +7,11 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { translations, type Language, type TranslationDict } from "./translations";
+import {
+  translations,
+  type Language,
+  type TranslationDict,
+} from "./translations";
 
 interface LanguageContextType {
   lang: Language;
@@ -44,7 +48,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const t = useCallback(
     <K extends keyof TranslationDict>(section: K): TranslationDict[K] => {
-      return translations[lang][section];
+      return translations[lang][section] as TranslationDict[K];
     },
     [lang],
   );

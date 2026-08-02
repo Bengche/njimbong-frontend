@@ -17,6 +17,7 @@ import {
 } from "../components/BrowserNotifications";
 import AnalyticsDashboard from "../components/AnalyticsDashboard";
 import TopSellers from "../components/TopSellers";
+import { useLanguage } from "../i18n/LanguageContext";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -201,6 +202,9 @@ const formatRelativeTime = (
 export default function Dashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useLanguage();
+  const d = t("dashboard");
+  const common = t("common");
   const [showSellModal, setShowSellModal] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [listings, setListings] = useState<Listing[]>([]);
@@ -1012,7 +1016,7 @@ export default function Dashboard() {
               d="M12 4v16m8-8H4"
             />
           </svg>
-          Create Listing
+          {d.createListing}
         </button>
 
         <button
@@ -1036,7 +1040,7 @@ export default function Dashboard() {
               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
             />
           </svg>
-          My Listings ({myListings.length})
+          {d.tabs.myListings} ({myListings.length})
         </button>
 
         <button
@@ -1056,7 +1060,7 @@ export default function Dashboard() {
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
           </svg>
-          {showFilters ? "Hide Filters" : "Search & Filter Listings"}
+          {showFilters ? d.hideFilters : d.showFilters}
         </button>
       </div>
 
@@ -1077,7 +1081,7 @@ export default function Dashboard() {
                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
               />
             </svg>
-            My Listings
+            {d.tabs.myListings}
           </h2>
 
           {myListings.length === 0 ? (
@@ -1364,7 +1368,7 @@ export default function Dashboard() {
                         >
                           {renewingListing === listing.id
                             ? "Renewing…"
-                            : "Renew Listing"}
+                            : d.listing.renew}
                         </button>
                       ) : listing.moderation_status === "approved" ? (
                         // Escrow-sold listings cannot be relisted — show a read-only badge instead
@@ -1410,9 +1414,9 @@ export default function Dashboard() {
                                 Updating…
                               </span>
                             ) : listing.status === "Available" ? (
-                              "Mark as Sold"
+                              d.listing.markSold
                             ) : (
-                              "Mark as Available"
+                              d.listing.markAvailable
                             )}
                           </button>
                         )
@@ -1423,7 +1427,7 @@ export default function Dashboard() {
                     {deleteConfirmId === listing.id ? (
                       <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
                         <span className="text-xs text-gray-600 flex-1">
-                          Delete this listing?
+                          {d.listing.deleteConfirm}
                         </span>
                         <button
                           onClick={() => deleteListing(listing.id)}
@@ -1438,7 +1442,7 @@ export default function Dashboard() {
                           onClick={() => setDeleteConfirmId(null)}
                           className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
                         >
-                          Cancel
+                          {common.cancel}
                         </button>
                       </div>
                     ) : (
@@ -1480,7 +1484,7 @@ export default function Dashboard() {
                               d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                             />
                           </svg>
-                          Edit
+                          {d.listing.edit}
                         </button>
                         {/* Share Story button */}
                         <button
@@ -1539,7 +1543,7 @@ export default function Dashboard() {
                               d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                             />
                           </svg>
-                          Delete
+                          {d.listing.delete}
                         </button>
                       </div>
                     )}
@@ -1567,7 +1571,7 @@ export default function Dashboard() {
       {trendingSearches.length > 0 && (
         <div className="mb-6">
           <p className="text-sm font-semibold text-gray-500 mb-2">
-            Trending searches
+            {d.tabs.trending}
           </p>
           <div className="flex flex-wrap gap-2">
             {trendingSearches.map((term) => (
@@ -1693,7 +1697,7 @@ export default function Dashboard() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-gray-900 leading-tight">
-                  My Offers
+                  {d.tabs.myOffers}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
                   {myOffers.filter((o) => o.status !== "withdrawn").length} sent
@@ -1949,7 +1953,7 @@ export default function Dashboard() {
                               onClick={() => setCounteringOfferId(null)}
                               className="px-4 py-2 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
                             >
-                              Cancel
+                              {common.cancel}
                             </button>
                           </div>
                         </div>
@@ -2516,7 +2520,7 @@ export default function Dashboard() {
         <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 pb-20 md:pb-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-y-auto max-h-[calc(100dvh-6rem)] md:max-h-[90vh]">
             <div className="p-4 sm:p-6 border-b">
-              <h3 className="text-xl font-bold text-gray-900">Save Search</h3>
+              <h3 className="text-xl font-bold text-gray-900">{d.saveSearch.title}</h3>
               <p className="text-sm text-gray-500">
                 Save your current filters and enable alerts.
               </p>
@@ -2524,7 +2528,7 @@ export default function Dashboard() {
             <div className="p-4 sm:p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Search Name
+                  {d.saveSearch.nameLabel}
                 </label>
                 <input
                   value={saveSearchName}
@@ -2540,7 +2544,7 @@ export default function Dashboard() {
                   onChange={(e) => setSaveSearchNotify(e.target.checked)}
                   className="h-4 w-4 text-green-600 border-gray-300 rounded"
                 />
-                Notify me when new listings match
+                {d.saveSearch.notify}
               </label>
               {saveSearchError && (
                 <p className="text-sm text-red-600">{saveSearchError}</p>
@@ -2551,13 +2555,13 @@ export default function Dashboard() {
                 onClick={() => setShowSaveSearchModal(false)}
                 className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg"
               >
-                Cancel
+                {common.cancel}
               </button>
               <button
                 onClick={handleSaveSearch}
                 className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
               >
-                Save Search
+                {common.save}
               </button>
             </div>
           </div>
@@ -2660,7 +2664,7 @@ export default function Dashboard() {
                 onClick={() => setWithdrawConfirmOffer(null)}
                 className="flex-1 py-2.5 rounded-xl border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {common.cancel}
               </button>
               <button
                 onClick={confirmWithdrawOffer}

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface Category {
   id: number;
@@ -28,7 +29,9 @@ export default function OnboardingModal({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [step, setStep] = useState(1); // 1 = welcome, 2 = select categories
+  const [step, setStep] = useState(1);
+  const { t } = useLanguage();
+  const ob = t("onboarding");
 
   useEffect(() => {
     if (isOpen) {
@@ -43,7 +46,7 @@ export default function OnboardingModal({
       setLoading(false);
     } catch (error) {
       console.error("Error fetching categories:", error);
-      setError("Failed to load categories");
+      setError(ob.errors.loadFailed);
       setLoading(false);
     }
   };
@@ -61,7 +64,7 @@ export default function OnboardingModal({
 
   const handleSave = async () => {
     if (selectedCategories.length < 5) {
-      setError("Please select at least 5 categories to continue");
+      setError(ob.errors.minCategories);
       return;
     }
 
@@ -75,7 +78,7 @@ export default function OnboardingModal({
       onComplete();
     } catch (error) {
       console.error("Error saving preferences:", error);
-      setError("Failed to save preferences. Please try again.");
+      setError(ob.errors.saveFailed);
     } finally {
       setSaving(false);
     }
@@ -111,13 +114,13 @@ export default function OnboardingModal({
             <div>
               <h2 className="text-2xl font-bold">
                 {step === 1
-                  ? "Welcome to Marketplace!"
-                  : "Personalize Your Feed"}
+                  ? ob.welcome
+                  : ob.personalizeTitle}
               </h2>
               <p className="text-white/80 text-sm mt-1">
                 {step === 1
-                  ? "Let's set up your personalized experience"
-                  : `Select at least 5 categories you're interested in (${selectedCategories.length} selected)`}
+                  ? ob.personalizeSubtitle
+                  : `${ob.selectAtLeast} (${selectedCategories.length} selected)`}
               </p>
             </div>
           </div>
@@ -146,26 +149,24 @@ export default function OnboardingModal({
                 <span className="text-5xl">🛍️</span>
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                Find What You Love
+                {ob.step1.title}
               </h3>
               <p className="text-gray-600 max-w-lg mx-auto mb-8 leading-relaxed">
-                To give you the best experience, we&apos;d like to know what
-                categories interest you. This helps us show you relevant
-                listings and recommendations tailored just for you.
+                {ob.step1.desc}
               </p>
 
               <div className="grid grid-cols-1 gap-4 max-w-md mx-auto mb-8 sm:grid-cols-3">
                 <div className="bg-green-50 rounded-xl p-4 text-center">
                   <div className="text-2xl mb-2">🎯</div>
-                  <p className="text-sm text-gray-600">Personalized Feed</p>
+                  <p className="text-sm text-gray-600">{ob.step1.feature1}</p>
                 </div>
                 <div className="bg-yellow-50 rounded-xl p-4 text-center">
                   <div className="text-2xl mb-2">🔔</div>
-                  <p className="text-sm text-gray-600">Smart Alerts</p>
+                  <p className="text-sm text-gray-600">{ob.step1.feature2}</p>
                 </div>
                 <div className="bg-green-50 rounded-xl p-4 text-center">
                   <div className="text-2xl mb-2">⚡</div>
-                  <p className="text-sm text-gray-600">Quick Discovery</p>
+                  <p className="text-sm text-gray-600">{ob.step1.feature3}</p>
                 </div>
               </div>
 
@@ -173,7 +174,7 @@ export default function OnboardingModal({
                 onClick={() => setStep(2)}
                 className="w-full px-8 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all sm:w-auto"
               >
-                Let&apos;s Get Started
+                {ob.step1.cta}
               </button>
             </div>
           ) : (
@@ -285,7 +286,7 @@ export default function OnboardingModal({
               onClick={() => setStep(1)}
               className="w-full px-4 py-2 text-gray-600 hover:text-gray-800 font-medium sm:w-auto"
             >
-              ← Back
+              {ob.back}
             </button>
           )}
           <div
@@ -298,7 +299,7 @@ export default function OnboardingModal({
               disabled={saving}
               className="w-full px-4 py-2 text-gray-500 hover:text-gray-700 font-medium sm:w-auto sm:mr-3"
             >
-              Skip for now
+              {ob.skip}
             </button>
             {step === 2 && (
               <button
@@ -313,10 +314,10 @@ export default function OnboardingModal({
                 {saving ? (
                   <span className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Saving...
+                    {ob.saving}
                   </span>
                 ) : (
-                  "Continue →"
+                  ob.continue
                 )}
               </button>
             )}

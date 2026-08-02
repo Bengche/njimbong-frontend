@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "../i18n/LanguageContext";
 // import { headers } from "next/headers";
 
 interface ReportReason {
@@ -42,6 +43,9 @@ export default function ReportModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const { t } = useLanguage();
+  const rp = t("report");
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -91,10 +95,11 @@ export default function ReportModal({
       setReasons(normalizeReasons(data));
     } catch (err) {
       console.error("Error fetching reasons:", err);
-      setError("Failed to load report reasons");
+      setError(rp.errors.loadFailed);
     } finally {
       setLoading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [API_BASE, targetType]);
 
   useEffect(() => {
@@ -111,7 +116,7 @@ export default function ReportModal({
     e.preventDefault();
 
     if (!selectedReason) {
-      setError("Please select a reason for reporting");
+      setError(rp.errors.noReason);
       return;
     }
 
@@ -139,7 +144,7 @@ export default function ReportModal({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to submit report");
+        throw new Error(data.error || rp.errors.submitFailed);
       }
 
       setSuccess(true);
@@ -148,7 +153,7 @@ export default function ReportModal({
       }, 2000);
     } catch (err: unknown) {
       const message =
-        err instanceof Error ? err.message : "Failed to submit report";
+        err instanceof Error ? err.message : rp.errors.submitFailed;
       setError(message);
     } finally {
       setSubmitting(false);
@@ -190,7 +195,7 @@ export default function ReportModal({
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-xl font-bold">
-                Report {targetType === "listing" ? "Listing" : "User"}
+                {targetType === "listing" ? rp.titleListing : rp.titleUser}
               </h2>
               <p className="text-sm opacity-90 mt-1 truncate max-w-[250px]">
                 {targetName}
@@ -237,11 +242,10 @@ export default function ReportModal({
                 </svg>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Report Submitted
+                {rp.successTitle}
               </h3>
               <p className="text-gray-600">
-                Thank you for helping keep our community safe. We will review
-                your report soon.
+                {rp.successDesc}
               </p>
             </div>
           ) : loading ? (
@@ -258,14 +262,13 @@ export default function ReportModal({
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Why are you reporting this {targetType}?
+                  {targetType === "listing" ? rp.whyListing : rp.whyUser}
                 </label>
 
                 <div className="space-y-3">
                   {Object.entries(groupedReasons).length === 0 ? (
                     <div className="text-sm text-gray-500">
-                      No report reasons are available right now. Please try
-                      again later.
+                      {rp.empty}
                     </div>
                   ) : (
                     Object.entries(groupedReasons).map(
@@ -345,7 +348,7 @@ export default function ReportModal({
                     onClick={onClose}
                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition font-medium"
                   >
-                    Cancel
+                    {rp.cancel}
                   </button>
                   <button
                     type="submit"
@@ -355,10 +358,10 @@ export default function ReportModal({
                     {submitting ? (
                       <span className="flex items-center justify-center gap-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        Submitting...
+                        {rp.submitting}
                       </span>
                     ) : (
-                      "Submit Report"
+                      rp.submit
                     )}
                   </button>
                 </div>

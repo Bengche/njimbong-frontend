@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Axios from "axios";
+import { useLanguage } from "../i18n/LanguageContext";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -28,23 +29,25 @@ export default function KYCVerificationModal({
   const [selfiePreview, setSelfiePreview] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useLanguage();
+  const k = t("kyc");
 
   const documentTypes = [
     {
       value: "id_card",
-      label: "National ID Card",
-      icon: "🪪",
+      label: k.step1.nationalId,
+      icon: "🪭",
       requiresBack: true,
     },
     {
       value: "passport",
-      label: "International Passport",
+      label: k.step1.passport,
       icon: "📘",
       requiresBack: false,
     },
     {
       value: "drivers_license",
-      label: "Driver's License",
+      label: k.step1.driverLicense,
       icon: "🚗",
       requiresBack: true,
     },
@@ -56,7 +59,7 @@ export default function KYCVerificationModal({
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        setError("File size must be less than 10MB");
+        setError(k.errors.fileSize);
         return;
       }
       setDocumentFront(file);
@@ -73,7 +76,7 @@ export default function KYCVerificationModal({
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        setError("File size must be less than 10MB");
+        setError(k.errors.fileSize);
         return;
       }
       setDocumentBack(file);
@@ -90,7 +93,7 @@ export default function KYCVerificationModal({
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        setError("File size must be less than 10MB");
+        setError(k.errors.fileSize);
         return;
       }
       setSelfie(file);
@@ -111,19 +114,19 @@ export default function KYCVerificationModal({
       const selectedDoc = documentTypes.find((dt) => dt.value === documentType);
 
       if (!documentFront) {
-        setError("Please upload the front of your document");
+        setError(k.errors.frontRequired);
         setLoading(false);
         return;
       }
 
       if (selectedDoc?.requiresBack && !documentBack) {
-        setError("Please upload the back of your document");
+        setError(k.errors.backRequired);
         setLoading(false);
         return;
       }
 
       if (!selfie) {
-        setError("Please upload a selfie");
+        setError(k.errors.selfieRequired);
         setLoading(false);
         return;
       }
@@ -158,7 +161,7 @@ export default function KYCVerificationModal({
       console.error("Error submitting KYC:", error);
       setError(
         error.response?.data?.error ||
-          "Failed to submit KYC verification. Please try again.",
+          k.errors.failed,
       );
     } finally {
       setLoading(false);
@@ -188,9 +191,9 @@ export default function KYCVerificationModal({
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white p-4 sm:p-6 rounded-t-2xl flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold">KYC Verification</h2>
+            <h2 className="text-2xl font-bold">{k.title}</h2>
             <p className="text-sm opacity-90">
-              Step {step} of 3 - Verify your identity
+              {k.stepOf} {step} {k.of} 3 - {k.verifyIdentity}
             </p>
           </div>
           <button
@@ -224,10 +227,10 @@ export default function KYCVerificationModal({
         {step === 1 && (
           <div className="p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4">
-              Select Your Document Type
+              {k.step1.title}
             </h3>
             <p className="text-gray-600 mb-6">
-              Choose the type of identification document you want to upload
+              {k.step1.subtitle}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -244,9 +247,9 @@ export default function KYCVerificationModal({
                   <div className="text-4xl mb-3">{doc.icon}</div>
                   <h4 className="font-bold text-gray-800 mb-2">{doc.label}</h4>
                   <p className="text-xs text-gray-600">
-                    {doc.requiresBack
-                      ? "Upload front & back"
-                      : "Upload bio-data page"}
+                      {doc.requiresBack
+                      ? k.step1.frontBack
+                      : k.step1.bioPage}
                   </p>
                 </button>
               ))}
@@ -260,7 +263,7 @@ export default function KYCVerificationModal({
               disabled={!documentType}
               className="w-full mt-6 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              Continue
+              {k.continueBtn}
             </button>
           </div>
         )}
@@ -276,8 +279,8 @@ export default function KYCVerificationModal({
             <div className="mb-6">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 {selectedDoc?.requiresBack
-                  ? "Front of Document"
-                  : "Bio-data Page"}{" "}
+                  ? k.step2.frontLabel
+                  : k.step2.bioLabel}{" "}
                 <span className="text-red-500">*</span>
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-colors">
@@ -326,10 +329,10 @@ export default function KYCVerificationModal({
                       />
                     </svg>
                     <p className="text-gray-700 font-semibold">
-                      Click to upload
+                      {k.step2.clickUpload}
                     </p>
                     <p className="text-gray-500 text-sm mt-1">
-                      PNG, JPG up to 10MB
+                      {k.step2.format}
                     </p>
                     <input
                       type="file"
@@ -342,8 +345,8 @@ export default function KYCVerificationModal({
                 )}
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                ✓ Ensure all corners are visible
-                <br />✓ Document details should be clearly readable
+                ✓ {k.step2.tips[0]}
+                <br />✓ {k.step2.tips[1]}
               </p>
             </div>
 
@@ -398,12 +401,12 @@ export default function KYCVerificationModal({
                           d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                         />
                       </svg>
-                      <p className="text-gray-700 font-semibold">
-                        Click to upload
-                      </p>
-                      <p className="text-gray-500 text-sm mt-1">
-                        PNG, JPG up to 10MB
-                      </p>
+                        <p className="text-gray-700 font-semibold">
+                          {k.step2.clickUpload}
+                        </p>
+                        <p className="text-gray-500 text-sm mt-1">
+                          {k.step2.format}
+                        </p>
                       <input
                         type="file"
                         id="documentBack"
@@ -427,11 +430,11 @@ export default function KYCVerificationModal({
               <button
                 onClick={() => {
                   if (!documentFront) {
-                    setError("Please upload the front of your document");
+                    setError(k.errors.frontRequired);
                     return;
                   }
                   if (selectedDoc?.requiresBack && !documentBack) {
-                    setError("Please upload the back of your document");
+                    setError(k.errors.backRequired);
                     return;
                   }
                   setStep(3);
@@ -448,10 +451,10 @@ export default function KYCVerificationModal({
         {step === 3 && (
           <div className="p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4">
-              Upload a Selfie
+              {k.step3.title}
             </h3>
             <p className="text-gray-600 mb-6">
-              Take a clear selfie photo for identity verification
+              {k.step3.subtitle}
             </p>
 
             <div className="mb-6">
@@ -507,10 +510,10 @@ export default function KYCVerificationModal({
                       />
                     </svg>
                     <p className="text-gray-700 font-semibold">
-                      Click to upload selfie
+                      {k.step3.clickUpload}
                     </p>
                     <p className="text-gray-500 text-sm mt-1">
-                      PNG, JPG up to 10MB
+                      {k.step3.format}
                     </p>
                     <input
                       type="file"
@@ -524,15 +527,12 @@ export default function KYCVerificationModal({
               </div>
               <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-sm text-blue-800 font-semibold mb-2">
-                  📸 Selfie Requirements:
+                  📸 {k.step3.reqTitle}
                 </p>
                 <ul className="text-xs text-blue-700 space-y-1">
-                  <li>✓ Face the camera directly with good lighting</li>
-                  <li>✓ Both ears must be visible</li>
-                  <li>✓ Eyes must be open and clearly visible</li>
-                  <li>✓ Remove glasses, hats, or face coverings</li>
-                  <li>✓ Use a plain background</li>
-                  <li>✓ Hold your document next to your face (optional)</li>
+                  {k.step3.reqs.map((req, i) => (
+                    <li key={i}>✓ {req}</li>
+                  ))}
                 </ul>
               </div>
             </div>

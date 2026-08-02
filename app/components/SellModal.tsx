@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Axios from "axios";
 import ListingShareCardModal from "./ListingShareCardModal";
+import { useLanguage } from "../i18n/LanguageContext";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -51,6 +52,9 @@ export default function SellModal({
   editListing,
 }: SellModalProps) {
   const [categories, setCategories] = useState<Category[]>([]);
+  const { t } = useLanguage();
+  const s = t("sell");
+  const common = t("common");
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [existingImages, setExistingImages] = useState<ExistingImage[]>([]);
@@ -386,15 +390,15 @@ export default function SellModal({
         setSubmitError(
           editListing
             ? error.response.data?.error || "You cannot edit this listing."
-            : "Your account is suspended. You cannot create listings.",
+            : s.errors.suspended,
         );
       } else if (error.response?.data?.error) {
         setSubmitError(error.response.data.error);
       } else {
         setSubmitError(
           editListing
-            ? "Failed to update listing. Please try again."
-            : "Failed to create listing. Please try again.",
+            ? s.errors.updateFailed
+            : s.errors.createFailed,
         );
       }
     } finally {
@@ -421,7 +425,7 @@ export default function SellModal({
         {/* Modal Header */}
         <div className="sticky top-0 bg-emerald-600 text-white p-4 sm:p-6 rounded-t-2xl flex justify-between items-center">
           <h2 className="text-2xl font-bold">
-            {editListing ? "Edit Listing" : "Create New Listing"}
+            {editListing ? s.titleEdit : s.titleCreate}
           </h2>
           <button
             onClick={onClose}
@@ -449,7 +453,7 @@ export default function SellModal({
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Product Images{" "}
-              <span className="text-gray-500 text-xs">(Up to 10 images)</span>
+              <span className="text-gray-500 text-xs">({s.images.limit})</span>
             </label>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-green-500 transition">
               <input
@@ -478,10 +482,10 @@ export default function SellModal({
                   />
                 </svg>
                 <span className="text-sm text-gray-600">
-                  Click to {editListing ? "add more" : "upload"} images
+                  {editListing ? s.images.clickAdd : s.images.clickUpload}
                 </span>
                 <span className="text-xs text-gray-400 mt-1">
-                  PNG, JPG, GIF up to 5MB each
+                  {s.images.format}
                 </span>
               </label>
             </div>
@@ -490,7 +494,7 @@ export default function SellModal({
             {existingImages.length > 0 && (
               <div className="mt-3">
                 <p className="text-xs text-gray-500 mb-2">
-                  Current images (click × to remove):
+                  {s.images.currentImages}
                 </p>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
                   {existingImages.map((img) => (
@@ -502,7 +506,7 @@ export default function SellModal({
                       />
                       {img.is_main && (
                         <span className="absolute bottom-1 left-1 bg-green-500 text-white text-xs px-1 rounded">
-                          Main
+                          {s.images.main}
                         </span>
                       )}
                       <button
@@ -568,8 +572,7 @@ export default function SellModal({
                       />
                     </svg>
                     <p className="text-xs text-emerald-700 font-medium flex-1">
-                      Njimbong AI has filled in your listing details. Review and
-                      edit as needed.
+                      {s.images.aiFilled}
                     </p>
                     <button
                       type="button"
@@ -599,7 +602,7 @@ export default function SellModal({
                     {aiAnalyzing ? (
                       <>
                         <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
-                        Analyzing with Njimbong AI...
+                      {s.images.aiAnalyzing}
                       </>
                     ) : (
                       <>
@@ -621,7 +624,7 @@ export default function SellModal({
                             d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"
                           />
                         </svg>
-                        ✦ Auto-fill with Njimbong AI
+                        {s.images.aiBtn}
                       </>
                     )}
                   </button>
@@ -652,7 +655,7 @@ export default function SellModal({
             {duplicateWarning.length > 0 && (
               <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
                 <p className="font-semibold mb-1">
-                  Similar listing already exists:
+                  {s.form.duplicate}
                 </p>
                 <ul className="list-disc list-inside">
                   {duplicateWarning.map((t, i) => (
@@ -660,7 +663,7 @@ export default function SellModal({
                   ))}
                 </ul>
                 <p className="mt-1 text-amber-600 text-xs">
-                  Make sure this is not a duplicate before posting.
+                  {s.form.duplicateHint}
                 </p>
               </div>
             )}
@@ -698,7 +701,7 @@ export default function SellModal({
                     />
                   </svg>
                 )}
-                {aiEnhancingDesc ? "Enhancing..." : "✦ Enhance with AI"}
+                {aiEnhancingDesc ? s.form.descEnhancing : s.form.descEnhance}
               </button>
             </div>
             <textarea
@@ -708,7 +711,7 @@ export default function SellModal({
               onChange={handleInputChange}
               required
               rows={4}
-              placeholder="Describe your item in detail..."
+              placeholder={s.form.descPlaceholder}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none resize-none"
             ></textarea>
           </div>
@@ -769,7 +772,7 @@ export default function SellModal({
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
               >
-                <option value="">-- Select Category --</option>
+                <option value="">{s.form.categoryDefault}</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -793,8 +796,8 @@ export default function SellModal({
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
               >
-                <option value="new">New</option>
-                <option value="used">Used</option>
+                <option value="new">{s.form.conditionNew}</option>
+                <option value="used">{s.form.conditionUsed}</option>
               </select>
             </div>
           </div>
@@ -833,7 +836,7 @@ export default function SellModal({
                   value={formData.city}
                   onChange={handleInputChange}
                   required
-                  placeholder="e.g., Douala"
+                  placeholder={s.form.cityPlaceholder}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
                 />
               </div>
@@ -852,7 +855,7 @@ export default function SellModal({
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
-                placeholder="e.g., Akwa, near main market"
+                placeholder={s.form.specificLocPlaceholder}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
               />
             </div>
@@ -882,14 +885,13 @@ export default function SellModal({
                   }
                   onChange={handlePhoneChange}
                   required
-                  placeholder="6XX XXX XXX"
+              placeholder={s.form.momoPlaceholder}
                   maxLength={9}
                   className="flex-1 px-4 py-3 outline-none bg-white"
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Enter your MTN or Orange Cameroon MoMo number. When a buyer pays
-                through escrow, funds are released to this number.
+                {s.form.momoHint}
               </p>
             </div>
 
@@ -911,7 +913,7 @@ export default function SellModal({
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Used for payment receipts and escrow notifications.
+                {s.form.emailHint}
               </p>
             </div>
 
@@ -926,7 +928,7 @@ export default function SellModal({
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Status is automatically set to Available
+                {s.form.statusNote}
               </p>
             </div>
           </div>
@@ -950,10 +952,10 @@ export default function SellModal({
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
               >
-                <option value="pickup">Pickup only</option>
-                <option value="delivery">Delivery available</option>
-                <option value="both">Pickup or delivery</option>
-                <option value="ships">Ships nationwide</option>
+                <option value="pickup">{s.form.deliveryPickup}</option>
+                <option value="delivery">{s.form.deliveryAvailable}</option>
+                <option value="both">{s.form.deliveryBoth}</option>
+                <option value="ships">{s.form.deliveryNational}</option>
               </select>
             </div>
             <div>
@@ -972,7 +974,7 @@ export default function SellModal({
                 name="delivery_notes"
                 value={formData.delivery_notes}
                 onChange={handleInputChange}
-                placeholder="e.g., Can deliver within Douala for 2,000 XAF"
+                placeholder={s.form.deliveryNotesPlaceholder}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
               />
             </div>
@@ -985,7 +987,7 @@ export default function SellModal({
               className="block text-sm font-semibold text-gray-700 mb-2"
             >
               Tags{" "}
-              <span className="text-gray-500 text-xs">(comma-separated)</span>
+              <span className="text-gray-500 text-xs">({s.form.tagsLabel})</span>
             </label>
             <input
               type="text"
@@ -993,7 +995,7 @@ export default function SellModal({
               name="tags"
               value={formData.tags}
               onChange={handleInputChange}
-              placeholder="e.g., smartphone, electronics, apple"
+              placeholder={s.form.tagsPlaceholder}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
             />
           </div>
@@ -1036,14 +1038,10 @@ export default function SellModal({
               </svg>
               <div>
                 <p className="text-green-700 font-medium">
-                  {editListing
-                    ? "Listing updated!"
-                    : "Listing created successfully!"}
+                  {editListing ? s.listingUpdated : s.listingCreated}
                 </p>
                 <p className="text-green-600 text-sm">
-                  {editListing
-                    ? "Changes saved. It will be re-reviewed by our team if it was live."
-                    : "Your listing is pending admin approval."}
+                  {editListing ? s.listingUpdatedDesc : s.listingCreatedDesc}
                 </p>
               </div>
             </div>
@@ -1055,7 +1053,7 @@ export default function SellModal({
               disabled={isSubmitting}
               className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Cancel
+              {common.cancel}
             </button>
             {!editListing && (
               <button
@@ -1064,7 +1062,7 @@ export default function SellModal({
                 disabled={isSubmitting || submitSuccess}
                 className="flex-1 px-6 py-3 border-2 border-blue-400 text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Save Draft
+                {s.saveDraft}
               </button>
             )}
             <button
@@ -1095,7 +1093,7 @@ export default function SellModal({
                     ></path>
                   </svg>
                   <span>
-                    {editListing ? "Saving Changes..." : "Creating Listing..."}
+                    {editListing ? s.savingChanges : s.creatingListing}
                   </span>
                 </>
               ) : submitSuccess ? (
@@ -1113,10 +1111,10 @@ export default function SellModal({
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <span>{editListing ? "Saved!" : "Created!"}</span>
+                  <span>{editListing ? s.saved : s.created}</span>
                 </>
               ) : (
-                <span>{editListing ? "Save Changes" : "Create Listing"}</span>
+                <span>{editListing ? s.saveChanges : s.createListing}</span>
               )}
             </button>
           </div>

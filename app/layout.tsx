@@ -10,6 +10,7 @@ import ClientPolyfills from "./components/ClientPolyfills";
 import AuthClientInit from "./components/AuthClientInit";
 import MobileBottomNav from "./components/MobileBottomNav";
 import NjimbongChat from "./components/NjimbongChat";
+import { LanguageProvider } from "./i18n/LanguageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -131,6 +132,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <LanguageProvider>
         <ClientPolyfills />
         <AuthClientInit />
         <NotificationListener />
@@ -140,6 +142,7 @@ export default function RootLayout({
         <MobileBottomNav />
         <NjimbongChat />
         <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

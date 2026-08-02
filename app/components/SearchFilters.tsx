@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import { currencies } from "../constants/currencies";
 import { countries } from "../constants/countries";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface Category {
   id: number;
@@ -47,6 +48,9 @@ export default function SearchFilters({
   const [visualSearching, setVisualSearching] = useState(false);
   const [visualBanner, setVisualBanner] = useState<string | null>(null);
   const visualInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLanguage();
+  const sr = t("search");
+  const common = t("common");
 
   const handleVisualSearch = async (file: File) => {
     if (!file || visualSearching) return;
@@ -77,7 +81,7 @@ export default function SearchFilters({
         setTimeout(() => onSearch(), 100);
       }
     } catch {
-      setVisualBanner("Could not analyze image. Please search manually.");
+      setVisualBanner(sr.visualError);
     } finally {
       setVisualSearching(false);
       if (visualInputRef.current) visualInputRef.current.value = "";
@@ -99,14 +103,14 @@ export default function SearchFilters({
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
           />
         </svg>
-        Advanced Search & Filters
+        {sr.title}
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         {/* Search with Visual Search */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Search
+            {sr.searchLabel}
           </label>
 
           {/* Visual search banner */}
@@ -156,7 +160,7 @@ export default function SearchFilters({
               name="search"
               value={filters.search}
               onChange={onFilterChange}
-              placeholder="Search by title or description..."
+              placeholder={sr.searchPlaceholder}
               className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
             />
             {/* Visual Search Button */}
@@ -202,14 +206,14 @@ export default function SearchFilters({
             />
           </div>
           <p className="text-[10px] text-gray-400 mt-1 pl-1">
-            Tip: click the camera icon to search by image
+            {sr.visualSearchTip}
           </p>
         </div>
 
         {/* Category */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Category
+            {sr.category}
           </label>
           <select
             name="category"
@@ -217,7 +221,7 @@ export default function SearchFilters({
             onChange={onFilterChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
           >
-            <option value="">All Categories</option>
+            <option value="">{sr.allCategories}</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -229,7 +233,7 @@ export default function SearchFilters({
         {/* Country */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Country
+            {sr.country}
           </label>
           <input
             type="text"
@@ -237,7 +241,7 @@ export default function SearchFilters({
             value={filters.country}
             onChange={onFilterChange}
             list="country-filter-list"
-            placeholder="Select country..."
+            placeholder={sr.countryPlaceholder}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
           />
           <datalist id="country-filter-list">
@@ -250,14 +254,14 @@ export default function SearchFilters({
         {/* City */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            City
+            {sr.city}
           </label>
           <input
             type="text"
             name="city"
             value={filters.city}
             onChange={onFilterChange}
-            placeholder="Enter city..."
+            placeholder={sr.cityPlaceholder}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
           />
         </div>
@@ -265,7 +269,7 @@ export default function SearchFilters({
         {/* Min Price */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Min Price
+            {sr.minPrice}
           </label>
           <input
             type="number"
@@ -281,7 +285,7 @@ export default function SearchFilters({
         {/* Max Price */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Max Price
+            {sr.maxPrice}
           </label>
           <input
             type="number"
@@ -297,7 +301,7 @@ export default function SearchFilters({
         {/* Currency */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Currency
+            {sr.currency}
           </label>
           <input
             type="text"
@@ -305,7 +309,7 @@ export default function SearchFilters({
             value={filters.currency}
             onChange={onFilterChange}
             list="currency-filter-list"
-            placeholder="All currencies..."
+            placeholder={sr.currencyPlaceholder}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
           />
           <datalist id="currency-filter-list">
@@ -320,7 +324,7 @@ export default function SearchFilters({
         {/* Condition */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Condition
+            {sr.condition}
           </label>
           <select
             name="condition"
@@ -328,9 +332,9 @@ export default function SearchFilters({
             onChange={onFilterChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition"
           >
-            <option value="">Any Condition</option>
-            <option value="new">New</option>
-            <option value="used">Used</option>
+            <option value="">{sr.anyCondition}</option>
+            <option value="new">{sr.conditionNew}</option>
+            <option value="used">{sr.conditionUsed}</option>
           </select>
         </div>
       </div>
@@ -354,7 +358,7 @@ export default function SearchFilters({
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
           </svg>
-          Apply Filters
+          {sr.applyFilters}
         </button>
         <button
           onClick={onReset}
@@ -373,7 +377,7 @@ export default function SearchFilters({
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
             />
           </svg>
-          Reset Filters
+          {sr.resetFilters}
         </button>
         {onSaveSearch && (
           <button
@@ -393,7 +397,7 @@ export default function SearchFilters({
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            Save Search
+            {sr.saveSearch}
           </button>
         )}
       </div>

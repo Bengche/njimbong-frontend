@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -10,55 +11,6 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   streaming?: boolean;
-}
-
-const WELCOME_MESSAGE: Message = {
-  id: "welcome",
-  role: "assistant",
-  content:
-    "Hi! I'm **Njimbong AI** — your smart marketplace assistant.\n\nI can help you find products, price items fairly, create better listings, stay safe online, and much more.\n\nWhat can I help you with today?",
-};
-
-const QUICK_SUGGESTIONS = [
-  "How do I sell something?",
-  "Is this platform safe?",
-  "How are prices determined?",
-  "I need help finding a product",
-];
-
-const PAGE_SUGGESTIONS: Record<string, string[]> = {
-  "/dashboard": [
-    "Find me a good deal",
-    "What's trending?",
-    "Tips to sell faster",
-  ],
-  "/listing": [
-    "Is this a fair price?",
-    "How do I contact the seller?",
-    "Tips for safe buying",
-  ],
-  "/profile": [
-    "How to boost my trust score",
-    "Tips for my listings",
-    "How to get verified",
-  ],
-  "/chat": [
-    "Help me write a message",
-    "Summarize this conversation",
-    "Negotiation tips",
-  ],
-  "/sell": [
-    "Help me write a description",
-    "What price should I set?",
-    "Best category for my item",
-  ],
-};
-
-function getPageSuggestions(pathname: string): string[] {
-  const match = Object.keys(PAGE_SUGGESTIONS).find((k) =>
-    pathname?.includes(k),
-  );
-  return match ? PAGE_SUGGESTIONS[match] : QUICK_SUGGESTIONS;
 }
 
 function renderMarkdown(text: string): string {
@@ -84,6 +36,23 @@ function TypingDots() {
 
 export default function NjimbongChat() {
   const pathname = usePathname();
+  const { t } = useLanguage();
+  const ai = t("aiChat");
+
+  const WELCOME_MESSAGE: Message = {
+    id: "welcome",
+    role: "assistant",
+    content: ai.welcome,
+  };
+
+  const getPageSuggestions = (path: string): readonly string[] => {
+    if (path?.includes("/dashboard")) return ai.suggestions.dashboard;
+    if (path?.includes("/listing")) return ai.suggestions.listing;
+    if (path?.includes("/profile")) return ai.suggestions.profile;
+    if (path?.includes("/chat")) return ai.suggestions.chat;
+    if (path?.includes("/sell")) return ai.suggestions.sell;
+    return ai.suggestions.default;
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
@@ -112,7 +81,7 @@ export default function NjimbongChat() {
     }
   }, [isOpen, messages, scrollToBottom]);
 
-  const buildPageContext = () => {
+  const buildPageContext = useCallback(() => {
     const page = pathname || "";
     if (page.includes("/listing/"))
       return "User is viewing a product listing page.";
@@ -126,7 +95,7 @@ export default function NjimbongChat() {
     if (page.includes("/safety"))
       return "User is on the safety and trust page.";
     return "User is browsing the Njimbong Marketplace.";
-  };
+  }, [pathname]);
 
   const sendMessage = useCallback(
     async (text: string) => {
@@ -231,7 +200,7 @@ export default function NjimbongChat() {
         scrollToBottom();
       }
     },
-    [isStreaming, messages, pathname, scrollToBottom],
+    [isStreaming, messages, scrollToBottom, buildPageContext],
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -256,7 +225,7 @@ export default function NjimbongChat() {
       {/* ── Floating Button ──────────────────────────────────────────────────── */}
       <button
         onClick={() => setIsOpen((v) => !v)}
-        aria-label="Open Njimbong AI assistant"
+        aria-label={ai.openTitle}
         className={`fixed z-[70] bottom-20 right-4 md:bottom-7 md:right-7 w-14 h-14 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center group
           ${isOpen ? "bg-slate-700 rotate-0 scale-95" : "bg-gradient-to-br from-slate-800 to-slate-900 hover:scale-110"}`}
         style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.35)" }}
@@ -330,12 +299,12 @@ export default function NjimbongChat() {
               </div>
               <div>
                 <p className="text-white font-semibold text-sm leading-none">
-                  Njimbong AI
+                  {ai.panelTitle}
                 </p>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
                   <span className="text-white/60 text-[11px]">
-                    Online · Smart Marketplace Assistant
+                    {ai.panelSubtitle}
                   </span>
                 </div>
               </div>
@@ -343,7 +312,7 @@ export default function NjimbongChat() {
             <div className="flex items-center gap-1">
               <button
                 onClick={clearChat}
-                title="Clear chat"
+                title={ai.clearChat}
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
               >
                 <svg
@@ -482,7 +451,7 @@ export default function NjimbongChat() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 disabled={isStreaming}
-                placeholder="Ask Njimbong AI anything..."
+                placeholder={ai.inputPlaceholder}
                 rows={1}
                 className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none resize-none max-h-24 leading-relaxed disabled:opacity-60"
                 style={{
@@ -508,7 +477,7 @@ export default function NjimbongChat() {
               </button>
             </div>
             <p className="text-center text-[10px] text-gray-300 mt-1.5">
-              Njimbong AI · Powered by Gemini
+              {ai.poweredBy}
             </p>
           </div>
         </div>

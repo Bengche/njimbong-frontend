@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import SellModal from "./SellModal";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const AUTH_ROUTES = new Set([
   "/dashboard",
@@ -28,6 +29,10 @@ export default function MobileBottomNav() {
   const [showSellModal, setShowSellModal] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState(0);
   const API_BASE = useMemo(() => process.env.NEXT_PUBLIC_API_URL || "", []);
+  const { t } = useLanguage();
+  const nav = t("nav");
+  const common = t("common");
+  const dash = t("dashboard");
 
   const checkAuth = useCallback(async () => {
     try {
@@ -118,7 +123,7 @@ export default function MobileBottomNav() {
                 d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75v-4.5h-4.5V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z"
               />
             </svg>
-            <span className="text-[10px] font-medium">Home</span>
+            <span className="text-[10px] font-medium">{nav.marketplace}</span>
           </button>
 
           {/* Search & Filter */}
@@ -140,7 +145,7 @@ export default function MobileBottomNav() {
                 d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
               />
             </svg>
-            <span className="text-[10px] font-medium">Search</span>
+            <span className="text-[10px] font-medium">{common.search}</span>
           </button>
 
           {/* Sell (center CTA) */}
@@ -185,7 +190,7 @@ export default function MobileBottomNav() {
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               />
             </svg>
-            <span className="text-[10px] font-medium">My Listings</span>
+            <span className="text-[10px] font-medium">{dash.tabs.myListings}</span>
           </button>
 
           {/* Chat */}
@@ -218,7 +223,7 @@ export default function MobileBottomNav() {
                 </span>
               )}
             </span>
-            <span className="text-[10px] font-medium">Chat</span>
+            <span className="text-[10px] font-medium">{nav.chat}</span>
           </button>
         </div>
       </nav>

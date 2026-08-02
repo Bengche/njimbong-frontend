@@ -1,11 +1,14 @@
 "use client";
 import { useState } from "react";
 import Axios from "axios";
+import { useLanguage } from "../i18n/LanguageContext";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
 export default function Login() {
+  const { t } = useLanguage();
+  const a = t("auth").login;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -46,14 +49,14 @@ export default function Login() {
         );
       }
 
-      setLogin("Login Successful");
+      setLogin(a.successToast);
       setTimeout(() => {
         setLogin("");
       }, 7000);
       window.location.href =
         process.env.NEXT_PUBLIC_DASHBOARD_ENDPOINT || "/dashboard";
     } catch (error) {
-      setError("Error Logging in");
+      setError(a.errorToast);
       setTimeout(() => {
         setError("");
       }, 7000);
@@ -127,11 +130,10 @@ export default function Login() {
             </div>
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-2 animate-slide-up">
-            Welcome Back!
+            {a.title}
           </h1>
           <p className="text-gray-600 animate-slide-up animation-delay-200">
-            Sign in to access your{" "}
-            {process.env.NEXT_PUBLIC_SITENAME || "Marketplace"} account
+            {a.subtitle}
           </p>
         </div>
 
@@ -144,7 +146,7 @@ export default function Login() {
                 htmlFor="email"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                Email or Username <span className="text-red-500">*</span>
+                {a.emailLabel} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -169,7 +171,7 @@ export default function Login() {
                   required
                   onChange={handleInputChange}
                   value={formData.email}
-                  placeholder="Enter your email or username"
+                  placeholder={a.emailPlaceholder}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 outline-none hover:border-green-300"
                 />
               </div>
@@ -181,7 +183,7 @@ export default function Login() {
                 htmlFor="password"
                 className="block text-sm font-semibold text-gray-700 mb-2"
               >
-                Password <span className="text-red-500">*</span>
+                {a.passwordLabel} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -206,7 +208,7 @@ export default function Login() {
                   required
                   onChange={handleInputChange}
                   value={formData.password}
-                  placeholder="Enter your password"
+                  placeholder={a.passwordPlaceholder}
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 outline-none hover:border-green-300"
                 />
                 <button
@@ -266,7 +268,7 @@ export default function Login() {
                   htmlFor="remember-me"
                   className="ml-2 block text-sm text-gray-700 cursor-pointer"
                 >
-                  Remember me
+                  {a.rememberMe}
                 </label>
               </div>
 
@@ -275,7 +277,7 @@ export default function Login() {
                   href="/forgot-password"
                   className="font-medium text-green-600 hover:text-yellow-600 transition-colors"
                 >
-                  Forgot password?
+                  {a.forgotPassword}
                 </a>
               </div>
             </div>
@@ -292,7 +294,7 @@ export default function Login() {
                 {isSubmitting ? (
                   <span className="w-5 h-5 border-2 border-white/70 border-t-transparent rounded-full animate-spin" />
                 ) : null}
-                {isSubmitting ? "Signing in..." : "Sign In"}
+                {isSubmitting ? a.submitting : a.submitBtn}
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-red-400 to-yellow-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
             </button>
@@ -313,12 +315,12 @@ export default function Login() {
           {/* Sign Up Link */}
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account yet?{" "}
+              {a.noAccount}{" "}
               <a
                 href="/signup"
                 className="font-semibold text-green-600 hover:text-yellow-600 transition-colors"
               >
-                Create an account
+                {a.createAccount}
               </a>
             </p>
           </div>
@@ -326,19 +328,19 @@ export default function Login() {
 
         {/* Footer Text */}
         <p className="text-center text-sm text-gray-500">
-          By signing in, you agree to our{" "}
+          {a.terms}{" "}
           <a
             href="#"
             className="text-green-600 hover:underline hover:text-yellow-600 transition-colors"
           >
-            Terms of Service
+            {a.termsLink}
           </a>{" "}
-          and{" "}
+          {a.and}{" "}
           <a
             href="#"
             className="text-green-600 hover:underline hover:text-yellow-600 transition-colors"
           >
-            Privacy Policy
+            {a.privacyLink}
           </a>
         </p>
       </div>

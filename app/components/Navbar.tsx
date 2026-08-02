@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Notifications from "./Notifications";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface AuthUser {
   id: number;
@@ -16,6 +18,8 @@ export default function Navbar() {
   const drawerRef = useRef<HTMLDivElement>(null);
 
   const API_BASE = useMemo(() => process.env.NEXT_PUBLIC_API_URL || "", []);
+  const { t } = useLanguage();
+  const nav = t("nav");
 
   const fetchMe = useCallback(async () => {
     try {
@@ -99,32 +103,32 @@ export default function Navbar() {
 
   const authedLinks = [
     {
-      label: "Marketplace",
+      label: nav.marketplace,
       href: "/dashboard",
       icon: "M3 3h2l.4 2M7 13h10l4-4H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z",
     },
     {
-      label: "Favorites",
+      label: nav.favorites,
       href: "/favorites",
       icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
     },
     {
-      label: "Requests",
+      label: nav.requests,
       href: "/requests",
       icon: "M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z",
     },
     {
-      label: "Chat",
+      label: nav.chat,
       href: "/chat",
       icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z",
     },
     {
-      label: "Orders",
+      label: nav.orders,
       href: "/orders",
       icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2",
     },
     {
-      label: "Profile",
+      label: nav.profile,
       href: "/profile",
       icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
     },
@@ -137,12 +141,12 @@ export default function Navbar() {
 
   const guestLinks = [
     {
-      label: "Browse Listings",
+      label: nav.browseListings,
       href: "/browse",
       icon: "M3 3h2l.4 2M7 13h10l4-4H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z",
     },
     {
-      label: "Safety & Trust",
+      label: nav.safetyTrust,
       href: "/safety-trust",
       icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
     },
@@ -150,18 +154,18 @@ export default function Navbar() {
 
   const desktopLinks = user
     ? [
-        { label: "Marketplace", href: "/dashboard" },
-        { label: "Favorites", href: "/favorites" },
-        { label: "Requests", href: "/requests" },
-        { label: "Orders", href: "/orders" },
-        { label: "Chat", href: "/chat" },
-        { label: "Profile", href: "/profile" },
+        { label: nav.marketplace, href: "/dashboard" },
+        { label: nav.favorites, href: "/favorites" },
+        { label: nav.requests, href: "/requests" },
+        { label: nav.orders, href: "/orders" },
+        { label: nav.chat, href: "/chat" },
+        { label: nav.profile, href: "/profile" },
       ]
     : loading
-      ? [{ label: "Marketplace", href: "/dashboard" }]
+      ? [{ label: nav.marketplace, href: "/dashboard" }]
       : [
-          { label: "Browse", href: "/browse" },
-          { label: "Sign in", href: "/login" },
+          { label: nav.browse, href: "/browse" },
+          { label: nav.signIn, href: "/login" },
         ];
 
   const drawerLinks = user ? authedLinks : loading ? guestLinks : guestLinks;
@@ -201,7 +205,7 @@ export default function Navbar() {
                   onClick={handleLogout}
                   className="text-sm font-semibold text-red-500 hover:text-red-600 transition-colors"
                 >
-                  Log out
+                  {nav.logOut}
                 </button>
               )}
               {!user && !loading && (
@@ -209,9 +213,10 @@ export default function Navbar() {
                   href="/signup"
                   className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-700 transition-colors"
                 >
-                  Start selling
+                  {nav.startSelling}
                 </a>
               )}
+              <LanguageSwitcher />
             </nav>
 
             {/* Mobile right cluster: notifications bell + hamburger */}
@@ -225,7 +230,7 @@ export default function Navbar() {
                 aria-controls="mobile-nav"
               >
                 <span className="sr-only">
-                  {isOpen ? "Close menu" : "Open menu"}
+                  {isOpen ? nav.closeMenu : nav.openMenu}
                 </span>
                 {/* Animated burger icon */}
                 <span className="flex h-5 w-5 flex-col items-center justify-center gap-[5px]">
@@ -313,7 +318,7 @@ export default function Navbar() {
         {user && (
           <div className="border-b border-gray-100 px-5 py-3 bg-emerald-50/60">
             <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-0.5">
-              Signed in as
+              {nav.signedInAs}
             </p>
             <p className="text-sm font-semibold text-gray-900 truncate">
               {user.name || user.email || "User"}
@@ -357,7 +362,7 @@ export default function Navbar() {
         <div className="border-t border-gray-100 px-4 py-4 space-y-2.5">
           {loading && (
             <p className="text-xs text-center text-gray-400 py-1">
-              Checking sessionâ€¦
+              {nav.checkingSession}
             </p>
           )}
           {user ? (
@@ -378,7 +383,7 @@ export default function Navbar() {
                   d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                 />
               </svg>
-              Log out
+              {nav.logOut}
             </button>
           ) : (
             !loading && (
@@ -401,14 +406,14 @@ export default function Navbar() {
                       d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                     />
                   </svg>
-                  Create Account
+                  {nav.createAccount}
                 </a>
                 <a
                   href="/login"
                   onClick={() => setIsOpen(false)}
                   className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  Sign in
+                  {nav.signIn}
                 </a>
               </>
             )
@@ -442,7 +447,7 @@ export default function Navbar() {
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
               />
             </svg>
-            Payments protected by Fonlok Escrow
+            {nav.fonlokProtection}
           </a>
         </div>
       </div>

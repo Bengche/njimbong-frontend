@@ -1,6 +1,11 @@
+"use client";
+
 import React from "react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
+  const f = t("footer");
   return (
     <footer className="relative border-t border-emerald-100/70 bg-gradient-to-b from-white via-emerald-50/30 to-white">
       {/* Trust bar */}
@@ -10,7 +15,7 @@ export default function Footer() {
             {(
               [
                 {
-                  label: "Fonlok Escrow Payments",
+                  label: f.trustBar.escrow,
                   icon: (
                     <svg
                       className="w-3.5 h-3.5 text-emerald-600"
@@ -28,7 +33,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  label: "KYC-Verified Sellers",
+                  label: f.trustBar.kyc,
                   icon: (
                     <svg
                       className="w-3.5 h-3.5 text-emerald-600"
@@ -44,7 +49,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  label: "Buyer Dispute Protection",
+                  label: f.trustBar.dispute,
                   icon: (
                     <svg
                       className="w-3.5 h-3.5 text-emerald-600"
@@ -62,7 +67,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  label: "Secure On-Platform Chat",
+                  label: f.trustBar.chat,
                   icon: (
                     <svg
                       className="w-3.5 h-3.5 text-emerald-600"
@@ -80,7 +85,7 @@ export default function Footer() {
                   ),
                 },
                 {
-                  label: "Professional Moderation",
+                  label: f.trustBar.moderation,
                   icon: (
                     <svg
                       className="w-3.5 h-3.5 text-emerald-600"
@@ -117,14 +122,13 @@ export default function Footer() {
           <div className="space-y-3">
             <h3 className="text-base font-bold text-emerald-700">Njimbong</h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Cameroon&apos;s safest online marketplace — powered by Fonlok
-              escrow payments, KYC verification, and professional moderation.
+              {f.tagline}
             </p>
             <a
               href="/browse"
               className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-700 hover:underline"
             >
-              Explore listings
+              {f.exploreListings}
               <svg
                 className="w-3.5 h-3.5"
                 fill="none"
@@ -142,86 +146,86 @@ export default function Footer() {
           </div>
 
           <div className="space-y-2 text-sm">
-            <p className="font-bold text-gray-800">Marketplace</p>
+            <p className="font-bold text-gray-800">{f.marketplace}</p>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/browse"
             >
-              Browse listings
+              {f.browseListings}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/favorites"
             >
-              Favorites
+              {f.favorites}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/dashboard"
             >
-              Sell on Njimbong
+              {f.sellOnNjimbong}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/safety-trust"
             >
-              Secure Payments
+              {f.securePayments}
             </a>
           </div>
 
           <div className="space-y-2 text-sm">
-            <p className="font-bold text-gray-800">Account</p>
+            <p className="font-bold text-gray-800">{f.account}</p>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/login"
             >
-              Sign in
+              {f.signIn}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/signup"
             >
-              Create account
+              {f.createAccount}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/profile"
             >
-              My profile
+              {f.myProfile}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/kyc"
             >
-              Get KYC verified
+              {f.getKYCVerified}
             </a>
           </div>
 
           <div className="space-y-2 text-sm">
-            <p className="font-bold text-gray-800">Support & Legal</p>
+            <p className="font-bold text-gray-800">{f.supportLegal}</p>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="mailto:support@njimbong.com"
             >
-              Help Center
+              {f.helpCenter}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/safety-trust"
             >
-              Safety &amp; Trust
+              {f.safetyTrust}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/safety-trust#fonlok-heading"
             >
-              How Escrow Works
+              {f.howEscrowWorks}
             </a>
             <a
               className="block text-gray-600 hover:text-emerald-700 transition-colors"
               href="/terms-privacy"
             >
-              Terms &amp; Privacy
+              {f.termsPrivacy}
             </a>
           </div>
         </div>
@@ -245,26 +249,24 @@ export default function Footer() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-bold text-emerald-800">
-              Payments powered by Fonlok Escrow
+              {f.fonlokTitle}
             </p>
             <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">
-              Every XAF transaction on Njimbong is protected by Fonlok escrow.
-              Your money is held securely and only released to the seller after
-              you confirm receipt of your item.
+              {f.fonlokDesc}
             </p>
           </div>
           <a
             href="/safety-trust"
             className="text-xs font-semibold text-emerald-700 hover:underline flex-shrink-0"
           >
-            Learn more
+            {f.exploreListings}
           </a>
         </div>
 
         <div className="mt-6 flex flex-col gap-2 border-t border-emerald-100/70 pt-6 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2025–2026 Njimbong Marketplace. All rights reserved.</span>
+          <span>{f.copyright}</span>
           <span>
-            Built by{" "}
+            {f.builtBy}{" "}
             <a
               href="https://brancodex.com/"
               className="hover:text-emerald-700 transition-colors"

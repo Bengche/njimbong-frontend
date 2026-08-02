@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Axios from "axios";
+import { useLanguage } from "../i18n/LanguageContext";
 Axios.defaults.withCredentials = true;
 
 // â”€â”€â”€ types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -65,9 +66,9 @@ function getLink(n: Notification): string | null {
   return "/dashboard";
 }
 
-function getTimeAgo(date: string) {
+function getTimeAgo(date: string, justNowLabel: string) {
   const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-  if (s < 60) return "Just now";
+  if (s < 60) return justNowLabel;
   if (s < 3600) return `${Math.floor(s / 60)}m ago`;
   if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
   if (s < 604800) return `${Math.floor(s / 86400)}d ago`;
@@ -129,6 +130,8 @@ function NotificationItem({
   onClick: (n: Notification) => void;
   onDismiss: (e: React.MouseEvent, id: number) => void;
 }) {
+  const { t } = useLanguage();
+  const notif = t("notifications");
   return (
     <li
       className={`group relative flex cursor-pointer items-start gap-3 px-4 py-3.5 transition-colors hover:bg-gray-50/80 `}
@@ -145,19 +148,19 @@ function NotificationItem({
         <div className="flex items-start justify-between gap-2">
           <p className={`text-xs leading-snug `}>{n.title}</p>
           <span className="flex-shrink-0 text-[10px] tabular-nums text-gray-400 mt-0.5">
-            {getTimeAgo(n.createdat)}
+            {getTimeAgo(n.createdat, notif.justNow)}
           </span>
         </div>
         <p className="mt-0.5 text-xs text-gray-500 line-clamp-2 leading-snug">
           {n.message}
         </p>
         <span className="mt-1 inline-block text-[10px] font-medium text-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity">
-          View details
+          {notif.viewDetails}
         </span>
       </div>
       <button
         onClick={(e) => onDismiss(e, n.id)}
-        aria-label="Dismiss notification"
+        aria-label={notif.dismiss}
         className="flex-shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100 mt-0.5 flex h-5 w-5 items-center justify-center rounded text-gray-300 hover:text-gray-600 hover:bg-gray-200 transition-all"
       >
         <svg
@@ -182,6 +185,8 @@ function NotificationItem({
 
 export default function Notifications({ userId }: NotificationsProps) {
   const router = useRouter();
+  const { t } = useLanguage();
+  const notif = t("notifications");
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -357,7 +362,7 @@ export default function Notifications({ userId }: NotificationsProps) {
             <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-100 px-4 py-3">
               <div className="flex items-center gap-2">
                 <h2 className="text-sm font-semibold text-gray-900">
-                  Notifications
+                  {notif.title}
                 </h2>
                 {unreadCount > 0 && (
                   <span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
@@ -371,7 +376,7 @@ export default function Notifications({ userId }: NotificationsProps) {
                     onClick={markAllAsRead}
                     className="rounded px-2 py-1 text-[11px] font-medium text-emerald-700 hover:bg-emerald-50 transition-colors"
                   >
-                    Mark all read
+                    {notif.markAllRead}
                   </button>
                 )}
                 <button
@@ -403,11 +408,9 @@ export default function Notifications({ userId }: NotificationsProps) {
                   onClick={() => setFilter(f)}
                   className={`pb-2 px-1 text-xs font-medium border-b-2 transition-colors `}
                 >
-                  {f === "all" ? (
-                    "All"
-                  ) : (
+                  {f === "all" ? notif.all : (
                     <span className="flex items-center gap-1.5">
-                      Unread
+                      {notif.unread}
                       {unreadCount > 0 && (
                         <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-100 px-1 text-[9px] font-bold text-red-600">
                           {unreadCount}
@@ -424,7 +427,7 @@ export default function Notifications({ userId }: NotificationsProps) {
                 <div className="flex flex-col items-center justify-center py-14 gap-3">
                   <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-emerald-600" />
                   <span className="text-xs text-gray-400">
-                    Loading notifications...
+                    {notif.loading}
                   </span>
                 </div>
               ) : displayed.length === 0 ? (
@@ -445,14 +448,10 @@ export default function Notifications({ userId }: NotificationsProps) {
                     </svg>
                   </div>
                   <p className="text-sm font-medium text-gray-700">
-                    {filter === "unread"
-                      ? "No unread notifications"
-                      : "No notifications yet"}
+                    {filter === "unread" ? notif.noUnread : notif.none}
                   </p>
                   <p className="mt-1 text-xs text-gray-400">
-                    {filter === "unread"
-                      ? "You are all caught up."
-                      : "Activity from your listings and purchases will appear here."}
+                    {filter === "unread" ? notif.caughtUp : notif.activity}
                   </p>
                 </div>
               ) : (
@@ -477,7 +476,7 @@ export default function Notifications({ userId }: NotificationsProps) {
                     {loadingMore ? (
                       <>
                         <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-emerald-300 border-t-emerald-700" />
-                        Loading more notifications...
+                      {notif.loadingMore}
                       </>
                     ) : (
                       <>
@@ -494,7 +493,7 @@ export default function Notifications({ userId }: NotificationsProps) {
                             d="M19 9l-7 7-7-7"
                           />
                         </svg>
-                        Load more notifications
+                        {notif.loadMore}
                       </>
                     )}
                   </button>

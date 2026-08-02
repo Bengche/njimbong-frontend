@@ -1,11 +1,14 @@
 "use client";
 import { useState } from "react";
 import Axios from "axios";
+import { useLanguage } from "../i18n/LanguageContext";
 Axios.defaults.withCredentials = true;
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
 export default function Signup() {
+  const { t } = useLanguage();
+  const a = t("auth").signup;
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
 
@@ -73,7 +76,7 @@ export default function Signup() {
     formData.terms;
 
   const popUp = () => {
-    setShowPopup("Registeration Succesful");
+    setShowPopup(a.successToast);
 
     setTimeout(() => {
       setShowPopup("");
@@ -113,7 +116,7 @@ export default function Signup() {
       window.location.href = process.env.NEXT_PUBLIC_LOGIN_ENDPOINT || "/login";
       console.log(formData);
     } catch (error) {
-      setError("Error registering user");
+      setError(a.errorToast);
 
       setTimeout(() => {
         setError("");
@@ -214,11 +217,10 @@ export default function Signup() {
             </div>
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-2 animate-slide-up">
-            Create Your Account
+            {a.title}
           </h1>
           <p className="text-lg text-gray-600 animate-slide-up animation-delay-200">
-            Join {process.env.NEXT_PUBLIC_SITENAME || "our marketplace"} and
-            connect with thousands of buyers and sellers
+            {a.subtitle}
           </p>
         </div>
 
@@ -227,7 +229,7 @@ export default function Signup() {
             {/* Personal Information Section */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">
-                Personal Information
+                {a.personalInfo}
               </h2>
 
               <div>
@@ -235,7 +237,7 @@ export default function Signup() {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Full Name <span className="text-red-500">*</span>
+                  {a.fullName} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -244,7 +246,7 @@ export default function Signup() {
                   required
                   onChange={handleInputChange}
                   value={formData.name}
-                  placeholder="Enter your full name"
+                  placeholder={a.fullNamePlaceholder}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 outline-none hover:border-green-300"
                 />
               </div>
@@ -254,7 +256,7 @@ export default function Signup() {
                   htmlFor="username"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Username <span className="text-red-500">*</span>
+                  {a.username} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -263,7 +265,7 @@ export default function Signup() {
                   required
                   onChange={handleInputChange}
                   value={formData.username}
-                  placeholder="Choose a unique username"
+                  placeholder={a.usernamePlaceholder}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 outline-none hover:border-green-300"
                 />
               </div>
@@ -274,7 +276,7 @@ export default function Signup() {
                     htmlFor="email"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Email Address <span className="text-red-500">*</span>
+                    {a.email} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -293,7 +295,7 @@ export default function Signup() {
                     htmlFor="phone"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Phone Number <span className="text-red-500">*</span>
+                    {a.phone} <span className="text-red-500">*</span>
                   </label>
                   <div className="flex rounded-lg border border-gray-300 focus-within:ring-2 focus-within:ring-green-500 focus-within:border-green-500 hover:border-green-300 transition duration-200 overflow-hidden">
                     <span className="flex items-center px-3 bg-gray-50 border-r border-gray-300 text-gray-600 text-sm font-medium select-none">
@@ -316,7 +318,7 @@ export default function Signup() {
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Enter your Cameroonian Mobile Money number (MTN or Orange).
+                    {a.phoneHint}
                   </p>
                 </div>
               </div>
@@ -326,7 +328,7 @@ export default function Signup() {
                   htmlFor="country"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Country <span className="text-red-500">*</span>
+                  {a.country} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -335,7 +337,7 @@ export default function Signup() {
                   required
                   onChange={handleInputChange}
                   value={formData.country}
-                  placeholder="Enter your country"
+                  placeholder={a.countryPlaceholder}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 outline-none hover:border-green-300"
                 />
               </div>
@@ -343,7 +345,7 @@ export default function Signup() {
             {/* Security Section */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">
-                Security
+                {a.security}
               </h2>
 
               <div>
@@ -351,7 +353,7 @@ export default function Signup() {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Password <span className="text-red-500">*</span>
+                  {a.password} <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -361,7 +363,7 @@ export default function Signup() {
                     required
                     onChange={handleInputChange}
                     value={formData.password}
-                    placeholder="Create a strong password"
+                    placeholder={a.passwordPlaceholder}
                     className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 outline-none hover:border-green-300"
                   />
                   <button
@@ -421,7 +423,7 @@ export default function Signup() {
                   </div>
                   <div className="mt-2 grid gap-1 text-xs">
                     <p className="font-medium text-gray-600">
-                      Password must include:
+                      {a.passwordReqs}
                     </p>
                     <p
                       className={
@@ -430,7 +432,7 @@ export default function Signup() {
                           : "text-red-500"
                       }
                     >
-                      • At least 8 characters
+                      • {a.req1}
                     </p>
                     <p
                       className={
@@ -439,7 +441,7 @@ export default function Signup() {
                           : "text-red-500"
                       }
                     >
-                      • One uppercase letter
+                      • {a.req2}
                     </p>
                     <p
                       className={
@@ -448,7 +450,7 @@ export default function Signup() {
                           : "text-red-500"
                       }
                     >
-                      • One lowercase letter
+                      • {a.req3}
                     </p>
                     <p
                       className={
@@ -457,7 +459,7 @@ export default function Signup() {
                           : "text-red-500"
                       }
                     >
-                      • One number
+                      • {a.req4}
                     </p>
                     <p
                       className={
@@ -466,7 +468,7 @@ export default function Signup() {
                           : "text-red-500"
                       }
                     >
-                      • One symbol
+                      • {a.req5}
                     </p>
                   </div>
                 </div>
@@ -477,7 +479,7 @@ export default function Signup() {
                   htmlFor="confirmPassword"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Confirm Password <span className="text-red-500">*</span>
+                  {a.confirmPassword} <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -487,7 +489,7 @@ export default function Signup() {
                     required
                     onChange={handleInputChange}
                     value={formData.confirmPassword}
-                    placeholder="Re-enter your password"
+                    placeholder={a.confirmPlaceholder}
                     className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 outline-none hover:border-green-300"
                   />
                   <button
@@ -538,9 +540,7 @@ export default function Signup() {
                       passwordsMatch ? "text-green-600" : "text-red-500"
                     }`}
                   >
-                    {passwordsMatch
-                      ? "Passwords match"
-                      : "Passwords do not match"}
+                    {passwordsMatch ? a.passwordsMatch : a.passwordsNoMatch}
                   </p>
                 )}
               </div>
@@ -548,7 +548,7 @@ export default function Signup() {
             {/* Profile Picture Section */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">
-                Profile Picture
+                {a.profilePic}
               </h2>
 
               <div>
@@ -556,8 +556,8 @@ export default function Signup() {
                   htmlFor="profileImage"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Upload Profile Picture{" "}
-                  <span className="text-gray-500 text-xs">(Optional)</span>
+                  {a.uploadPic}{" "}
+                  <span className="text-gray-500 text-xs">({a.uploadHint.split("(")[1]?.replace(")","") || "Optional"})</span>
                 </label>
                 <div className="flex items-center gap-4">
                   <label
@@ -580,12 +580,11 @@ export default function Signup() {
                       </svg>
                       <p className="mt-2 text-sm text-gray-600">
                         <span className="font-medium text-green-600">
-                          Click to upload
-                        </span>{" "}
-                        or drag and drop
+                          {a.uploadHint}
+                        </span>
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        PNG, JPG, GIF up to 5MB
+                        {a.uploadFormat}
                       </p>
                     </div>
                     <input
@@ -622,22 +621,21 @@ export default function Signup() {
                   className="mt-1 w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                 />
                 <label htmlFor="terms" className="text-sm text-gray-700">
-                  I agree to the{" "}
+                  {a.termsAgree}{" "}
                   <a
                     href="#"
                     className="text-green-600 hover:text-yellow-600 hover:underline font-medium transition-colors"
                   >
-                    Terms and Conditions
+                    {a.termsLink}
                   </a>{" "}
-                  and{" "}
+                  {a.termsAnd}{" "}
                   <a
                     href="#"
                     className="text-green-600 hover:text-yellow-600 hover:underline font-medium transition-colors"
                   >
-                    Privacy Policy
+                    {a.privacyLink}
                   </a>
-                  . I understand that my information will be processed according
-                  to these policies.
+                  . {a.termsEnd}
                 </label>
               </div>
             </div>
@@ -669,25 +667,24 @@ export default function Signup() {
                     />
                   </svg>
                 )}
-                {isSubmitting ? "Creating account..." : "Create Account"}
+                {isSubmitting ? a.submitting : a.submitBtn}
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-red-400 to-yellow-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
             </button>{" "}
             <p className="text-center text-sm text-gray-600 mt-6">
-              Already have an account?{" "}
+              {a.alreadyHave}{" "}
               <a
                 href="/login"
                 className="text-green-600 hover:text-yellow-600 hover:underline font-medium transition-colors"
               >
-                Sign in here
+                {a.signIn}
               </a>
             </p>
           </form>
         </div>
 
         <p className="text-center text-xs text-gray-500 mt-6">
-          By signing up, you're joining a trusted community of marketplace users
-          worldwide.
+          {a.footer}
         </p>
       </div>
     </div>

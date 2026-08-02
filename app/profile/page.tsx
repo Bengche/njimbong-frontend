@@ -16,6 +16,7 @@ import {
   ReviewList,
 } from "../components/Reviews";
 import LoadingArt from "../components/LoadingArt";
+import { useLanguage } from "../i18n/LanguageContext";
 Axios.defaults.withCredentials = true;
 
 interface User {
@@ -80,6 +81,9 @@ export default function ProfilePage() {
   const [reportSuccess, setReportSuccess] = useState("");
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+  const { t } = useLanguage();
+  const pr = t("profile");
+  const common = t("common");
 
   const getErrorStatus = useCallback(
     (error: unknown) =>
@@ -449,8 +453,8 @@ export default function ProfilePage() {
     return (
       <LoadingArt
         fullScreen
-        label="Loading your profile"
-        subLabel="Fetching account details"
+        label={pr.loading}
+        subLabel={pr.fetching}
       />
     );
   }
@@ -460,13 +464,13 @@ export default function ProfilePage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Profile not found
+            {pr.notFound}
           </h2>
           <button
             onClick={() => router.push("/dashboard")}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
           >
-            Back to Dashboard
+            {pr.backToDashboard}
           </button>
         </div>
       </div>
@@ -531,7 +535,7 @@ export default function ProfilePage() {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Dashboard
+            {pr.dashboard}
           </button>
         </div>
 
@@ -616,7 +620,7 @@ export default function ProfilePage() {
                 {kycLoading ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500 border border-gray-200">
                     <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                    Checking...
+                    {pr.checking}
                   </span>
                 ) : user.verified || kycStatus?.status === "approved" ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
@@ -631,20 +635,20 @@ export default function ProfilePage() {
                         clipRule="evenodd"
                       />
                     </svg>
-                    Verified
+                    {pr.verified}
                   </span>
                 ) : kycStatus?.status === "pending" ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 border border-amber-200">
-                    Pending Review
+                    {pr.pendingReview}
                   </span>
                 ) : kycStatus?.status === "rejected" ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
-                    Rejected
+                    {pr.rejected}
                   </span>
                 ) : null}
                 {suspensionStatus?.isSuspended && (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
-                    Suspended
+                    {pr.suspended}
                   </span>
                 )}
               </div>
@@ -663,7 +667,7 @@ export default function ProfilePage() {
                     {isSavingProfile ? (
                       <span className="w-3.5 h-3.5 border-2 border-white/70 border-t-transparent rounded-full animate-spin" />
                     ) : null}
-                    {isSavingProfile ? "Saving..." : "Save"}
+                    {isSavingProfile ? common.saving : common.save}
                   </button>
                   <button
                     onClick={() => {
@@ -685,7 +689,7 @@ export default function ProfilePage() {
                     disabled={isSavingProfile}
                     className="h-9 px-4 rounded-xl text-sm font-semibold bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all"
                   >
-                    Cancel
+                    {common.cancel}
                   </button>
                 </>
               ) : (
@@ -733,7 +737,7 @@ export default function ProfilePage() {
             </svg>
             <div className="flex-1">
               <p className="text-xs font-semibold text-red-700">
-                Verification Rejected
+                {pr.kycRejectedBanner}
               </p>
               <p className="text-xs text-red-600 mt-0.5">
                 {kycStatus.rejectionreason}
@@ -743,7 +747,7 @@ export default function ProfilePage() {
               onClick={() => setShowKYCModal(true)}
               className="flex-shrink-0 text-xs font-semibold text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-xl transition-colors"
             >
-              Resubmit
+              {pr.resubmit}
             </button>
           </div>
         </div>
@@ -778,7 +782,7 @@ export default function ProfilePage() {
               >
                 {trustLoading ? "..." : `${trustScore}%`}
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">Trust Score</p>
+              <p className="text-xs text-gray-500 mt-0.5">{pr.trustScore}</p>
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
@@ -802,12 +806,12 @@ export default function ProfilePage() {
             <div>
               <p className="text-sm font-bold text-gray-900 leading-tight">
                 {user.verified || kycStatus?.status === "approved"
-                  ? "Verified"
+                  ? pr.verified
                   : kycStatus?.status === "pending"
                     ? "Pending"
                     : "Not Verified"}
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">KYC Status</p>
+              <p className="text-xs text-gray-500 mt-0.5">{pr.kycStatus}</p>
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
@@ -833,7 +837,7 @@ export default function ProfilePage() {
                   year: "numeric",
                 })}
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">Member Since</p>
+              <p className="text-xs text-gray-500 mt-0.5">{pr.memberSince}</p>
             </div>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
@@ -859,8 +863,8 @@ export default function ProfilePage() {
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
                 {reviewStats && reviewStats.averageRating > 0
-                  ? `${reviewStats.averageRating.toFixed(1)} avg rating`
-                  : "No ratings yet"}
+                  ? `${reviewStats.averageRating.toFixed(1)} ${pr.avgRating}`
+                  : pr.noRatings}
               </p>
             </div>
           </div>
@@ -889,17 +893,17 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-emerald-900">
-                Verify your identity to build trust
+                {pr.getVerifiedTitle}
               </p>
               <p className="text-xs text-emerald-700 mt-0.5">
-                Verified sellers get more visibility and buyer confidence.
+                {pr.getVerifiedDesc}
               </p>
             </div>
             <button
               onClick={() => setShowKYCModal(true)}
               className="flex-shrink-0 h-9 px-4 rounded-xl text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm"
             >
-              Get Verified
+              {pr.getVerified}
             </button>
           </div>
         )}
@@ -909,12 +913,12 @@ export default function ProfilePage() {
           {/* Personal Information */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
-              Personal
+              {pr.personalInfo}
             </p>
             <div className="space-y-4">
               <div>
                 <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                  Full Name
+                  {pr.fullName}
                 </label>
                 {editMode ? (
                   <input
@@ -932,13 +936,13 @@ export default function ProfilePage() {
               </div>
               <div>
                 <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
-                  Email
+                  {pr.email}
                 </label>
                 <p className="text-sm font-semibold text-gray-900">
                   {user.email}
                 </p>
                 <p className="text-[10px] text-gray-400 mt-0.5">
-                  Cannot be changed
+                  {pr.emailNote}
                 </p>
               </div>
             </div>
@@ -1232,14 +1236,14 @@ export default function ProfilePage() {
                 disabled={reportSubmitting}
                 className="flex-1 h-10 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {common.cancel}
               </button>
               <button
                 onClick={submitReviewReport}
                 disabled={reportSubmitting}
                 className="flex-1 h-10 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors disabled:opacity-70"
               >
-                {reportSubmitting ? "Submitting..." : "Submit Report"}
+                {reportSubmitting ? common.submitting : "Submit Report"}
               </button>
             </div>
           </div>

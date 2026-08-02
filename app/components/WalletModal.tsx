@@ -237,8 +237,12 @@ export default function WalletModal({
         setWithdrawError(data.error || "Withdrawal failed. Please try again.");
         return;
       }
-      setWithdrawSuccess(amount);
-      setLiveBalance((b) => b - amount);
+      setWithdrawSuccess(data.amount_withdrawn ?? amount);
+      if (typeof data.new_balance === "number") {
+        setLiveBalance(data.new_balance);
+      } else {
+        setLiveBalance((b) => b - amount);
+      }
       setWithdrawAmount("");
     } catch {
       setWithdrawError("Network error. Please try again.");

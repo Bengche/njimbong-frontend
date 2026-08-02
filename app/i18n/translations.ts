@@ -4,6 +4,11 @@
  * Cameroon is officially bilingual; default language is English.
  */
 
+// Recursive helper: same shape as T but every leaf string may be any string.
+type DeepShape<T> = {
+  [K in keyof T]: T[K] extends object ? DeepShape<T[K]> : string;
+};
+
 const en = {
   common: {
     save: "Save",
@@ -382,8 +387,7 @@ const en = {
       emailPlaceholder: "you@example.com",
       phone: "Phone Number",
       phonePlaceholder: "6XX XXX XXX",
-      phoneHint:
-        "Enter your Cameroonian Mobile Money number (MTN or Orange).",
+      phoneHint: "Enter your Cameroonian Mobile Money number (MTN or Orange).",
       country: "Country",
       countryPlaceholder: "Enter your country",
       security: "Security",
@@ -502,8 +506,7 @@ const en = {
       deliveryBoth: "Pickup or delivery",
       deliveryNational: "Ships nationwide",
       deliveryNotes: "Delivery Notes (optional)",
-      deliveryNotesPlaceholder:
-        "e.g., Can deliver within Douala for 2,000 XAF",
+      deliveryNotesPlaceholder: "e.g., Can deliver within Douala for 2,000 XAF",
       tagsLabel: "Tags (comma-separated)",
       tagsPlaceholder: "e.g., smartphone, electronics, apple",
     },
@@ -511,8 +514,7 @@ const en = {
       fileSize: "File size must be less than 10MB",
       createFailed: "Failed to create listing. Please try again.",
       updateFailed: "Failed to update listing. Please try again.",
-      suspended:
-        "Your account is suspended. You cannot create listings.",
+      suspended: "Your account is suspended. You cannot create listings.",
     },
     submit: "Submit Listing",
     update: "Update Listing",
@@ -526,7 +528,8 @@ const en = {
     saved: "Saved!",
     created: "Created!",
     listingUpdated: "Listing updated!",
-    listingUpdatedDesc: "Changes saved. It will be re-reviewed by our team if it was live.",
+    listingUpdatedDesc:
+      "Changes saved. It will be re-reviewed by our team if it was live.",
     listingCreated: "Listing created successfully!",
     listingCreatedDesc: "Your listing is pending admin approval.",
   },
@@ -565,8 +568,7 @@ const en = {
     noUnread: "No unread notifications",
     caughtUp: "You are all caught up.",
     none: "No notifications yet",
-    activity:
-      "Activity from your listings and purchases will appear here.",
+    activity: "Activity from your listings and purchases will appear here.",
     loading: "Loading notifications...",
     loadMore: "Load more notifications",
     loadingMore: "Loading more notifications...",
@@ -579,8 +581,7 @@ const en = {
     verifyIdentity: "Verify your identity",
     step1: {
       title: "Select Your Document Type",
-      subtitle:
-        "Choose the type of identification document you want to upload",
+      subtitle: "Choose the type of identification document you want to upload",
       nationalId: "National ID Card",
       passport: "International Passport",
       driverLicense: "Driver's License",
@@ -648,8 +649,7 @@ const en = {
     continue: "Continue →",
     saving: "Saving...",
     errors: {
-      minCategories:
-        "Please select at least 5 categories to continue",
+      minCategories: "Please select at least 5 categories to continue",
       loadFailed: "Failed to load categories",
       saveFailed: "Failed to save preferences. Please try again.",
     },
@@ -669,8 +669,7 @@ const en = {
     successTitle: "Report Submitted",
     successDesc:
       "Thank you for helping keep our community safe. We will review your report soon.",
-    empty:
-      "No report reasons are available right now. Please try again later.",
+    empty: "No report reasons are available right now. Please try again later.",
     errors: {
       noReason: "Please select a reason for reporting",
       loadFailed: "Failed to load report reasons",
@@ -722,8 +721,7 @@ const en = {
     },
     errors: {
       unavailable: "Njimbong AI is not available right now.",
-      tooMany:
-        "Too many requests — please wait a moment and try again.",
+      tooMany: "Too many requests — please wait a moment and try again.",
       generic: "Njimbong AI is temporarily unavailable.",
     },
   },
@@ -757,7 +755,9 @@ const en = {
   },
 } as const;
 
-const fr: typeof en = {
+export type TranslationDict = typeof en;
+
+const fr: DeepShape<TranslationDict> = {
   common: {
     save: "Enregistrer",
     cancel: "Annuler",
@@ -837,8 +837,7 @@ const fr: typeof en = {
     fonlokTitle: "Paiements propulsés par Fonlok Escrow",
     fonlokDesc:
       "Chaque transaction en XAF sur Njimbong est protégée par Fonlok Escrow. Votre argent est conservé en toute sécurité et n'est libéré au vendeur qu'après votre confirmation de réception.",
-    copyright:
-      "© 2025–2026 Njimbong Marketplace. Tous droits réservés.",
+    copyright: "© 2025–2026 Njimbong Marketplace. Tous droits réservés.",
     builtBy: "Créé par",
     trustBar: {
       escrow: "Paiements Fonlok Escrow",
@@ -958,8 +957,7 @@ const fr: typeof en = {
     },
     howItWorks: {
       title: "Comment fonctionne Njimbong",
-      subtitle:
-        "De l'inscription à une transaction sécurisée — quatre étapes.",
+      subtitle: "De l'inscription à une transaction sécurisée — quatre étapes.",
       step1Title: "Créez votre compte",
       step1Text:
         "Inscrivez-vous gratuitement, vérifiez votre profil et construisez la confiance avec les acheteurs et vendeurs.",
@@ -1193,8 +1191,7 @@ const fr: typeof en = {
       renew: "Renouveler l'Annonce",
       edit: "Modifier l'Annonce",
       delete: "Supprimer l'Annonce",
-      deleteConfirm:
-        "Êtes-vous sûr de vouloir supprimer cette annonce ?",
+      deleteConfirm: "Êtes-vous sûr de vouloir supprimer cette annonce ?",
       addFavorite: "Ajouter aux favoris",
       removeFavorite: "Retirer des favoris",
       report: "Signaler l'Annonce",
@@ -1261,15 +1258,13 @@ const fr: typeof en = {
       deliveryBoth: "Remise ou livraison",
       deliveryNational: "Livraison nationale",
       deliveryNotes: "Notes de Livraison (facultatif)",
-      deliveryNotesPlaceholder:
-        "ex : Je peux livrer à Douala pour 2 000 XAF",
+      deliveryNotesPlaceholder: "ex : Je peux livrer à Douala pour 2 000 XAF",
       tagsLabel: "Mots-clés (séparés par des virgules)",
       tagsPlaceholder: "ex : smartphone, électronique, apple",
     },
     errors: {
       fileSize: "La taille du fichier doit être inférieure à 10Mo",
-      createFailed:
-        "Impossible de créer l'annonce. Veuillez réessayer.",
+      createFailed: "Impossible de créer l'annonce. Veuillez réessayer.",
       updateFailed:
         "Impossible de mettre à jour l'annonce. Veuillez réessayer.",
       suspended:
@@ -1287,9 +1282,11 @@ const fr: typeof en = {
     saved: "Enregistré !",
     created: "Créé !",
     listingUpdated: "Annonce mise à jour !",
-    listingUpdatedDesc: "Modifications sauvegardées. Elle sera re-vérifiée par notre équipe si elle était active.",
+    listingUpdatedDesc:
+      "Modifications sauvegardées. Elle sera re-vérifiée par notre équipe si elle était active.",
     listingCreated: "Annonce créée avec succès !",
-    listingCreatedDesc: "Votre annonce est en attente d'approbation par l'administrateur.",
+    listingCreatedDesc:
+      "Votre annonce est en attente d'approbation par l'administrateur.",
   },
   search: {
     title: "Recherche Avancée & Filtres",
@@ -1328,8 +1325,7 @@ const fr: typeof en = {
     noUnread: "Aucune notification non lue",
     caughtUp: "Vous êtes à jour.",
     none: "Aucune notification",
-    activity:
-      "L'activité de vos annonces et achats apparaîtra ici.",
+    activity: "L'activité de vos annonces et achats apparaîtra ici.",
     loading: "Chargement des notifications...",
     loadMore: "Charger plus de notifications",
     loadingMore: "Chargement en cours...",
@@ -1386,16 +1382,14 @@ const fr: typeof en = {
       frontRequired: "Veuillez télécharger le recto de votre document",
       backRequired: "Veuillez télécharger le verso de votre document",
       selfieRequired: "Veuillez télécharger un selfie",
-      failed:
-        "Échec de la soumission KYC. Veuillez réessayer.",
+      failed: "Échec de la soumission KYC. Veuillez réessayer.",
     },
   },
   onboarding: {
     welcome: "Bienvenue sur Marketplace !",
     personalizeTitle: "Personnalisez Votre Fil",
     personalizeSubtitle: "Configurons votre expérience personnalisée",
-    selectAtLeast:
-      "Sélectionnez au moins 5 catégories qui vous intéressent",
+    selectAtLeast: "Sélectionnez au moins 5 catégories qui vous intéressent",
     step1: {
       title: "Trouvez ce que Vous Aimez",
       desc: "Pour vous offrir la meilleure expérience, nous aimerions connaître les catégories qui vous intéressent. Cela nous aide à vous montrer des annonces et des recommandations pertinentes.",
@@ -1407,7 +1401,8 @@ const fr: typeof en = {
     step2: {
       selectMore: "Sélectionnez encore",
       more: "de plus",
-      great: "Super ! Vous pouvez en sélectionner davantage si vous le souhaitez",
+      great:
+        "Super ! Vous pouvez en sélectionner davantage si vous le souhaitez",
     },
     back: "← Retour",
     skip: "Passer pour l'instant",
@@ -1489,8 +1484,7 @@ const fr: typeof en = {
     },
     errors: {
       unavailable: "Njimbong AI n'est pas disponible pour le moment.",
-      tooMany:
-        "Trop de requêtes — veuillez patienter un moment et réessayer.",
+      tooMany: "Trop de requêtes — veuillez patienter un moment et réessayer.",
       generic: "Njimbong AI est temporairement indisponible.",
     },
   },
@@ -1512,8 +1506,7 @@ const fr: typeof en = {
     reviews: "avis",
     avgRating: "note moyenne",
     noRatings: "Aucune note pour l'instant",
-    getVerifiedTitle:
-      "Vérifiez votre identité pour renforcer la confiance",
+    getVerifiedTitle: "Vérifiez votre identité pour renforcer la confiance",
     getVerifiedDesc:
       "Les vendeurs vérifiés obtiennent plus de visibilité et la confiance des acheteurs.",
     getVerified: "Se Faire Vérifier",
@@ -1527,4 +1520,3 @@ const fr: typeof en = {
 
 export const translations = { en, fr } as const;
 export type Language = keyof typeof translations;
-export type TranslationDict = typeof en;

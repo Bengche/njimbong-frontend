@@ -222,6 +222,7 @@ export default function Navbar() {
             {/* Mobile right cluster: notifications bell + hamburger */}
             <div className="flex items-center gap-1 md:hidden">
               {user && <Notifications userId={user.id} />}
+              <LanguageSwitcher />
               <button
                 className="relative z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-100 bg-white text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50 active:scale-95"
                 onClick={() => setIsOpen(!isOpen)}
@@ -449,6 +450,10 @@ export default function Navbar() {
             </svg>
             {nav.fonlokProtection}
           </a>
+          {/* Language switcher — drawer */}
+          <div className="mt-3 border-t border-gray-100">
+            <LanguageSwitcher variant="full" />
+          </div>
         </div>
       </div>
     </>

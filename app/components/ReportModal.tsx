@@ -99,7 +99,7 @@ export default function ReportModal({
     } finally {
       setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [API_BASE, targetType]);
 
   useEffect(() => {
@@ -244,9 +244,7 @@ export default function ReportModal({
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 {rp.successTitle}
               </h3>
-              <p className="text-gray-600">
-                {rp.successDesc}
-              </p>
+              <p className="text-gray-600">{rp.successDesc}</p>
             </div>
           ) : loading ? (
             <div className="flex items-center justify-center py-12">
@@ -267,9 +265,7 @@ export default function ReportModal({
 
                 <div className="space-y-3">
                   {Object.entries(groupedReasons).length === 0 ? (
-                    <div className="text-sm text-gray-500">
-                      {rp.empty}
-                    </div>
+                    <div className="text-sm text-gray-500">{rp.empty}</div>
                   ) : (
                     Object.entries(groupedReasons).map(
                       ([category, categoryReasons]) => (

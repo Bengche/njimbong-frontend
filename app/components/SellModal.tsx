@@ -396,9 +396,7 @@ export default function SellModal({
         setSubmitError(error.response.data.error);
       } else {
         setSubmitError(
-          editListing
-            ? s.errors.updateFailed
-            : s.errors.createFailed,
+          editListing ? s.errors.updateFailed : s.errors.createFailed,
         );
       }
     } finally {
@@ -602,7 +600,7 @@ export default function SellModal({
                     {aiAnalyzing ? (
                       <>
                         <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
-                      {s.images.aiAnalyzing}
+                        {s.images.aiAnalyzing}
                       </>
                     ) : (
                       <>
@@ -654,9 +652,7 @@ export default function SellModal({
             />
             {duplicateWarning.length > 0 && (
               <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
-                <p className="font-semibold mb-1">
-                  {s.form.duplicate}
-                </p>
+                <p className="font-semibold mb-1">{s.form.duplicate}</p>
                 <ul className="list-disc list-inside">
                   {duplicateWarning.map((t, i) => (
                     <li key={i}>{t}</li>
@@ -885,14 +881,12 @@ export default function SellModal({
                   }
                   onChange={handlePhoneChange}
                   required
-              placeholder={s.form.momoPlaceholder}
+                  placeholder={s.form.momoPlaceholder}
                   maxLength={9}
                   className="flex-1 px-4 py-3 outline-none bg-white"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {s.form.momoHint}
-              </p>
+              <p className="text-xs text-gray-500 mt-1">{s.form.momoHint}</p>
             </div>
 
             <div>
@@ -912,9 +906,7 @@ export default function SellModal({
                 placeholder="your@email.com"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
               />
-              <p className="text-xs text-gray-500 mt-1">
-                {s.form.emailHint}
-              </p>
+              <p className="text-xs text-gray-500 mt-1">{s.form.emailHint}</p>
             </div>
 
             <div>
@@ -927,9 +919,7 @@ export default function SellModal({
                 disabled
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
               />
-              <p className="text-xs text-gray-500 mt-1">
-                {s.form.statusNote}
-              </p>
+              <p className="text-xs text-gray-500 mt-1">{s.form.statusNote}</p>
             </div>
           </div>
 
@@ -987,7 +977,9 @@ export default function SellModal({
               className="block text-sm font-semibold text-gray-700 mb-2"
             >
               Tags{" "}
-              <span className="text-gray-500 text-xs">({s.form.tagsLabel})</span>
+              <span className="text-gray-500 text-xs">
+                ({s.form.tagsLabel})
+              </span>
             </label>
             <input
               type="text"

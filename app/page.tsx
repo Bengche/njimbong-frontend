@@ -184,4 +184,4 @@ export default async function Home() {
       <HomePageContent listings={listings} />
     </div>
   );
-}
+}

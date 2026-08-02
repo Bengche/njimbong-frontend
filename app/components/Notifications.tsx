@@ -408,7 +408,9 @@ export default function Notifications({ userId }: NotificationsProps) {
                   onClick={() => setFilter(f)}
                   className={`pb-2 px-1 text-xs font-medium border-b-2 transition-colors `}
                 >
-                  {f === "all" ? notif.all : (
+                  {f === "all" ? (
+                    notif.all
+                  ) : (
                     <span className="flex items-center gap-1.5">
                       {notif.unread}
                       {unreadCount > 0 && (
@@ -426,9 +428,7 @@ export default function Notifications({ userId }: NotificationsProps) {
               {loading && notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-14 gap-3">
                   <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-200 border-t-emerald-600" />
-                  <span className="text-xs text-gray-400">
-                    {notif.loading}
-                  </span>
+                  <span className="text-xs text-gray-400">{notif.loading}</span>
                 </div>
               ) : displayed.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
@@ -476,7 +476,7 @@ export default function Notifications({ userId }: NotificationsProps) {
                     {loadingMore ? (
                       <>
                         <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-emerald-300 border-t-emerald-700" />
-                      {notif.loadingMore}
+                        {notif.loadingMore}
                       </>
                     ) : (
                       <>

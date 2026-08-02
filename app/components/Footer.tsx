@@ -121,9 +121,7 @@ export default function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div className="space-y-3">
             <h3 className="text-base font-bold text-emerald-700">Njimbong</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              {f.tagline}
-            </p>
+            <p className="text-sm text-gray-600 leading-relaxed">{f.tagline}</p>
             <a
               href="/browse"
               className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-700 hover:underline"

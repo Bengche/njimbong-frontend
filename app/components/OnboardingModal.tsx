@@ -113,9 +113,7 @@ export default function OnboardingModal({
             </div>
             <div>
               <h2 className="text-2xl font-bold">
-                {step === 1
-                  ? ob.welcome
-                  : ob.personalizeTitle}
+                {step === 1 ? ob.welcome : ob.personalizeTitle}
               </h2>
               <p className="text-white/80 text-sm mt-1">
                 {step === 1

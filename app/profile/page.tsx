@@ -450,13 +450,7 @@ export default function ProfilePage() {
   };
 
   if (loading) {
-    return (
-      <LoadingArt
-        fullScreen
-        label={pr.loading}
-        subLabel={pr.fetching}
-      />
-    );
+    return <LoadingArt fullScreen label={pr.loading} subLabel={pr.fetching} />;
   }
 
   if (!user) {

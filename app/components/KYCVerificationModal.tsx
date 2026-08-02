@@ -159,10 +159,7 @@ export default function KYCVerificationModal({
           process.env.NEXT_PUBLIC_LOGIN_ENDPOINT || "/login";
       }
       console.error("Error submitting KYC:", error);
-      setError(
-        error.response?.data?.error ||
-          k.errors.failed,
-      );
+      setError(error.response?.data?.error || k.errors.failed);
     } finally {
       setLoading(false);
     }
@@ -229,9 +226,7 @@ export default function KYCVerificationModal({
             <h3 className="text-xl font-bold text-gray-800 mb-4">
               {k.step1.title}
             </h3>
-            <p className="text-gray-600 mb-6">
-              {k.step1.subtitle}
-            </p>
+            <p className="text-gray-600 mb-6">{k.step1.subtitle}</p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {documentTypes.map((doc) => (
@@ -247,9 +242,7 @@ export default function KYCVerificationModal({
                   <div className="text-4xl mb-3">{doc.icon}</div>
                   <h4 className="font-bold text-gray-800 mb-2">{doc.label}</h4>
                   <p className="text-xs text-gray-600">
-                      {doc.requiresBack
-                      ? k.step1.frontBack
-                      : k.step1.bioPage}
+                    {doc.requiresBack ? k.step1.frontBack : k.step1.bioPage}
                   </p>
                 </button>
               ))}
@@ -401,12 +394,12 @@ export default function KYCVerificationModal({
                           d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                         />
                       </svg>
-                        <p className="text-gray-700 font-semibold">
-                          {k.step2.clickUpload}
-                        </p>
-                        <p className="text-gray-500 text-sm mt-1">
-                          {k.step2.format}
-                        </p>
+                      <p className="text-gray-700 font-semibold">
+                        {k.step2.clickUpload}
+                      </p>
+                      <p className="text-gray-500 text-sm mt-1">
+                        {k.step2.format}
+                      </p>
                       <input
                         type="file"
                         id="documentBack"
@@ -453,9 +446,7 @@ export default function KYCVerificationModal({
             <h3 className="text-xl font-bold text-gray-800 mb-4">
               {k.step3.title}
             </h3>
-            <p className="text-gray-600 mb-6">
-              {k.step3.subtitle}
-            </p>
+            <p className="text-gray-600 mb-6">{k.step3.subtitle}</p>
 
             <div className="mb-6">
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-colors">

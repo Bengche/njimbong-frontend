@@ -317,9 +317,7 @@ export default function Signup() {
                       className="flex-1 px-4 py-3 outline-none bg-white"
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {a.phoneHint}
-                  </p>
+                  <p className="text-xs text-gray-500 mt-1">{a.phoneHint}</p>
                 </div>
               </div>
 
@@ -557,7 +555,11 @@ export default function Signup() {
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
                   {a.uploadPic}{" "}
-                  <span className="text-gray-500 text-xs">({a.uploadHint.split("(")[1]?.replace(")","") || "Optional"})</span>
+                  <span className="text-gray-500 text-xs">
+                    (
+                    {a.uploadHint.split("(")[1]?.replace(")", "") || "Optional"}
+                    )
+                  </span>
                 </label>
                 <div className="flex items-center gap-4">
                   <label
@@ -683,9 +685,7 @@ export default function Signup() {
           </form>
         </div>
 
-        <p className="text-center text-xs text-gray-500 mt-6">
-          {a.footer}
-        </p>
+        <p className="text-center text-xs text-gray-500 mt-6">{a.footer}</p>
       </div>
     </div>
   );

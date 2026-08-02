@@ -133,15 +133,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <LanguageProvider>
-        <ClientPolyfills />
-        <AuthClientInit />
-        <NotificationListener />
-        <Navbar />
-        <WalletBar />
-        <AppShellWrapper>{children}</AppShellWrapper>
-        <MobileBottomNav />
-        <NjimbongChat />
-        <Footer />
+          <ClientPolyfills />
+          <AuthClientInit />
+          <NotificationListener />
+          <Navbar />
+          <WalletBar />
+          <AppShellWrapper>{children}</AppShellWrapper>
+          <MobileBottomNav />
+          <NjimbongChat />
+          <Footer />
         </LanguageProvider>
       </body>
     </html>

@@ -2520,7 +2520,9 @@ export default function Dashboard() {
         <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 pb-20 md:pb-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-y-auto max-h-[calc(100dvh-6rem)] md:max-h-[90vh]">
             <div className="p-4 sm:p-6 border-b">
-              <h3 className="text-xl font-bold text-gray-900">{d.saveSearch.title}</h3>
+              <h3 className="text-xl font-bold text-gray-900">
+                {d.saveSearch.title}
+              </h3>
               <p className="text-sm text-gray-500">
                 Save your current filters and enable alerts.
               </p>

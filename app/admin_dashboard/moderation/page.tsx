@@ -144,7 +144,11 @@ function ModerationDashboardContent() {
   const [disputes, setDisputes] = useState<DisputeOrder[]>([]);
   const [disputesLoading, setDisputesLoading] = useState(false);
   const [resendingId, setResendingId] = useState<number | null>(null);
-  const [resendResult, setResendResult] = useState<{ id: number; ok: boolean; msg: string } | null>(null);
+  const [resendResult, setResendResult] = useState<{
+    id: number;
+    ok: boolean;
+    msg: string;
+  } | null>(null);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState("pending");
@@ -223,13 +227,13 @@ function ModerationDashboardContent() {
   const getStringValue = useCallback(
     (value: unknown, fallback = "") =>
       typeof value === "string" ? value : fallback,
-    []
+    [],
   );
 
   const getNullableString = useCallback(
     (value: unknown) =>
       typeof value === "string" && value.trim() !== "" ? value : null,
-    []
+    [],
   );
 
   const toSeverityLabel = useCallback((value: unknown) => {
@@ -286,13 +290,13 @@ function ModerationDashboardContent() {
         reviewed: getNumberValue(stats.resolved_reports ?? stats.reviewed),
         escalated: getNumberValue(stats.high_priority ?? stats.escalated),
         totalSuspensions: getNumberValue(
-          stats.active_suspensions ?? stats.totalSuspensions
+          stats.active_suspensions ?? stats.totalSuspensions,
         ),
         activeSuspensions: getNumberValue(
-          stats.active_suspensions ?? stats.activeSuspensions
+          stats.active_suspensions ?? stats.activeSuspensions,
         ),
         pendingAppeals: getNumberValue(
-          stats.pending_appeals ?? stats.pendingAppeals
+          stats.pending_appeals ?? stats.pendingAppeals,
         ),
         warningsIssued: getNumberValue(stats.warningsIssued),
       });
@@ -338,8 +342,8 @@ function ModerationDashboardContent() {
             typeof report.reason_name === "string"
               ? report.reason_name
               : typeof report.reason_text === "string"
-              ? report.reason_text
-              : "",
+                ? report.reason_text
+                : "",
           severity: toSeverityLabel(report.severity),
           custom_reason: getNullableString(report.custom_reason),
           status: getStringValue(report.status, "pending"),
@@ -357,7 +361,7 @@ function ModerationDashboardContent() {
           admin_notes: getNullableString(report.admin_notes),
           reviewed_by_name: getNullableString(report.reviewed_by_name),
           reviewed_at: getNullableString(report.reviewed_at),
-        })
+        }),
       );
       setReports(normalizedReports);
     } catch (err) {
@@ -417,7 +421,7 @@ function ModerationDashboardContent() {
         `${API_BASE}/api/admin/users?${params.toString()}`,
         {
           credentials: "include",
-        }
+        },
       );
 
       if (response.status === 401) {
@@ -453,7 +457,7 @@ function ModerationDashboardContent() {
         `${API_BASE}/api/admin/users/${userId}/moderation-history`,
         {
           credentials: "include",
-        }
+        },
       );
 
       if (moderationRes.status === 401) {
@@ -485,7 +489,7 @@ function ModerationDashboardContent() {
 
   const handleUnsuspendUser = async (userId: number) => {
     const liftReason = window.prompt(
-      "Provide a reason for lifting the suspension:"
+      "Provide a reason for lifting the suspension:",
     );
     if (!liftReason) return;
 
@@ -500,7 +504,7 @@ function ModerationDashboardContent() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ liftReason }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to lift suspension");
@@ -627,7 +631,7 @@ function ModerationDashboardContent() {
             adminNotes,
             actionTaken: "dismissed",
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to dismiss report");
@@ -660,7 +664,7 @@ function ModerationDashboardContent() {
             adminNotes,
             actionTaken: "reviewing",
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to acknowledge report");
@@ -693,7 +697,7 @@ function ModerationDashboardContent() {
             adminNotes: adminNotes || `Escalated priority: ${priority}`,
             actionTaken: "escalated",
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to escalate report");
@@ -720,8 +724,8 @@ function ModerationDashboardContent() {
         warningForm.severity === "high"
           ? "severe"
           : warningForm.severity === "medium"
-          ? "moderate"
-          : "mild";
+            ? "moderate"
+            : "mild";
 
       const response = await fetch(
         `${API_BASE}/api/admin/users/${selectedUser.id}/warn`,
@@ -736,7 +740,7 @@ function ModerationDashboardContent() {
             reason: warningForm.reason,
             relatedReportId: selectedReport?.id,
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to issue warning");
@@ -773,12 +777,12 @@ function ModerationDashboardContent() {
             endsAt:
               suspensionForm.type === "temporary"
                 ? new Date(
-                    Date.now() + suspensionForm.duration * 24 * 60 * 60 * 1000
+                    Date.now() + suspensionForm.duration * 24 * 60 * 60 * 1000,
                   ).toISOString()
                 : null,
             relatedReportId: selectedReport?.id,
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to suspend user");
@@ -799,7 +803,7 @@ function ModerationDashboardContent() {
   const handleDeleteListing = async (listingId: number) => {
     if (
       !confirm(
-        "Are you sure you want to delete this listing? This action cannot be undone."
+        "Are you sure you want to delete this listing? This action cannot be undone.",
       )
     ) {
       return;
@@ -819,7 +823,7 @@ function ModerationDashboardContent() {
             reason: adminNotes || "Removed due to policy violation",
             relatedReportId: selectedReport?.id,
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to delete listing");
@@ -852,7 +856,7 @@ function ModerationDashboardContent() {
             decision: "approved",
             adminNotes: appealResponse,
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to approve appeal");
@@ -889,7 +893,7 @@ function ModerationDashboardContent() {
             decision: "denied",
             adminNotes: appealResponse,
           }),
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to reject appeal");
@@ -932,7 +936,7 @@ function ModerationDashboardContent() {
 
       const data = await response.json();
       setBroadcastSuccess(
-        `Broadcast sent successfully to ${data.recipientsCount} users!`
+        `Broadcast sent successfully to ${data.recipientsCount} users!`,
       );
       setBroadcastForm({
         title: "",
@@ -1264,7 +1268,7 @@ function ModerationDashboardContent() {
                           <td className="px-4 py-3">
                             <span
                               className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getPriorityColor(
-                                report.priority
+                                report.priority,
                               )}`}
                             >
                               {report.priority}
@@ -1273,7 +1277,7 @@ function ModerationDashboardContent() {
                           <td className="px-4 py-3">
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-                                report.status
+                                report.status,
                               )}`}
                             >
                               {report.status}
@@ -1585,7 +1589,7 @@ function ModerationDashboardContent() {
                   <button
                     onClick={() =>
                       setUsersPage((prev) =>
-                        Math.min(prev + 1, usersTotalPages)
+                        Math.min(prev + 1, usersTotalPages),
                       )
                     }
                     disabled={usersPage >= usersTotalPages}
@@ -1809,7 +1813,9 @@ function ModerationDashboardContent() {
                 <button
                   onClick={() => {
                     setDisputesLoading(true);
-                    fetch(`${API_BASE}/api/admin/disputes`, { credentials: "include" })
+                    fetch(`${API_BASE}/api/admin/disputes`, {
+                      credentials: "include",
+                    })
                       .then((r) => r.json())
                       .then((data) => setDisputes(data.disputes || []))
                       .catch(() => setDisputes([]))
@@ -1822,9 +1828,13 @@ function ModerationDashboardContent() {
               </div>
 
               {disputesLoading ? (
-                <div className="text-center py-12 text-gray-400">Loading disputes...</div>
+                <div className="text-center py-12 text-gray-400">
+                  Loading disputes...
+                </div>
               ) : disputes.length === 0 ? (
-                <div className="text-center py-12 text-gray-400">No disputed orders found.</div>
+                <div className="text-center py-12 text-gray-400">
+                  No disputed orders found.
+                </div>
               ) : (
                 <div className="space-y-4">
                   {disputes.map((d) => (
@@ -1864,12 +1874,16 @@ function ModerationDashboardContent() {
                           )}
                           {d.dispute_transcript ? (
                             <p className="mt-1 text-xs text-green-600">
-                              Chat transcript captured ({d.dispute_transcript.length.toLocaleString()} chars)
+                              Chat transcript captured (
+                              {d.dispute_transcript.length.toLocaleString()}{" "}
+                              chars)
                               {d.dispute_transcript_sent_at &&
                                 ` · Last sent ${new Date(d.dispute_transcript_sent_at).toLocaleDateString()}`}
                             </p>
                           ) : (
-                            <p className="mt-1 text-xs text-gray-400">No transcript recorded</p>
+                            <p className="mt-1 text-xs text-gray-400">
+                              No transcript recorded
+                            </p>
                           )}
                         </div>
                         <div className="flex flex-col gap-2 flex-shrink-0">
@@ -1894,19 +1908,31 @@ function ModerationDashboardContent() {
                                   { method: "POST", credentials: "include" },
                                 );
                                 if (!resp.ok) throw new Error("failed");
-                                setResendResult({ id: d.id, ok: true, msg: "Sent to support@fonlok.com" });
+                                setResendResult({
+                                  id: d.id,
+                                  ok: true,
+                                  msg: "Sent to support@fonlok.com",
+                                });
                               } catch {
-                                setResendResult({ id: d.id, ok: false, msg: "Failed to send" });
+                                setResendResult({
+                                  id: d.id,
+                                  ok: false,
+                                  msg: "Failed to send",
+                                });
                               } finally {
                                 setResendingId(null);
                               }
                             }}
                             className="px-3 py-2 text-xs font-semibold border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition"
                           >
-                            {resendingId === d.id ? "Sending..." : "Resend Transcript"}
+                            {resendingId === d.id
+                              ? "Sending..."
+                              : "Resend Transcript"}
                           </button>
                           {resendResult?.id === d.id && (
-                            <p className={`text-xs text-center ${resendResult.ok ? "text-green-600" : "text-red-500"}`}>
+                            <p
+                              className={`text-xs text-center ${resendResult.ok ? "text-green-600" : "text-red-500"}`}
+                            >
                               {resendResult.msg}
                             </p>
                           )}
@@ -1981,7 +2007,7 @@ function ModerationDashboardContent() {
                   </label>
                   <span
                     className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getPriorityColor(
-                      selectedReport.priority
+                      selectedReport.priority,
                     )}`}
                   >
                     {selectedReport.priority}
@@ -1999,7 +2025,7 @@ function ModerationDashboardContent() {
                   </span>
                   <span
                     className={`text-xs px-2 py-0.5 rounded ${getSeverityColor(
-                      selectedReport.severity
+                      selectedReport.severity,
                     )}`}
                   >
                     {selectedReport.severity}
@@ -2225,7 +2251,7 @@ function ModerationDashboardContent() {
                         <div className="flex items-center gap-2">
                           <span
                             className={`px-2 py-0.5 text-xs rounded-full ${getSeverityColor(
-                              warning.severity
+                              warning.severity,
                             )}`}
                           >
                             {warning.severity}

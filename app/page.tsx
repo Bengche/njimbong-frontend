@@ -65,7 +65,7 @@ export default async function Home() {
     listings = []; // Keep it as an empty array on error so the map doesn't crash
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-yellow-50 to-white text-gray-900">
+    <>
       {/* Structured data */}
       <script
         type="application/ld+json"
@@ -182,6 +182,6 @@ export default async function Home() {
         }}
       />
       <HomePageContent listings={listings} />
-    </div>
+    </>
   );
 }

@@ -1,12 +1,13 @@
-"use client";
+﻿"use client";
 
-import FeaturedCarousel from "./FeaturedCarousel";
-import { useLanguage } from "../i18n/LanguageContext";
+import { useState, useCallback, FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
+/* ── Types ─────────────────────────────────────────────────────────────── */
 interface Listing {
   id: number;
   title: string;
-  description?: string;
   price: number | string;
   currency: string;
   imageurl?: string;
@@ -21,960 +22,488 @@ interface Props {
   listings: Listing[];
 }
 
-export default function HomePageContent({ listings }: Props) {
-  const { t } = useLanguage();
-  const h = t("home");
-  const common = t("common");
+/* ── Category config ────────────────────────────────────────────────────── */
+const CATEGORIES = [
+  { emoji: "📱", label: "Phones" },
+  { emoji: "💻", label: "Electronics" },
+  { emoji: "👗", label: "Fashion" },
+  { emoji: "🚗", label: "Vehicles" },
+  { emoji: "🏠", label: "Home & Living" },
+  { emoji: "🛋️", label: "Furniture" },
+  { emoji: "🌾", label: "Agriculture" },
+  { emoji: "💼", label: "Services" },
+  { emoji: "🏗️", label: "Real Estate" },
+  { emoji: "📚", label: "Books" },
+  { emoji: "🎮", label: "Gaming" },
+  { emoji: "🛒", label: "Local Deals" },
+];
 
-  const escrowCardSteps = [
-    {
-      step: "1",
-      label: h.escrowCard.step1Label,
-      detail: h.escrowCard.step1Detail,
-    },
-    {
-      step: "2",
-      label: h.escrowCard.step2Label,
-      detail: h.escrowCard.step2Detail,
-    },
-    {
-      step: "3",
-      label: h.escrowCard.step3Label,
-      detail: h.escrowCard.step3Detail,
-    },
-  ];
-
-  const fonlokSteps = [
-    {
-      n: "01",
-      title: h.fonlokSection.step01Title,
-      body: h.fonlokSection.step01Body,
-      icon: (
-        <svg
-          className="w-5 h-5 text-emerald-300"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-          />
-        </svg>
-      ),
-    },
-    {
-      n: "02",
-      title: h.fonlokSection.step02Title,
-      body: h.fonlokSection.step02Body,
-      icon: (
-        <svg
-          className="w-5 h-5 text-emerald-300"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-          />
-        </svg>
-      ),
-    },
-    {
-      n: "03",
-      title: h.fonlokSection.step03Title,
-      body: h.fonlokSection.step03Body,
-      icon: (
-        <svg
-          className="w-5 h-5 text-emerald-300"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-      ),
-    },
-    {
-      n: "04",
-      title: h.fonlokSection.step04Title,
-      body: h.fonlokSection.step04Body,
-      icon: (
-        <svg
-          className="w-5 h-5 text-emerald-300"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-          />
-        </svg>
-      ),
-    },
-  ];
-
-  const categoryTags = [
-    "electronics",
-    "phones",
-    "laptops",
-    "fashion",
-    "home & living",
-    "vehicles",
-    "services",
-    "furniture",
-    "real estate",
-    "jobs",
-    "local deals",
-  ];
-
-  const trustItems = [
-    {
-      label: h.categories.trustItems[0],
-      icon: (
-        <svg
-          className="w-4 h-4 text-emerald-300 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-          />
-        </svg>
-      ),
-    },
-    {
-      label: h.categories.trustItems[1],
-      icon: (
-        <svg
-          className="w-4 h-4 text-emerald-300 flex-shrink-0"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            fillRule="evenodd"
-            d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-            clipRule="evenodd"
-          />
-        </svg>
-      ),
-    },
-    {
-      label: h.categories.trustItems[2],
-      icon: (
-        <svg
-          className="w-4 h-4 text-emerald-300 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-          />
-        </svg>
-      ),
-    },
-    {
-      label: h.categories.trustItems[3],
-      icon: (
-        <svg
-          className="w-4 h-4 text-emerald-300 flex-shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-          />
-        </svg>
-      ),
-    },
-  ];
-
-  const howItWorksSteps = [
-    {
-      step: "1",
-      title: h.howItWorks.step1Title,
-      text: h.howItWorks.step1Text,
-      link: "/signup",
-      linkText: h.howItWorks.step1Link,
-    },
-    {
-      step: "2",
-      title: h.howItWorks.step2Title,
-      text: h.howItWorks.step2Text,
-      link: "/browse",
-      linkText: h.howItWorks.step2Link,
-    },
-    {
-      step: "3",
-      title: h.howItWorks.step3Title,
-      text: h.howItWorks.step3Text,
-      link: "/chat",
-      linkText: h.howItWorks.step3Link,
-    },
-    {
-      step: "4",
-      title: h.howItWorks.step4Title,
-      text: h.howItWorks.step4Text,
-      link: "/safety-trust",
-      linkText: h.howItWorks.step4Link,
-    },
-  ];
+/* ── Listing card ───────────────────────────────────────────────────────── */
+function ListingCard({ listing }: { listing: Listing }) {
+  const img = listing.imageurl || listing.image_url;
+  const rawPrice =
+    typeof listing.price === "string"
+      ? parseFloat(listing.price)
+      : listing.price;
+  const displayPrice = isNaN(rawPrice)
+    ? String(listing.price)
+    : Number(rawPrice).toLocaleString();
+  const isNew = listing.condition?.toLowerCase() === "new";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-yellow-50 to-white text-gray-900">
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 md:py-20">
-        {/* ── HERO ─────────────────────────────────────────────────── */}
-        <section className="grid gap-10 md:grid-cols-2 md:items-center">
-          <div className="space-y-6">
-            <p className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-semibold text-emerald-700">
-              {h.badge}
-            </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-              {h.hero.title1}{" "}
-              <span className="text-emerald-600">{h.hero.title2}</span>
-            </h1>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              {h.hero.desc}{" "}
-              <strong className="text-gray-800">{h.hero.fonlok}</strong>{" "}
-              {h.hero.fonlokDesc}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <a
-                href="/browse"
-                className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-6 py-3 text-white font-semibold shadow-lg hover:bg-emerald-700 transition-colors"
-              >
-                {h.hero.browseCta}
-              </a>
-              <a
-                href="/signup"
-                className="inline-flex items-center justify-center rounded-xl border-2 border-emerald-200 bg-white px-6 py-3 font-semibold text-emerald-700 hover:bg-emerald-50 transition-colors"
-              >
-                {h.hero.sellCta}
-              </a>
-            </div>
-
-            {/* Inline trust row */}
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-gray-500 pt-1">
-              <span className="flex items-center gap-1.5">
-                <svg
-                  className="w-4 h-4 text-emerald-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {h.hero.trustEscrow}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <svg
-                  className="w-4 h-4 text-emerald-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {h.hero.trustKyc}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <svg
-                  className="w-4 h-4 text-emerald-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-                {h.hero.trustDispute}
-              </span>
-            </div>
-          </div>
-
-          {/* Hero card — escrow explained */}
-          <div className="rounded-2xl bg-white shadow-xl border border-emerald-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-bold text-white text-sm">
-                    {h.escrowCard.title}
-                  </p>
-                  <p className="text-emerald-100 text-xs">
-                    {h.escrowCard.subtitle}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="p-6 space-y-4">
-              {escrowCardSteps.map((s) => (
-                <div key={s.step} className="flex gap-4 items-start">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold flex items-center justify-center flex-shrink-0">
-                    {s.step}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">
-                      {s.label}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-                      {s.detail}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              <a
-                href="/safety-trust"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:underline pt-1"
-              >
-                {h.escrowCard.learnLink}
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* ── TRUST BADGES BAR ─────────────────────────────────────── */}
-        <div className="mt-12 rounded-2xl border border-gray-100 bg-white shadow-sm px-6 py-5">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 text-center">
-            {[
-              {
-                icon: (
-                  <svg
-                    className="w-6 h-6 text-emerald-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                ),
-                label: h.trustBadges.escrowLabel,
-                sub: h.trustBadges.escrowSub,
-              },
-              {
-                icon: (
-                  <svg
-                    className="w-6 h-6 text-emerald-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                ),
-                label: h.trustBadges.kycLabel,
-                sub: h.trustBadges.kycSub,
-              },
-              {
-                icon: (
-                  <svg
-                    className="w-6 h-6 text-emerald-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                ),
-                label: h.trustBadges.disputeLabel,
-                sub: h.trustBadges.disputeSub,
-              },
-              {
-                icon: (
-                  <svg
-                    className="w-6 h-6 text-emerald-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                  </svg>
-                ),
-                label: h.trustBadges.chatLabel,
-                sub: h.trustBadges.chatSub,
-              },
-            ].map((b) => (
-              <div key={b.label} className="flex flex-col items-center gap-1.5">
-                <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
-                  {b.icon}
-                </div>
-                <p className="text-xs font-semibold text-gray-900">{b.label}</p>
-                <p className="text-xs text-gray-500 leading-tight">{b.sub}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── VALUE PROPS ──────────────────────────────────────────── */}
-        <section className="mt-14 grid gap-5 sm:grid-cols-3">
-          {[
-            {
-              icon: (
-                <svg
-                  className="w-6 h-6 text-emerald-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              ),
-              title: h.valueProps.v1Title,
-              text: h.valueProps.v1Text,
-            },
-            {
-              icon: (
-                <svg
-                  className="w-6 h-6 text-emerald-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              ),
-              title: h.valueProps.v2Title,
-              text: h.valueProps.v2Text,
-            },
-            {
-              icon: (
-                <svg
-                  className="w-6 h-6 text-emerald-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              ),
-              title: h.valueProps.v3Title,
-              text: h.valueProps.v3Text,
-            },
-          ].map((card) => (
-            <div
-              key={card.title}
-              className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-            >
-              <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center mb-4">
-                {card.icon}
-              </div>
-              <h3 className="text-base font-semibold text-gray-900">
-                {card.title}
-              </h3>
-              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
-                {card.text}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        {/* ── FEATURED LISTINGS CAROUSEL ───────────────────────────── */}
-        <section className="mt-20">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-                {h.featured.title}
-              </h2>
-              <p className="mt-1 text-sm text-gray-500">
-                {h.featured.subtitle}
-              </p>
-            </div>
-            <a
-              href="/browse"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 transition-colors shadow-sm flex-shrink-0"
-            >
-              {common.seeAll}
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-          </div>
-          <FeaturedCarousel listings={listings} />
-        </section>
-
-        {/* ── FONLOK ESCROW DEEP DIVE ──────────────────────────────── */}
-        <section className="mt-20" aria-labelledby="escrow-section">
-          <div className="rounded-3xl overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-800 to-gray-900 shadow-2xl">
-            <div className="px-6 py-10 sm:px-10 sm:py-14 md:grid md:grid-cols-2 md:gap-12 md:items-center">
-              <div className="text-white space-y-6">
-                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-4 py-1.5 text-xs font-semibold text-emerald-200">
-                  <svg
-                    className="w-3.5 h-3.5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {h.fonlokSection.badge}
-                </div>
-                <h2
-                  id="escrow-section"
-                  className="text-3xl font-bold leading-tight"
-                >
-                  {h.fonlokSection.title1}
-                  <br />
-                  <span className="text-emerald-300">
-                    {h.fonlokSection.title2}
-                  </span>
-                </h2>
-                <p className="text-emerald-100 leading-relaxed text-sm sm:text-base">
-                  {h.fonlokSection.desc}
-                </p>
-                <ul className="space-y-3 text-sm text-emerald-100">
-                  {h.fonlokSection.bullets.map((point: string) => (
-                    <li key={point} className="flex items-start gap-2.5">
-                      <svg
-                        className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <a
-                    href="/signup"
-                    className="inline-flex items-center justify-center rounded-xl bg-white text-emerald-800 font-semibold px-6 py-3 text-sm hover:bg-emerald-50 transition-colors shadow-md"
-                  >
-                    {h.fonlokSection.cta1}
-                  </a>
-                  <a
-                    href="/safety-trust"
-                    className="inline-flex items-center justify-center rounded-xl border border-white/30 text-white font-semibold px-6 py-3 text-sm hover:bg-white/10 transition-colors"
-                  >
-                    {h.fonlokSection.cta2}
-                  </a>
-                </div>
-              </div>
-
-              <div className="mt-10 md:mt-0 space-y-4">
-                {fonlokSteps.map((step) => (
-                  <div
-                    key={step.n}
-                    className="flex gap-4 items-start rounded-2xl bg-white/10 border border-white/10 px-5 py-4"
-                  >
-                    <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                      {step.icon}
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-emerald-300 mb-0.5">
-                        {common.step} {step.n}
-                      </p>
-                      <p className="text-sm font-semibold text-white">
-                        {step.title}
-                      </p>
-                      <p className="text-xs text-emerald-200 mt-0.5 leading-relaxed">
-                        {step.body}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="border-t border-white/10 px-6 py-5 sm:px-10">
-              <div className="grid grid-cols-3 gap-4 text-center text-white">
-                {[
-                  {
-                    value: h.fonlokSection.stat1Value,
-                    label: h.fonlokSection.stat1Label,
-                  },
-                  {
-                    value: h.fonlokSection.stat2Value,
-                    label: h.fonlokSection.stat2Label,
-                  },
-                  {
-                    value: h.fonlokSection.stat3Value,
-                    label: h.fonlokSection.stat3Label,
-                  },
-                ].map((stat) => (
-                  <div key={stat.label}>
-                    <p className="text-xl font-bold text-emerald-300">
-                      {stat.value}
-                    </p>
-                    <p className="text-xs text-emerald-200 mt-1 leading-tight">
-                      {stat.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── CATEGORIES ───────────────────────────────────────────── */}
-        <section
-          className="mt-16 grid gap-10 md:grid-cols-2"
-          aria-labelledby="categories"
-        >
-          <div className="space-y-4">
-            <h2 id="categories" className="text-2xl font-bold">
-              {h.categories.title}
-            </h2>
-            <p className="text-gray-600 leading-relaxed">{h.categories.desc}</p>
-            <div className="flex flex-wrap gap-2 text-xs">
-              {categoryTags.map((tag) => (
-                <a
-                  key={tag}
-                  href={`/dashboard?category=${encodeURIComponent(tag)}`}
-                  className="rounded-full bg-emerald-50 border border-emerald-100 px-3 py-1 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-200 transition-colors"
-                >
-                  {tag}
-                </a>
-              ))}
-            </div>
-            <p className="text-sm text-gray-500">
-              {h.categories.exploreMore}{" "}
-              <a
-                className="text-emerald-700 hover:underline font-medium"
-                href="/dashboard"
-              >
-                {h.categories.marketplace}
-              </a>{" "}
-              {h.categories.orList}{" "}
-              <a
-                className="text-emerald-700 hover:underline font-medium"
-                href="/dashboard"
-              >
-                {h.categories.sellerDashboard}
-              </a>
-              .
-            </p>
-          </div>
-
-          <div className="rounded-2xl bg-emerald-700 p-8 text-white shadow-xl">
-            <h2 className="text-2xl font-bold">
-              {h.categories.builtForTrustTitle}
-            </h2>
-            <p className="mt-3 text-sm text-emerald-100 leading-relaxed">
-              {h.categories.builtForTrustDesc}
-            </p>
-            <div className="mt-6 grid gap-3 text-sm">
-              {trustItems.map((item) => (
-                <div
-                  key={item.label}
-                  className="flex items-center gap-3 rounded-xl bg-white/10 border border-white/10 px-4 py-3 text-emerald-50"
-                >
-                  {item.icon}
-                  {item.label}
-                </div>
-              ))}
-            </div>
-            <a
-              href="/safety-trust"
-              className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-200 hover:text-white transition-colors"
-            >
-              {h.categories.safetyGuide}
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-          </div>
-        </section>
-
-        {/* ── HOW IT WORKS ─────────────────────────────────────────── */}
-        <section className="mt-16" aria-labelledby="how-it-works">
-          <div className="mb-8">
-            <h2 id="how-it-works" className="text-2xl font-bold">
-              {h.howItWorks.title}
-            </h2>
-            <p className="mt-2 text-gray-600">{h.howItWorks.subtitle}</p>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {howItWorksSteps.map((item) => (
-              <div
-                key={item.step}
-                className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-50 rounded-bl-3xl flex items-end justify-start pb-2 pl-2.5">
-                  <span className="text-2xl font-black text-emerald-200">
-                    {item.step}
-                  </span>
-                </div>
-                <div className="text-xs font-semibold text-emerald-600 mb-2">
-                  {common.step} {item.step}
-                </div>
-                <h3 className="text-sm font-bold text-gray-900 pr-10">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-xs text-gray-600 leading-relaxed">
-                  {item.text}
-                </p>
-                <a
-                  href={item.link}
-                  className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 hover:underline"
-                >
-                  {item.linkText}
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── PLATFORM FEATURES ────────────────────────────────────── */}
-        <section className="mt-20" aria-labelledby="platform-features">
-          <div className="mb-8 text-center">
-            <h2
-              id="platform-features"
-              className="text-2xl font-bold text-gray-900 sm:text-3xl"
-            >
-              {h.features.title}
-            </h2>
-            <p className="mt-2 text-gray-500 max-w-xl mx-auto text-sm">
-              {h.features.subtitle}
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {h.features.items.map((feat: { title: string; desc: string }) => (
-              <article
-                key={feat.title}
-                className="rounded-xl bg-white border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-sm font-bold text-gray-900 mb-1.5">
-                  {feat.title}
-                </h3>
-                <p className="text-xs text-gray-500 leading-relaxed">
-                  {feat.desc}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        {/* ── FAQ ──────────────────────────────────────────────────── */}
-        <section className="mt-20" aria-labelledby="faq">
-          <div className="mb-8">
-            <h2 id="faq" className="text-2xl font-bold text-gray-900">
-              {h.faq.title}
-            </h2>
-            <p className="mt-2 text-gray-500 text-sm">{h.faq.subtitle}</p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {h.faq.items.map((item: { q: string; a: string }) => (
-              <div
-                key={item.q}
-                className="rounded-xl bg-white border border-gray-100 shadow-sm p-5"
-              >
-                <h3 className="text-sm font-bold text-gray-900 mb-2">
-                  {item.q}
-                </h3>
-                <p className="text-xs text-gray-500 leading-relaxed">
-                  {item.a}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── FINAL CTA ────────────────────────────────────────────── */}
-        <section className="mt-16 rounded-3xl bg-white p-8 sm:p-12 shadow-xl border border-emerald-100 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-100 px-4 py-1.5 text-xs font-semibold text-emerald-700 mb-5">
+    <Link
+      href={`/listing/${listing.id}`}
+      className="group block bg-white rounded-2xl overflow-hidden border border-gray-100/80 hover:border-emerald-200 hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-1 transition-all duration-200 ease-out"
+    >
+      {/* Image */}
+      <div className="relative aspect-[4/3] bg-gray-50 overflow-hidden">
+        {img ? (
+          <img
+            src={img}
+            alt={listing.title}
+            className="w-full h-full object-cover group-hover:scale-[1.06] transition-transform duration-300 ease-out"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-50">
             <svg
-              className="w-3.5 h-3.5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+              className="w-10 h-10 text-gray-200"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
               <path
-                fillRule="evenodd"
-                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                clipRule="evenodd"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            {h.cta.badge}
           </div>
-          <h2 className="text-2xl font-bold sm:text-3xl">{h.cta.title}</h2>
-          <p className="mt-3 text-gray-600 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
-            {h.cta.desc}
+        )}
+
+        {/* Condition badge */}
+        {listing.condition && (
+          <span
+            className={`absolute top-2 left-2 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm tracking-wide ${
+              isNew
+                ? "bg-emerald-500 text-white"
+                : "bg-black/55 text-white backdrop-blur-sm"
+            }`}
+          >
+            {listing.condition.toUpperCase()}
+          </span>
+        )}
+
+        {/* Hover shimmer */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+      </div>
+
+      {/* Details */}
+      <div className="p-3 sm:p-3.5">
+        <p className="font-black text-gray-900 text-[15px] leading-none tabular-nums">
+          {displayPrice}
+          <span className="text-[10px] font-bold text-emerald-600 ml-1 tracking-wide">
+            {listing.currency}
+          </span>
+        </p>
+        <p className="text-[12px] sm:text-[13px] text-gray-500 mt-1.5 line-clamp-2 leading-snug font-medium">
+          {listing.title}
+        </p>
+        {listing.city && (
+          <p className="mt-2 text-[10px] sm:text-[11px] text-gray-400 flex items-center gap-1">
+            <svg
+              className="w-2.5 h-2.5 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span className="truncate">{listing.city}</span>
           </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <a
-              href="/signup"
-              className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-7 py-3 text-white font-semibold shadow-lg hover:bg-emerald-700 transition-colors"
-            >
-              {h.cta.createAccount}
-            </a>
-            <a
-              href="/browse"
-              className="inline-flex items-center justify-center rounded-xl border-2 border-gray-200 px-7 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              {h.cta.browseListings}
-            </a>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+/* ── Main component ─────────────────────────────────────────────────────── */
+export default function HomePageContent({ listings }: Props) {
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
+
+  const handleSearch = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      const params = new URLSearchParams();
+      if (search.trim()) params.set("search", search.trim());
+      if (searchCategory) params.set("category", searchCategory);
+      router.push(`/browse?${params.toString()}`);
+    },
+    [search, searchCategory, router],
+  );
+
+  const activeListings = listings.filter(
+    (l) => !l.status || l.status.toLowerCase() !== "sold",
+  );
+
+  return (
+    <div className="bg-gray-50 min-h-screen">
+
+      {/* ─────────────────────────────────────────────────────────────── */}
+      {/* HERO                                                            */}
+      {/* ─────────────────────────────────────────────────────────────── */}
+      <section
+        className="relative overflow-hidden"
+        style={{
+          background:
+            "linear-gradient(135deg,#050e09 0%,#0a1f13 45%,#071510 100%)",
+        }}
+      >
+        {/* Dot-grid texture */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #10b981 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+        {/* Radial glow */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-80 opacity-25 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 100% at 50% 0%, #059669 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="relative max-w-4xl mx-auto px-4 pt-12 pb-16 sm:pt-16 sm:pb-20 text-center">
+          {/* Country badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/8 px-4 py-1.5 text-[11px] font-bold text-emerald-400 mb-6 tracking-wide">
+            🇨🇲 Cameroon&apos;s #1 Marketplace
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-500">
-            {h.cta.trustItems.map((item: string) => (
-              <span key={item} className="flex items-center gap-1.5">
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl md:text-[58px] font-extrabold text-white leading-[1.08] tracking-tight">
+            Find anything.
+            <br />
+            <span
+              className="text-transparent bg-clip-text"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg,#34d399 0%,#10b981 50%,#06b6d4 100%)",
+              }}
+            >
+              Buy it safely.
+            </span>
+          </h1>
+
+          <p className="mt-5 text-gray-400 text-sm sm:text-[15px] max-w-md mx-auto leading-relaxed">
+            Thousands of verified listings across Cameroon — escrow-protected
+            payments, KYC-verified sellers, zero compromise on safety.
+          </p>
+
+          {/* Search form */}
+          <form onSubmit={handleSearch} className="mt-8 max-w-2xl mx-auto">
+            <div className="flex rounded-2xl overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/5">
+              {/* Category selector */}
+              <select
+                value={searchCategory}
+                onChange={(e) => setSearchCategory(e.target.value)}
+                className="hidden sm:block px-4 py-0 text-[13px] font-semibold text-gray-600 bg-white border-r border-gray-100 focus:outline-none cursor-pointer w-36 flex-shrink-0"
+                aria-label="Select category"
+              >
+                <option value="">All categories</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c.label} value={c.label}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+
+              {/* Text input */}
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search phones, cars, clothes, furniture..."
+                className="flex-1 px-4 py-4 sm:py-3.5 text-gray-900 bg-white text-[13px] focus:outline-none placeholder:text-gray-400 min-w-0"
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
+              />
+
+              {/* Search button */}
+              <button
+                type="submit"
+                className="px-5 sm:px-7 bg-emerald-500 text-white font-bold text-sm hover:bg-emerald-600 active:bg-emerald-700 transition-colors flex items-center gap-2 flex-shrink-0"
+              >
                 <svg
-                  className="w-3.5 h-3.5 text-emerald-500"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
                   />
                 </svg>
+                <span className="hidden sm:inline">Search</span>
+              </button>
+            </div>
+          </form>
+
+          {/* Quick category pills */}
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            {["Phones", "Laptops", "Cars", "Fashion", "Services", "Furniture"].map(
+              (cat) => (
+                <Link
+                  key={cat}
+                  href={`/browse?category=${encodeURIComponent(cat)}`}
+                  className="rounded-full border border-white/8 bg-white/4 px-3 py-1 text-[11px] text-gray-500 hover:bg-white/10 hover:text-gray-200 hover:border-white/15 transition-all"
+                >
+                  {cat}
+                </Link>
+              ),
+            )}
+            <Link
+              href="/browse"
+              className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] text-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-300 transition-all font-semibold"
+            >
+              All listings →
+            </Link>
+          </div>
+
+          {/* Trust micro-indicators */}
+          <div className="mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2">
+            {[
+              "Escrow-protected payments",
+              "KYC-verified sellers",
+              "Full dispute protection",
+              "Free to list",
+            ].map((item) => (
+              <span
+                key={item}
+                className="flex items-center gap-1.5 text-[11px] text-gray-600"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 inline-block" />
                 {item}
               </span>
             ))}
           </div>
+        </div>
+      </section>
 
-          <p className="mt-4 text-xs text-gray-400">
-            {h.cta.alreadyMember}{" "}
-            <a
-              className="text-emerald-700 hover:underline font-medium"
-              href="/login"
+      {/* ─────────────────────────────────────────────────────────────── */}
+      {/* CATEGORY BAR                                                    */}
+      {/* ─────────────────────────────────────────────────────────────── */}
+      <nav
+        className="bg-white border-b border-gray-100 shadow-sm"
+        aria-label="Browse by category"
+      >
+        <div className="max-w-7xl mx-auto px-3 sm:px-6">
+          <div className="flex gap-0.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-1">
+            <Link
+              href="/browse"
+              className="flex flex-col items-center gap-1 flex-none px-3.5 py-2.5 rounded-xl hover:bg-emerald-50 active:bg-emerald-100 transition-colors group"
             >
-              {h.cta.signIn}
-            </a>{" "}
-            · {h.cta.needHelp}{" "}
-            <a
-              className="text-emerald-700 hover:underline font-medium"
-              href="mailto:support@njimbong.com"
+              <span className="text-xl leading-none" role="img" aria-label="All">🏪</span>
+              <span className="text-[10px] font-semibold text-gray-500 group-hover:text-emerald-700 whitespace-nowrap">All</span>
+            </Link>
+            {CATEGORIES.map((c) => (
+              <Link
+                key={c.label}
+                href={`/browse?category=${encodeURIComponent(c.label)}`}
+                className="flex flex-col items-center gap-1 flex-none px-3.5 py-2.5 rounded-xl hover:bg-emerald-50 active:bg-emerald-100 transition-colors group"
+              >
+                <span className="text-xl leading-none" role="img" aria-label={c.label}>{c.emoji}</span>
+                <span className="text-[10px] font-semibold text-gray-500 group-hover:text-emerald-700 whitespace-nowrap">{c.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      {/* ─────────────────────────────────────────────────────────────── */}
+      {/* LISTINGS GRID                                                   */}
+      {/* ─────────────────────────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">
+              Fresh Listings
+            </h2>
+            <p className="text-[11px] text-gray-400 mt-0.5">
+              {activeListings.length > 0
+                ? `${activeListings.length} items available right now`
+                : "New items added daily"}
+            </p>
+          </div>
+          <Link
+            href="/browse"
+            className="flex items-center gap-1 text-sm font-bold text-emerald-600 hover:text-emerald-700 transition-colors group"
+          >
+            View all
+            <svg
+              className="w-4 h-4 group-hover:translate-x-0.5 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              support@njimbong.com
-            </a>
-          </p>
-        </section>
-      </main>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+
+        {activeListings.length === 0 ? (
+          <div className="rounded-3xl border-2 border-dashed border-gray-200 py-24 text-center bg-white">
+            <p className="text-4xl mb-3">🛍️</p>
+            <p className="text-gray-500 font-semibold">No listings yet</p>
+            <p className="text-xs text-gray-400 mt-1">Be the first to list something!</p>
+            <Link
+              href="/signup"
+              className="inline-flex mt-5 items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors shadow-sm"
+            >
+              Start Selling Free
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+              {activeListings.map((listing) => (
+                <ListingCard key={listing.id} listing={listing} />
+              ))}
+            </div>
+            <div className="mt-10 text-center">
+              <Link
+                href="/browse"
+                className="inline-flex items-center gap-2.5 rounded-2xl border-2 border-gray-200 bg-white px-8 py-3.5 text-sm font-bold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50/50 transition-all shadow-sm hover:shadow-md"
+              >
+                Browse all listings
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────── */}
+      {/* SELL CTA BANNER                                                 */}
+      {/* ─────────────────────────────────────────────────────────────── */}
+      <section className="px-4 sm:px-6 pb-8 max-w-7xl mx-auto">
+        <div
+          className="relative rounded-3xl overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(135deg,#064e3b 0%,#065f46 35%,#047857 65%,#0f766e 100%)",
+          }}
+        >
+          {/* Dot pattern */}
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, white 1.5px, transparent 1.5px)",
+              backgroundSize: "22px 22px",
+            }}
+          />
+          {/* Decorative rings */}
+          <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full opacity-10 border-2 border-white pointer-events-none" />
+          <div className="absolute -right-8 top-8 w-40 h-40 rounded-full opacity-10 border border-white pointer-events-none" />
+
+          <div className="relative px-6 py-10 sm:px-10 sm:py-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+            <div className="text-white max-w-sm">
+              <p className="text-[10px] font-bold text-emerald-300 uppercase tracking-[0.18em] mb-2">
+                For Sellers
+              </p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">
+                List your item in under{" "}
+                <span className="text-emerald-300">2 minutes.</span>
+              </h2>
+              <p className="mt-3 text-emerald-100/75 text-sm leading-relaxed">
+                Free to list. Reach thousands of buyers across Cameroon. Secure
+                escrow payments via MTN MoMo and Orange Money.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                {["Free listing", "Secure escrow", "KYC badge", "AI listing help"].map((f) => (
+                  <span key={f} className="flex items-center gap-1.5 text-[11px] text-emerald-200">
+                    <svg className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-row sm:flex-col gap-3 flex-shrink-0 w-full sm:w-auto">
+              <Link
+                href="/signup"
+                className="inline-flex items-center justify-center rounded-2xl bg-white text-emerald-800 font-extrabold px-6 py-3.5 text-sm hover:bg-emerald-50 transition-all shadow-xl hover:shadow-2xl flex-1 sm:flex-none text-center"
+              >
+                Start Selling — Free
+              </Link>
+              <Link
+                href="/about"
+                className="inline-flex items-center justify-center rounded-2xl border border-white/20 text-white font-semibold px-6 py-3.5 text-sm hover:bg-white/10 transition-colors flex-1 sm:flex-none text-center"
+              >
+                How it works
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────── */}
+      {/* TRUST STRIP                                                     */}
+      {/* ─────────────────────────────────────────────────────────────── */}
+      <section className="border-t border-gray-100 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-7">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-5 gap-x-6">
+            {[
+              { emoji: "🔒", label: "Escrow Protection", sub: "Funds held safely until delivery confirmed" },
+              { emoji: "✅", label: "KYC Verified Sellers", sub: "ID-checked accounts for your safety" },
+              { emoji: "🛡️", label: "Dispute Resolution", sub: "Fonlok mediates and resolves every case" },
+              { emoji: "💬", label: "Real-time Chat", sub: "Message sellers directly, no middleman" },
+            ].map((b) => (
+              <div key={b.label} className="flex items-start gap-3">
+                <span className="text-2xl flex-shrink-0 leading-none mt-0.5">{b.emoji}</span>
+                <div>
+                  <p className="text-xs font-bold text-gray-800 leading-tight">{b.label}</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5 leading-snug">{b.sub}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 pt-5 border-t border-gray-50 text-center">
+            <Link
+              href="/about"
+              className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors"
+            >
+              Learn how Njimbong keeps you safe →
+            </Link>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

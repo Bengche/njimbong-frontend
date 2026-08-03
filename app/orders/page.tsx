@@ -699,7 +699,8 @@ export default function OrdersPage() {
                         </a>
                         {order.my_role === "buyer" && (
                           <p className="text-xs text-gray-400 text-center mt-1.5">
-                            Your Fonlok dispute chat link was sent to your email when payment was confirmed.
+                            Your Fonlok dispute chat link was sent to your email
+                            when payment was confirmed.
                           </p>
                         )}
                       </div>

@@ -131,6 +131,7 @@ function ModerationDashboardContent() {
     amount: number;
     currency: string;
     fonlok_invoice_id: string | null;
+    fonlok_payment_url: string | null;
     dispute_transcript: string | null;
     dispute_transcript_sent_at: string | null;
     created_at: string;
@@ -1889,9 +1890,12 @@ function ModerationDashboardContent() {
                         <div className="flex flex-col gap-2 flex-shrink-0">
                           {d.fonlok_invoice_id && (
                             <a
-                              href={`https://app.fonlok.com/pay/${d.fonlok_invoice_id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                              href={
+                                d.fonlok_payment_url ||
+                                `mailto:support@fonlok.com?subject=${encodeURIComponent(`Dispute — Invoice ${d.fonlok_invoice_id}`)}&body=${encodeURIComponent(`Fonlok Invoice ID: ${d.fonlok_invoice_id}`)}`
+                              }
+                              target={d.fonlok_payment_url ? "_blank" : undefined}
+                              rel={d.fonlok_payment_url ? "noopener noreferrer" : undefined}
                               className="px-3 py-2 text-xs font-semibold border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition text-center"
                             >
                               View on Fonlok

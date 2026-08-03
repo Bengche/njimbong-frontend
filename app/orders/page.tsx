@@ -671,15 +671,15 @@ export default function OrdersPage() {
                   )}
                   {/* Fonlok link for disputed orders */}
                   {order.fonlok_status === "disputed" &&
-                    (order.fonlok_payment_url || order.fonlok_invoice_id) && (
+                    order.fonlok_invoice_id && (
                       <div className="px-4 pb-4">
                         <a
                           href={
                             order.fonlok_payment_url ||
-                            `https://app.fonlok.com/pay/${order.fonlok_invoice_id}`
+                            `mailto:support@fonlok.com?subject=${encodeURIComponent(`Dispute — Invoice ${order.fonlok_invoice_id}`)}&body=${encodeURIComponent(`Fonlok Invoice ID: ${order.fonlok_invoice_id}\nPlease help me resolve my dispute.`)}`
                           }
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          target={order.fonlok_payment_url ? "_blank" : undefined}
+                          rel={order.fonlok_payment_url ? "noopener noreferrer" : undefined}
                           className="w-full py-2.5 px-4 border border-blue-200 text-blue-600 rounded-xl text-sm font-semibold hover:bg-blue-50 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5"
                         >
                           <svg

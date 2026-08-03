@@ -162,19 +162,18 @@ export default function HomePageContent({ listings }: Props) {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-
       {/* ─────────────────────────────────────────────────────────────── */}
       {/* HERO                                                            */}
       {/* ─────────────────────────────────────────────────────────────── */}
       <section className="bg-[#050e09]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
-
           <p className="text-[11px] font-semibold text-emerald-600 uppercase tracking-[0.18em] mb-7">
             Cameroon&apos;s marketplace
           </p>
 
           <h1 className="text-[38px] sm:text-5xl md:text-[58px] font-bold text-white leading-[1.1] tracking-tight max-w-2xl">
-            Find anything.<br />
+            Find anything.
+            <br />
             Buy it safely.
           </h1>
 
@@ -233,21 +232,26 @@ export default function HomePageContent({ listings }: Props) {
 
           {/* Category text links */}
           <div className="mt-5 flex flex-wrap items-center text-[12px]">
-            {["Phones", "Laptops", "Cars", "Fashion", "Services", "Furniture"].map(
-              (cat, i) => (
-                <span key={cat} className="flex items-center">
-                  {i > 0 && (
-                    <span className="text-gray-700 px-2 select-none">·</span>
-                  )}
-                  <Link
-                    href={`/browse?category=${encodeURIComponent(cat)}`}
-                    className="text-gray-500 hover:text-white transition-colors"
-                  >
-                    {cat}
-                  </Link>
-                </span>
-              ),
-            )}
+            {[
+              "Phones",
+              "Laptops",
+              "Cars",
+              "Fashion",
+              "Services",
+              "Furniture",
+            ].map((cat, i) => (
+              <span key={cat} className="flex items-center">
+                {i > 0 && (
+                  <span className="text-gray-700 px-2 select-none">·</span>
+                )}
+                <Link
+                  href={`/browse?category=${encodeURIComponent(cat)}`}
+                  className="text-gray-500 hover:text-white transition-colors"
+                >
+                  {cat}
+                </Link>
+              </span>
+            ))}
             <span className="text-gray-700 px-2 select-none">·</span>
             <Link
               href="/browse"
@@ -259,9 +263,9 @@ export default function HomePageContent({ listings }: Props) {
 
           {/* Trust line */}
           <p className="mt-7 text-[11px] text-gray-600">
-            Escrow protected&nbsp;·&nbsp;KYC-verified sellers&nbsp;·&nbsp;Dispute resolution&nbsp;·&nbsp;Free to list
+            Escrow protected&nbsp;·&nbsp;KYC-verified
+            sellers&nbsp;·&nbsp;Dispute resolution&nbsp;·&nbsp;Free to list
           </p>
-
         </div>
       </section>
 
@@ -278,8 +282,16 @@ export default function HomePageContent({ listings }: Props) {
               href="/browse"
               className="flex flex-col items-center gap-1 flex-none px-3.5 py-2.5 rounded-xl hover:bg-emerald-50 active:bg-emerald-100 transition-colors group"
             >
-              <span className="text-xl leading-none" role="img" aria-label="All">🏪</span>
-              <span className="text-[10px] font-semibold text-gray-500 group-hover:text-emerald-700 whitespace-nowrap">All</span>
+              <span
+                className="text-xl leading-none"
+                role="img"
+                aria-label="All"
+              >
+                🏪
+              </span>
+              <span className="text-[10px] font-semibold text-gray-500 group-hover:text-emerald-700 whitespace-nowrap">
+                All
+              </span>
             </Link>
             {CATEGORIES.map((c) => (
               <Link
@@ -287,8 +299,16 @@ export default function HomePageContent({ listings }: Props) {
                 href={`/browse?category=${encodeURIComponent(c.label)}`}
                 className="flex flex-col items-center gap-1 flex-none px-3.5 py-2.5 rounded-xl hover:bg-emerald-50 active:bg-emerald-100 transition-colors group"
               >
-                <span className="text-xl leading-none" role="img" aria-label={c.label}>{c.emoji}</span>
-                <span className="text-[10px] font-semibold text-gray-500 group-hover:text-emerald-700 whitespace-nowrap">{c.label}</span>
+                <span
+                  className="text-xl leading-none"
+                  role="img"
+                  aria-label={c.label}
+                >
+                  {c.emoji}
+                </span>
+                <span className="text-[10px] font-semibold text-gray-500 group-hover:text-emerald-700 whitespace-nowrap">
+                  {c.label}
+                </span>
               </Link>
             ))}
           </div>
@@ -321,7 +341,12 @@ export default function HomePageContent({ listings }: Props) {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </Link>
         </div>
@@ -330,7 +355,9 @@ export default function HomePageContent({ listings }: Props) {
           <div className="rounded-3xl border-2 border-dashed border-gray-200 py-24 text-center bg-white">
             <p className="text-4xl mb-3">🛍️</p>
             <p className="text-gray-500 font-semibold">No listings yet</p>
-            <p className="text-xs text-gray-400 mt-1">Be the first to list something!</p>
+            <p className="text-xs text-gray-400 mt-1">
+              Be the first to list something!
+            </p>
             <Link
               href="/signup"
               className="inline-flex mt-5 items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors shadow-sm"
@@ -351,8 +378,18 @@ export default function HomePageContent({ listings }: Props) {
                 className="inline-flex items-center gap-2.5 rounded-2xl border-2 border-gray-200 bg-white px-8 py-3.5 text-sm font-bold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50/50 transition-all shadow-sm hover:shadow-md"
               >
                 Browse all listings
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </Link>
             </div>
@@ -401,16 +438,38 @@ export default function HomePageContent({ listings }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-7">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-5 gap-x-6">
             {[
-              { emoji: "🔒", label: "Escrow Protection", sub: "Funds held safely until delivery confirmed" },
-              { emoji: "✅", label: "KYC Verified Sellers", sub: "ID-checked accounts for your safety" },
-              { emoji: "🛡️", label: "Dispute Resolution", sub: "Fonlok mediates and resolves every case" },
-              { emoji: "💬", label: "Real-time Chat", sub: "Message sellers directly, no middleman" },
+              {
+                emoji: "🔒",
+                label: "Escrow Protection",
+                sub: "Funds held safely until delivery confirmed",
+              },
+              {
+                emoji: "✅",
+                label: "KYC Verified Sellers",
+                sub: "ID-checked accounts for your safety",
+              },
+              {
+                emoji: "🛡️",
+                label: "Dispute Resolution",
+                sub: "Fonlok mediates and resolves every case",
+              },
+              {
+                emoji: "💬",
+                label: "Real-time Chat",
+                sub: "Message sellers directly, no middleman",
+              },
             ].map((b) => (
               <div key={b.label} className="flex items-start gap-3">
-                <span className="text-2xl flex-shrink-0 leading-none mt-0.5">{b.emoji}</span>
+                <span className="text-2xl flex-shrink-0 leading-none mt-0.5">
+                  {b.emoji}
+                </span>
                 <div>
-                  <p className="text-xs font-bold text-gray-800 leading-tight">{b.label}</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5 leading-snug">{b.sub}</p>
+                  <p className="text-xs font-bold text-gray-800 leading-tight">
+                    {b.label}
+                  </p>
+                  <p className="text-[11px] text-gray-400 mt-0.5 leading-snug">
+                    {b.sub}
+                  </p>
                 </div>
               </div>
             ))}
@@ -425,7 +484,6 @@ export default function HomePageContent({ listings }: Props) {
           </div>
         </div>
       </section>
-
     </div>
   );
 }

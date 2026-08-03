@@ -103,7 +103,7 @@ function ModerationDashboardContent() {
   const searchParams = useSearchParams();
   const [adminChecked, setAdminChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "reports" | "appeals" | "users" | "broadcast"
+    "reports" | "appeals" | "users" | "broadcast" | "disputes"
   >("reports");
   const [stats, setStats] = useState<ReportStats | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
@@ -123,6 +123,28 @@ function ModerationDashboardContent() {
     priority: "normal",
   });
   const [broadcastSuccess, setBroadcastSuccess] = useState<string | null>(null);
+
+  // Disputes state
+  type DisputeOrder = {
+    id: number;
+    order_reference: string;
+    amount: number;
+    currency: string;
+    fonlok_invoice_id: string | null;
+    dispute_transcript: string | null;
+    dispute_transcript_sent_at: string | null;
+    created_at: string;
+    listing_title: string;
+    buyer_name: string;
+    buyer_email: string;
+    seller_name: string;
+    seller_email: string;
+    dispute_reason: string | null;
+  };
+  const [disputes, setDisputes] = useState<DisputeOrder[]>([]);
+  const [disputesLoading, setDisputesLoading] = useState(false);
+  const [resendingId, setResendingId] = useState<number | null>(null);
+  const [resendResult, setResendResult] = useState<{ id: number; ok: boolean; msg: string } | null>(null);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState("pending");
@@ -514,7 +536,8 @@ function ModerationDashboardContent() {
       tabParam === "users" ||
       tabParam === "reports" ||
       tabParam === "appeals" ||
-      tabParam === "broadcast"
+      tabParam === "broadcast" ||
+      tabParam === "disputes"
     ) {
       setActiveTab(tabParam);
     }
@@ -566,6 +589,18 @@ function ModerationDashboardContent() {
     userSortBy,
     userSortOrder,
   ]);
+
+  useEffect(() => {
+    if (!adminChecked) return;
+    if (activeTab === "disputes") {
+      setDisputesLoading(true);
+      fetch(`${API_BASE}/api/admin/disputes`, { credentials: "include" })
+        .then((r) => r.json())
+        .then((data) => setDisputes(data.disputes || []))
+        .catch(() => setDisputes([]))
+        .finally(() => setDisputesLoading(false));
+    }
+  }, [adminChecked, activeTab, API_BASE]);
 
   if (!adminChecked) {
     return (
@@ -1095,6 +1130,16 @@ function ModerationDashboardContent() {
                   />
                 </svg>
                 Broadcast
+              </button>
+              <button
+                onClick={() => setActiveTab("disputes")}
+                className={`px-4 py-3 text-sm sm:px-6 sm:py-4 sm:text-base font-medium transition ${
+                  activeTab === "disputes"
+                    ? "text-red-600 border-b-2 border-red-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Disputes {disputes.length > 0 && `(${disputes.length})`}
               </button>
             </div>
           </div>
@@ -1751,6 +1796,126 @@ function ModerationDashboardContent() {
                   </button>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Disputes Tab */}
+          {activeTab === "disputes" && (
+            <div className="p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-gray-800">
+                  Disputed Orders
+                </h2>
+                <button
+                  onClick={() => {
+                    setDisputesLoading(true);
+                    fetch(`${API_BASE}/api/admin/disputes`, { credentials: "include" })
+                      .then((r) => r.json())
+                      .then((data) => setDisputes(data.disputes || []))
+                      .catch(() => setDisputes([]))
+                      .finally(() => setDisputesLoading(false));
+                  }}
+                  className="text-sm px-3 py-1.5 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 transition"
+                >
+                  Refresh
+                </button>
+              </div>
+
+              {disputesLoading ? (
+                <div className="text-center py-12 text-gray-400">Loading disputes...</div>
+              ) : disputes.length === 0 ? (
+                <div className="text-center py-12 text-gray-400">No disputed orders found.</div>
+              ) : (
+                <div className="space-y-4">
+                  {disputes.map((d) => (
+                    <div
+                      key={d.id}
+                      className="border border-red-100 rounded-xl p-4 bg-red-50/30"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-gray-900 truncate">
+                            {d.listing_title || "Unknown Listing"}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            Order #{d.order_reference} &middot;{" "}
+                            {Number(d.amount).toLocaleString()} {d.currency}
+                          </p>
+                          <div className="mt-2 text-sm text-gray-600 space-y-0.5">
+                            <p>
+                              <span className="font-medium">Buyer:</span>{" "}
+                              {d.buyer_name} ({d.buyer_email})
+                            </p>
+                            <p>
+                              <span className="font-medium">Seller:</span>{" "}
+                              {d.seller_name} ({d.seller_email})
+                            </p>
+                            {d.fonlok_invoice_id && (
+                              <p className="font-mono text-xs text-gray-500">
+                                Fonlok: {d.fonlok_invoice_id}
+                              </p>
+                            )}
+                          </div>
+                          {d.dispute_reason && (
+                            <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
+                              <span className="font-semibold">Reason: </span>
+                              {d.dispute_reason}
+                            </div>
+                          )}
+                          {d.dispute_transcript ? (
+                            <p className="mt-1 text-xs text-green-600">
+                              Chat transcript captured ({d.dispute_transcript.length.toLocaleString()} chars)
+                              {d.dispute_transcript_sent_at &&
+                                ` · Last sent ${new Date(d.dispute_transcript_sent_at).toLocaleDateString()}`}
+                            </p>
+                          ) : (
+                            <p className="mt-1 text-xs text-gray-400">No transcript recorded</p>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-2 flex-shrink-0">
+                          {d.fonlok_invoice_id && (
+                            <a
+                              href={`https://app.fonlok.com/pay/${d.fonlok_invoice_id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 py-2 text-xs font-semibold border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition text-center"
+                            >
+                              View on Fonlok
+                            </a>
+                          )}
+                          <button
+                            disabled={resendingId === d.id}
+                            onClick={async () => {
+                              setResendingId(d.id);
+                              setResendResult(null);
+                              try {
+                                const resp = await fetch(
+                                  `${API_BASE}/api/admin/orders/${d.id}/resend-dispute-transcript`,
+                                  { method: "POST", credentials: "include" },
+                                );
+                                if (!resp.ok) throw new Error("failed");
+                                setResendResult({ id: d.id, ok: true, msg: "Sent to support@fonlok.com" });
+                              } catch {
+                                setResendResult({ id: d.id, ok: false, msg: "Failed to send" });
+                              } finally {
+                                setResendingId(null);
+                              }
+                            }}
+                            className="px-3 py-2 text-xs font-semibold border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition"
+                          >
+                            {resendingId === d.id ? "Sending..." : "Resend Transcript"}
+                          </button>
+                          {resendResult?.id === d.id && (
+                            <p className={`text-xs text-center ${resendResult.ok ? "text-green-600" : "text-red-500"}`}>
+                              {resendResult.msg}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

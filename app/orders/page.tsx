@@ -17,6 +17,8 @@ interface Order {
   amount: number;
   currency: string;
   fonlok_status: string;
+  fonlok_payment_url?: string | null;
+  fonlok_invoice_id?: string | null;
   created_at: string;
   buyer_id: number;
   seller_id: number;
@@ -667,6 +669,41 @@ export default function OrdersPage() {
                       </div>
                     </div>
                   )}
+                  {/* Fonlok link for disputed orders */}
+                  {order.fonlok_status === "disputed" &&
+                    (order.fonlok_payment_url || order.fonlok_invoice_id) && (
+                      <div className="px-4 pb-4">
+                        <a
+                          href={
+                            order.fonlok_payment_url ||
+                            `https://app.fonlok.com/pay/${order.fonlok_invoice_id}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-2.5 px-4 border border-blue-200 text-blue-600 rounded-xl text-sm font-semibold hover:bg-blue-50 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                          View on Fonlok
+                        </a>
+                        {order.my_role === "buyer" && (
+                          <p className="text-xs text-gray-400 text-center mt-1.5">
+                            Your Fonlok dispute chat link was sent to your email when payment was confirmed.
+                          </p>
+                        )}
+                      </div>
+                    )}
                 </div>
               );
             })}

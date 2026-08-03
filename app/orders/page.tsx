@@ -669,18 +669,16 @@ export default function OrdersPage() {
                       </div>
                     </div>
                   )}
-                  {/* Fonlok link for disputed orders */}
+                  {/* Fonlok dispute chat — disputed orders only */}
                   {order.fonlok_status === "disputed" &&
                     order.fonlok_invoice_id && (
-                      <div className="px-4 pb-4">
+                      <div className="px-4 pb-4 flex flex-col gap-2">
+                        {/* Chat thread button */}
                         <a
-                          href={
-                            order.fonlok_payment_url ||
-                            `mailto:support@fonlok.com?subject=${encodeURIComponent(`Dispute — Invoice ${order.fonlok_invoice_id}`)}&body=${encodeURIComponent(`Fonlok Invoice ID: ${order.fonlok_invoice_id}\nPlease help me resolve my dispute.`)}`
-                          }
-                          target={order.fonlok_payment_url ? "_blank" : undefined}
-                          rel={order.fonlok_payment_url ? "noopener noreferrer" : undefined}
-                          className="w-full py-2.5 px-4 border border-blue-200 text-blue-600 rounded-xl text-sm font-semibold hover:bg-blue-50 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5"
+                          href={`https://fonlok.com/chat/${order.fonlok_invoice_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-2.5 px-4 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5"
                         >
                           <svg
                             className="w-4 h-4"
@@ -692,17 +690,41 @@ export default function OrdersPage() {
                               strokeLinecap="round"
                               strokeLinejoin="round"
                               strokeWidth={2}
+                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                            />
+                          </svg>
+                          Open Dispute Chat on Fonlok
+                        </a>
+                        {/* Invoice page button */}
+                        <a
+                          href={
+                            order.fonlok_payment_url ||
+                            `https://fonlok.com/pay/${order.fonlok_invoice_id}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-2 px-4 border border-gray-200 text-gray-500 rounded-xl text-xs font-medium hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5"
+                        >
+                          <svg
+                            className="w-3.5 h-3.5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
                               d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                             />
                           </svg>
-                          View on Fonlok
+                          View invoice on Fonlok
                         </a>
-                        {order.my_role === "buyer" && (
-                          <p className="text-xs text-gray-400 text-center mt-1.5">
-                            Your Fonlok dispute chat link was sent to your email
-                            when payment was confirmed.
-                          </p>
-                        )}
+                        <p className="text-[11px] text-gray-400 text-center mt-0.5">
+                          {order.my_role === "buyer"
+                            ? "Fonlok also emailed you a personal chat link with your payment confirmation."
+                            : "Log in to your Fonlok account to access the full dispute thread."}
+                        </p>
                       </div>
                     )}
                 </div>

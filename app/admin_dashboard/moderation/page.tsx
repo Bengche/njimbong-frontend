@@ -1889,17 +1889,27 @@ function ModerationDashboardContent() {
                         </div>
                         <div className="flex flex-col gap-2 flex-shrink-0">
                           {d.fonlok_invoice_id && (
-                            <a
-                              href={
-                                d.fonlok_payment_url ||
-                                `mailto:support@fonlok.com?subject=${encodeURIComponent(`Dispute — Invoice ${d.fonlok_invoice_id}`)}&body=${encodeURIComponent(`Fonlok Invoice ID: ${d.fonlok_invoice_id}`)}`
-                              }
-                              target={d.fonlok_payment_url ? "_blank" : undefined}
-                              rel={d.fonlok_payment_url ? "noopener noreferrer" : undefined}
-                              className="px-3 py-2 text-xs font-semibold border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition text-center"
-                            >
-                              View on Fonlok
-                            </a>
+                            <>
+                              <a
+                                href={`https://fonlok.com/chat/${d.fonlok_invoice_id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center"
+                              >
+                                Open Chat
+                              </a>
+                              <a
+                                href={
+                                  d.fonlok_payment_url ||
+                                  `https://fonlok.com/pay/${d.fonlok_invoice_id}`
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-2 text-xs font-semibold border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition text-center"
+                              >
+                                View Invoice
+                              </a>
+                            </>
                           )}
                           <button
                             disabled={resendingId === d.id}

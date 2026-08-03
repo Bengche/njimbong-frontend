@@ -166,65 +166,30 @@ export default function HomePageContent({ listings }: Props) {
       {/* ─────────────────────────────────────────────────────────────── */}
       {/* HERO                                                            */}
       {/* ─────────────────────────────────────────────────────────────── */}
-      <section
-        className="relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg,#050e09 0%,#0a1f13 45%,#071510 100%)",
-        }}
-      >
-        {/* Dot-grid texture */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, #10b981 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-          }}
-        />
-        {/* Radial glow */}
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-80 opacity-25 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 100% at 50% 0%, #059669 0%, transparent 70%)",
-          }}
-        />
+      <section className="bg-[#050e09]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
 
-        <div className="relative max-w-4xl mx-auto px-4 pt-12 pb-16 sm:pt-16 sm:pb-20 text-center">
-          {/* Country badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/8 px-4 py-1.5 text-[11px] font-bold text-emerald-400 mb-6 tracking-wide">
-            🇨🇲 Cameroon&apos;s #1 Marketplace
-          </div>
+          <p className="text-[11px] font-semibold text-emerald-600 uppercase tracking-[0.18em] mb-7">
+            Cameroon&apos;s marketplace
+          </p>
 
-          {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-[58px] font-extrabold text-white leading-[1.08] tracking-tight">
-            Find anything.
-            <br />
-            <span
-              className="text-transparent bg-clip-text"
-              style={{
-                backgroundImage:
-                  "linear-gradient(90deg,#34d399 0%,#10b981 50%,#06b6d4 100%)",
-              }}
-            >
-              Buy it safely.
-            </span>
+          <h1 className="text-[38px] sm:text-5xl md:text-[58px] font-bold text-white leading-[1.1] tracking-tight max-w-2xl">
+            Find anything.<br />
+            Buy it safely.
           </h1>
 
-          <p className="mt-5 text-gray-400 text-sm sm:text-[15px] max-w-md mx-auto leading-relaxed">
-            Thousands of verified listings across Cameroon — escrow-protected
-            payments, KYC-verified sellers, zero compromise on safety.
+          <p className="mt-5 text-[15px] text-gray-400 max-w-lg leading-relaxed">
+            Thousands of verified listings across Cameroon. Escrow-protected
+            payments and KYC-verified sellers on every transaction.
           </p>
 
           {/* Search form */}
-          <form onSubmit={handleSearch} className="mt-8 max-w-2xl mx-auto">
-            <div className="flex rounded-2xl overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/5">
-              {/* Category selector */}
+          <form onSubmit={handleSearch} className="mt-8 max-w-xl">
+            <div className="flex rounded-lg overflow-hidden border border-white/10 bg-white">
               <select
                 value={searchCategory}
                 onChange={(e) => setSearchCategory(e.target.value)}
-                className="hidden sm:block px-4 py-0 text-[13px] font-semibold text-gray-600 bg-white border-r border-gray-100 focus:outline-none cursor-pointer w-36 flex-shrink-0"
+                className="hidden sm:block px-4 py-0 text-[13px] text-gray-500 bg-white border-r border-gray-200 focus:outline-none cursor-pointer w-36 flex-shrink-0"
                 aria-label="Select category"
               >
                 <option value="">All categories</option>
@@ -234,23 +199,19 @@ export default function HomePageContent({ listings }: Props) {
                   </option>
                 ))}
               </select>
-
-              {/* Text input */}
               <input
                 type="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search phones, cars, clothes, furniture..."
-                className="flex-1 px-4 py-4 sm:py-3.5 text-gray-900 bg-white text-[13px] focus:outline-none placeholder:text-gray-400 min-w-0"
+                placeholder="Search phones, cars, fashion..."
+                className="flex-1 px-4 py-3.5 text-gray-900 text-sm focus:outline-none placeholder:text-gray-400 min-w-0 bg-white"
                 autoComplete="off"
                 autoCorrect="off"
                 spellCheck={false}
               />
-
-              {/* Search button */}
               <button
                 type="submit"
-                className="px-5 sm:px-7 bg-emerald-500 text-white font-bold text-sm hover:bg-emerald-600 active:bg-emerald-700 transition-colors flex items-center gap-2 flex-shrink-0"
+                className="px-5 sm:px-6 bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition-colors flex items-center gap-2 flex-shrink-0"
               >
                 <svg
                   className="w-4 h-4"
@@ -261,7 +222,7 @@ export default function HomePageContent({ listings }: Props) {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2.5}
+                    strokeWidth={2}
                     d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
                   />
                 </svg>
@@ -270,44 +231,37 @@ export default function HomePageContent({ listings }: Props) {
             </div>
           </form>
 
-          {/* Quick category pills */}
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
+          {/* Category text links */}
+          <div className="mt-5 flex flex-wrap items-center text-[12px]">
             {["Phones", "Laptops", "Cars", "Fashion", "Services", "Furniture"].map(
-              (cat) => (
-                <Link
-                  key={cat}
-                  href={`/browse?category=${encodeURIComponent(cat)}`}
-                  className="rounded-full border border-white/8 bg-white/4 px-3 py-1 text-[11px] text-gray-500 hover:bg-white/10 hover:text-gray-200 hover:border-white/15 transition-all"
-                >
-                  {cat}
-                </Link>
+              (cat, i) => (
+                <span key={cat} className="flex items-center">
+                  {i > 0 && (
+                    <span className="text-gray-700 px-2 select-none">·</span>
+                  )}
+                  <Link
+                    href={`/browse?category=${encodeURIComponent(cat)}`}
+                    className="text-gray-500 hover:text-white transition-colors"
+                  >
+                    {cat}
+                  </Link>
+                </span>
               ),
             )}
+            <span className="text-gray-700 px-2 select-none">·</span>
             <Link
               href="/browse"
-              className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] text-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-300 transition-all font-semibold"
+              className="text-emerald-600 hover:text-emerald-400 transition-colors"
             >
-              All listings →
+              All categories
             </Link>
           </div>
 
-          {/* Trust micro-indicators */}
-          <div className="mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {[
-              "Escrow-protected payments",
-              "KYC-verified sellers",
-              "Full dispute protection",
-              "Free to list",
-            ].map((item) => (
-              <span
-                key={item}
-                className="flex items-center gap-1.5 text-[11px] text-gray-600"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 inline-block" />
-                {item}
-              </span>
-            ))}
-          </div>
+          {/* Trust line */}
+          <p className="mt-7 text-[11px] text-gray-600">
+            Escrow protected&nbsp;·&nbsp;KYC-verified sellers&nbsp;·&nbsp;Dispute resolution&nbsp;·&nbsp;Free to list
+          </p>
+
         </div>
       </section>
 
@@ -409,65 +363,33 @@ export default function HomePageContent({ listings }: Props) {
       {/* ─────────────────────────────────────────────────────────────── */}
       {/* SELL CTA BANNER                                                 */}
       {/* ─────────────────────────────────────────────────────────────── */}
-      <section className="px-4 sm:px-6 pb-8 max-w-7xl mx-auto">
-        <div
-          className="relative rounded-3xl overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(135deg,#064e3b 0%,#065f46 35%,#047857 65%,#0f766e 100%)",
-          }}
-        >
-          {/* Dot pattern */}
-          <div
-            className="absolute inset-0 opacity-[0.07]"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, white 1.5px, transparent 1.5px)",
-              backgroundSize: "22px 22px",
-            }}
-          />
-          {/* Decorative rings */}
-          <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full opacity-10 border-2 border-white pointer-events-none" />
-          <div className="absolute -right-8 top-8 w-40 h-40 rounded-full opacity-10 border border-white pointer-events-none" />
-
-          <div className="relative px-6 py-10 sm:px-10 sm:py-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-            <div className="text-white max-w-sm">
-              <p className="text-[10px] font-bold text-emerald-300 uppercase tracking-[0.18em] mb-2">
-                For Sellers
-              </p>
-              <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">
-                List your item in under{" "}
-                <span className="text-emerald-300">2 minutes.</span>
-              </h2>
-              <p className="mt-3 text-emerald-100/75 text-sm leading-relaxed">
-                Free to list. Reach thousands of buyers across Cameroon. Secure
-                escrow payments via MTN MoMo and Orange Money.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
-                {["Free listing", "Secure escrow", "KYC badge", "AI listing help"].map((f) => (
-                  <span key={f} className="flex items-center gap-1.5 text-[11px] text-emerald-200">
-                    <svg className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    {f}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-row sm:flex-col gap-3 flex-shrink-0 w-full sm:w-auto">
-              <Link
-                href="/signup"
-                className="inline-flex items-center justify-center rounded-2xl bg-white text-emerald-800 font-extrabold px-6 py-3.5 text-sm hover:bg-emerald-50 transition-all shadow-xl hover:shadow-2xl flex-1 sm:flex-none text-center"
-              >
-                Start Selling — Free
-              </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center justify-center rounded-2xl border border-white/20 text-white font-semibold px-6 py-3.5 text-sm hover:bg-white/10 transition-colors flex-1 sm:flex-none text-center"
-              >
-                How it works
-              </Link>
-            </div>
+      <section className="bg-emerald-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16 flex flex-col sm:flex-row sm:items-center justify-between gap-10">
+          <div>
+            <p className="text-[11px] font-semibold text-emerald-500 uppercase tracking-[0.18em] mb-4">
+              For sellers
+            </p>
+            <h2 className="text-2xl sm:text-[30px] font-bold text-white leading-tight">
+              Sell to buyers across Cameroon.
+            </h2>
+            <p className="mt-3 text-sm text-white/50 max-w-sm leading-relaxed">
+              Free to list. Secure escrow payments via MTN MoMo and Orange
+              Money. Your item, live in minutes.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 flex-shrink-0">
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center rounded-lg bg-white text-emerald-900 font-semibold px-7 py-3 text-sm hover:bg-emerald-50 transition-colors whitespace-nowrap"
+            >
+              Create an account
+            </Link>
+            <Link
+              href="/about"
+              className="text-center text-[13px] text-white/40 hover:text-white/75 transition-colors"
+            >
+              How it works &rarr;
+            </Link>
           </div>
         </div>
       </section>

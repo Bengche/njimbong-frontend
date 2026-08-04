@@ -132,6 +132,8 @@ function ModerationDashboardContent() {
     currency: string;
     fonlok_invoice_id: string | null;
     fonlok_payment_url: string | null;
+    fonlok_chat_url_buyer: string | null;
+    fonlok_chat_url_seller: string | null;
     dispute_transcript: string | null;
     dispute_transcript_sent_at: string | null;
     created_at: string;
@@ -1890,14 +1892,36 @@ function ModerationDashboardContent() {
                         <div className="flex flex-col gap-2 flex-shrink-0">
                           {d.fonlok_invoice_id && (
                             <>
-                              <a
-                                href={`https://fonlok.com/chat/${d.fonlok_invoice_id}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center"
-                              >
-                                Open Chat
-                              </a>
+                              {d.fonlok_chat_url_buyer && (
+                                <a
+                                  href={d.fonlok_chat_url_buyer}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-3 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center"
+                                >
+                                  Buyer Chat
+                                </a>
+                              )}
+                              {d.fonlok_chat_url_seller && (
+                                <a
+                                  href={d.fonlok_chat_url_seller}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-3 py-2 text-xs font-semibold bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-center"
+                                >
+                                  Seller Chat
+                                </a>
+                              )}
+                              {!d.fonlok_chat_url_buyer && !d.fonlok_chat_url_seller && (
+                                <a
+                                  href={`https://fonlok.com/chat/${d.fonlok_invoice_id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-3 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center"
+                                >
+                                  Open Chat
+                                </a>
+                              )}
                               <a
                                 href={
                                   d.fonlok_payment_url ||

@@ -19,6 +19,8 @@ interface Order {
   fonlok_status: string;
   fonlok_payment_url?: string | null;
   fonlok_invoice_id?: string | null;
+  fonlok_chat_url_buyer?: string | null;
+  fonlok_chat_url_seller?: string | null;
   created_at: string;
   buyer_id: number;
   seller_id: number;
@@ -673,9 +675,15 @@ export default function OrdersPage() {
                   {order.fonlok_status === "disputed" &&
                     order.fonlok_invoice_id && (
                       <div className="px-4 pb-4 flex flex-col gap-2">
-                        {/* Chat thread button */}
+                        {/* Personal token-authenticated chat link per party */}
                         <a
-                          href={`https://fonlok.com/chat/${order.fonlok_invoice_id}`}
+                          href={
+                            order.my_role === "buyer"
+                              ? (order.fonlok_chat_url_buyer ||
+                                 `https://fonlok.com/chat/${order.fonlok_invoice_id}`)
+                              : (order.fonlok_chat_url_seller ||
+                                 `https://fonlok.com/chat/${order.fonlok_invoice_id}`)
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-full py-2.5 px-4 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5"
@@ -695,7 +703,7 @@ export default function OrdersPage() {
                           </svg>
                           Open Dispute Chat on Fonlok
                         </a>
-                        {/* Invoice page button */}
+                        {/* Invoice page — secondary action */}
                         <a
                           href={
                             order.fonlok_payment_url ||
@@ -722,8 +730,8 @@ export default function OrdersPage() {
                         </a>
                         <p className="text-[11px] text-gray-400 text-center mt-0.5">
                           {order.my_role === "buyer"
-                            ? "Fonlok also emailed you a personal chat link with your payment confirmation."
-                            : "Log in to your Fonlok account to access the full dispute thread."}
+                            ? "No Fonlok account needed — the chat link is personal to your order."
+                            : "No Fonlok account needed — the chat link is personal to your order."}
                         </p>
                       </div>
                     )}

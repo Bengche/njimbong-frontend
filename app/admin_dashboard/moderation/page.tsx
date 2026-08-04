@@ -1912,16 +1912,17 @@ function ModerationDashboardContent() {
                                   Seller Chat
                                 </a>
                               )}
-                              {!d.fonlok_chat_url_buyer && !d.fonlok_chat_url_seller && (
-                                <a
-                                  href={`https://fonlok.com/chat/${d.fonlok_invoice_id}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="px-3 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center"
-                                >
-                                  Open Chat
-                                </a>
-                              )}
+                              {!d.fonlok_chat_url_buyer &&
+                                !d.fonlok_chat_url_seller && (
+                                  <a
+                                    href={`https://fonlok.com/chat/${d.fonlok_invoice_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-3 py-2 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center"
+                                  >
+                                    Open Chat
+                                  </a>
+                                )}
                               <a
                                 href={
                                   d.fonlok_payment_url ||

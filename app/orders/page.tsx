@@ -679,10 +679,10 @@ export default function OrdersPage() {
                         <a
                           href={
                             order.my_role === "buyer"
-                              ? (order.fonlok_chat_url_buyer ||
-                                 `https://fonlok.com/chat/${order.fonlok_invoice_id}`)
-                              : (order.fonlok_chat_url_seller ||
-                                 `https://fonlok.com/chat/${order.fonlok_invoice_id}`)
+                              ? order.fonlok_chat_url_buyer ||
+                                `https://fonlok.com/chat/${order.fonlok_invoice_id}`
+                              : order.fonlok_chat_url_seller ||
+                                `https://fonlok.com/chat/${order.fonlok_invoice_id}`
                           }
                           target="_blank"
                           rel="noopener noreferrer"

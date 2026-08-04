@@ -128,6 +128,11 @@ export default function Navbar() {
       icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2",
     },
     {
+      label: nav.transactions,
+      href: "/transactions",
+      icon: "M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z",
+    },
+    {
       label: nav.profile,
       href: "/profile",
       icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
@@ -158,6 +163,7 @@ export default function Navbar() {
         { label: nav.favorites, href: "/favorites" },
         { label: nav.requests, href: "/requests" },
         { label: nav.orders, href: "/orders" },
+        { label: nav.transactions, href: "/transactions" },
         { label: nav.chat, href: "/chat" },
         { label: nav.profile, href: "/profile" },
       ]

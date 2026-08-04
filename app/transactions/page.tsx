@@ -36,9 +36,7 @@ interface Transaction {
 
 function formatAmount(amount: number, currency = "XAF"): string {
   return (
-    Number(amount).toLocaleString("fr-CM") +
-    "\u00a0" +
-    (currency || "XAF")
+    Number(amount).toLocaleString("fr-CM") + "\u00a0" + (currency || "XAF")
   );
 }
 
@@ -145,14 +143,10 @@ function TxIcon({ tx }: { tx: Transaction }) {
       : "bg-gray-100";
 
   const iconPath = (() => {
-    if (tx.type === "deposit")
-      return "M12 16v-8m-4 4l4 4 4-4";
-    if (tx.type === "withdrawal")
-      return "M12 8v8m-4-4l4-4 4 4";
-    if (tx.type === "sale")
-      return "M12 16v-8m-4 4l4 4 4-4";
-    if (tx.type === "refund")
-      return "M12 16v-8m-4 4l4 4 4-4";
+    if (tx.type === "deposit") return "M12 16v-8m-4 4l4 4 4-4";
+    if (tx.type === "withdrawal") return "M12 8v8m-4-4l4-4 4 4";
+    if (tx.type === "sale") return "M12 16v-8m-4 4l4 4 4-4";
+    if (tx.type === "refund") return "M12 16v-8m-4 4l4 4 4-4";
     if (tx.type === "dispute")
       return "M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93";
     // purchase / escrow_pay
@@ -187,13 +181,19 @@ function TxIcon({ tx }: { tx: Transaction }) {
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, large }: { status: string; large?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-1">
+    <span className="inline-flex items-center gap-1.5">
       <span
-        className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${statusDotColor(status)}`}
+        className={`rounded-full flex-shrink-0 ${statusDotColor(status)} ${
+          large ? "w-2 h-2" : "w-1.5 h-1.5"
+        }`}
       />
-      <span className="text-[11px] text-gray-500 font-medium">
+      <span
+        className={`font-semibold text-gray-600 ${
+          large ? "text-[13px]" : "text-[11px] font-medium text-gray-500"
+        }`}
+      >
         {statusLabel(status)}
       </span>
     </span>
@@ -238,14 +238,14 @@ function DetailPanel({
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop — above AI chat widget (z-[70]) */}
       <div
-        className="fixed inset-0 bg-black/20 z-40 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/30 z-[85] backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Panel — side on desktop, bottom sheet on mobile */}
-      <div className="fixed bottom-0 left-0 right-0 sm:bottom-auto sm:top-0 sm:right-0 sm:left-auto sm:h-full sm:w-96 bg-white z-50 shadow-2xl flex flex-col rounded-t-2xl sm:rounded-none overflow-hidden">
+      <div className="fixed bottom-0 left-0 right-0 sm:bottom-auto sm:top-0 sm:right-0 sm:left-auto sm:h-full sm:w-96 bg-white z-[90] shadow-2xl flex flex-col rounded-t-2xl sm:rounded-none overflow-hidden">
         {/* Drag handle — mobile only */}
         <div className="sm:hidden flex justify-center pt-3 pb-1">
           <div className="w-8 h-1 rounded-full bg-gray-200" />
@@ -276,22 +276,20 @@ function DetailPanel({
         </div>
 
         {/* Amount hero */}
-        <div className="px-5 py-6 border-b border-gray-100 bg-gray-50">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-1">
-            {isIn
-              ? "Received"
-              : tx.direction === "pending"
-                ? "Pending"
-                : "Sent"}
+        <div className="px-6 py-8 border-b border-gray-100 bg-gray-50 flex flex-col items-center text-center">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.18em] mb-4">
+            {isIn ? "Received" : tx.direction === "pending" ? "Pending" : "Sent"}
           </p>
           <p
-            className={`text-3xl font-bold tracking-tight tabular-nums ${amtColor}`}
+            className={`text-[42px] font-bold tracking-tight tabular-nums leading-none ${amtColor}`}
           >
-            {amtSign}
-            {formatAmount(tx.amount, tx.currency)}
+            {amtSign}{Number(tx.amount).toLocaleString("fr-CM")}
           </p>
-          <div className="mt-3">
-            <StatusBadge status={tx.status} />
+          <p className="text-sm font-semibold text-gray-400 mt-2 tracking-wide">
+            {tx.currency || "XAF"}
+          </p>
+          <div className="mt-5 flex items-center justify-center">
+            <StatusBadge status={tx.status} large />
           </div>
         </div>
 
@@ -442,8 +440,7 @@ export default function TransactionsPage() {
           (tx.counterparty && tx.counterparty.toLowerCase().includes(q)) ||
           (tx.listing_title && tx.listing_title.toLowerCase().includes(q)) ||
           (tx.reference && tx.reference.toLowerCase().includes(q)) ||
-          (tx.order_reference &&
-            tx.order_reference.toLowerCase().includes(q)),
+          (tx.order_reference && tx.order_reference.toLowerCase().includes(q)),
       );
     }
 
@@ -736,23 +733,26 @@ export default function TransactionsPage() {
         )}
 
         {/* No results for filter */}
-        {!loading && !error && transactions.length > 0 && filtered.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-sm text-gray-500">
-              No transactions match your filters.
-            </p>
-            <button
-              onClick={() => {
-                setFilterDir("all");
-                setFilterType("all");
-                setSearch("");
-              }}
-              className="text-xs font-medium text-emerald-600 mt-2 hover:underline"
-            >
-              Clear filters
-            </button>
-          </div>
-        )}
+        {!loading &&
+          !error &&
+          transactions.length > 0 &&
+          filtered.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-sm text-gray-500">
+                No transactions match your filters.
+              </p>
+              <button
+                onClick={() => {
+                  setFilterDir("all");
+                  setFilterType("all");
+                  setSearch("");
+                }}
+                className="text-xs font-medium text-emerald-600 mt-2 hover:underline"
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
 
         {/* Transaction groups */}
         {!loading &&
@@ -770,9 +770,7 @@ export default function TransactionsPage() {
                   const isIn = tx.direction === "in";
                   const isPending = tx.direction === "pending";
                   const amtSign = isIn ? "+" : isPending ? "" : "−";
-                  const amtColor = isIn
-                    ? "text-emerald-600"
-                    : "text-gray-900";
+                  const amtColor = isIn ? "text-emerald-600" : "text-gray-900";
 
                   return (
                     <button

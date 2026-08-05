@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
@@ -70,10 +70,8 @@ function getGroupLabel(iso: string): string {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const yesterday = new Date(today.getTime() - 86_400_000);
   const txDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-
   if (txDay.getTime() === today.getTime()) return "Today";
   if (txDay.getTime() === yesterday.getTime()) return "Yesterday";
-
   return d.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 }
 
@@ -84,9 +82,9 @@ function txTitle(tx: Transaction): string {
     escrow_pay: "Escrow payment",
     purchase: tx.listing_title || "Purchase",
     sale: tx.listing_title || "Sale",
-    refund: tx.listing_title ? `Refund — ${tx.listing_title}` : "Refund",
+    refund: tx.listing_title ? `Refund \u2014 ${tx.listing_title}` : "Refund",
     dispute: tx.listing_title
-      ? `Dispute — ${tx.listing_title}`
+      ? `Dispute \u2014 ${tx.listing_title}`
       : "Dispute opened",
   };
   return map[tx.type] || tx.description || "Transaction";
@@ -97,7 +95,7 @@ function txSubtitle(tx: Transaction): string {
   if (tx.counterparty) parts.push(tx.counterparty);
   if (tx.reference) parts.push(tx.reference);
   if (tx.order_reference) parts.push(tx.order_reference);
-  return parts.join("\u00a0·\u00a0") || formatDate(tx.created_at);
+  return parts.join("\u00a0\u00b7\u00a0") || formatDate(tx.created_at);
 }
 
 function statusLabel(status: string): string {
@@ -135,7 +133,6 @@ function statusDotColor(status: string): string {
 function TxIcon({ tx }: { tx: Transaction }) {
   const isIn = tx.direction === "in";
   const isPending = tx.direction === "pending";
-
   const bgClass = isIn
     ? "bg-emerald-50"
     : isPending
@@ -145,11 +142,10 @@ function TxIcon({ tx }: { tx: Transaction }) {
   const iconPath = (() => {
     if (tx.type === "deposit") return "M12 16v-8m-4 4l4 4 4-4";
     if (tx.type === "withdrawal") return "M12 8v8m-4-4l4-4 4 4";
-    if (tx.type === "sale") return "M12 16v-8m-4 4l4 4 4-4";
-    if (tx.type === "refund") return "M12 16v-8m-4 4l4 4 4-4";
+    if (tx.type === "sale" || tx.type === "refund")
+      return "M12 16v-8m-4 4l4 4 4-4";
     if (tx.type === "dispute")
       return "M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93";
-    // purchase / escrow_pay
     return "M12 8v8m-4-4l4-4 4 4";
   })();
 
@@ -185,14 +181,10 @@ function StatusBadge({ status, large }: { status: string; large?: boolean }) {
   return (
     <span className="inline-flex items-center gap-1.5">
       <span
-        className={`rounded-full flex-shrink-0 ${statusDotColor(status)} ${
-          large ? "w-2 h-2" : "w-1.5 h-1.5"
-        }`}
+        className={`rounded-full flex-shrink-0 ${statusDotColor(status)} ${large ? "w-2 h-2" : "w-1.5 h-1.5"}`}
       />
       <span
-        className={`font-semibold text-gray-600 ${
-          large ? "text-[13px]" : "text-[11px] font-medium text-gray-500"
-        }`}
+        className={`font-semibold ${large ? "text-[13px] text-gray-600" : "text-[11px] text-gray-500"}`}
       >
         {statusLabel(status)}
       </span>
@@ -214,7 +206,7 @@ function DetailPanel({
   downloading: boolean;
 }) {
   const isIn = tx.direction === "in";
-  const amtSign = isIn ? "+" : tx.direction === "pending" ? "" : "−";
+  const amtSign = isIn ? "+" : tx.direction === "pending" ? "" : "\u2212";
   const amtColor = isIn ? "text-emerald-600" : "text-gray-900";
 
   const rows: Array<[string, string]> = [
@@ -238,28 +230,23 @@ function DetailPanel({
 
   return (
     <>
-      {/* Backdrop — above AI chat widget (z-[70]) */}
       <div
         className="fixed inset-0 bg-black/30 z-[85] backdrop-blur-sm"
         onClick={onClose}
       />
-
-      {/* Panel — side on desktop, bottom sheet on mobile */}
       <div className="fixed bottom-0 left-0 right-0 sm:bottom-auto sm:top-0 sm:right-0 sm:left-auto sm:h-full sm:w-96 bg-white z-[90] shadow-2xl flex flex-col rounded-t-2xl sm:rounded-none overflow-hidden">
-        {/* Drag handle — mobile only */}
         <div className="sm:hidden flex justify-center pt-3 pb-1">
           <div className="w-8 h-1 rounded-full bg-gray-200" />
         </div>
 
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <h2 className="text-sm font-semibold text-gray-900">
             Transaction details
           </h2>
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
             aria-label="Close"
+            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
           >
             <svg
               width={14}
@@ -275,15 +262,20 @@ function DetailPanel({
           </button>
         </div>
 
-        {/* Amount hero */}
+        {/* Centered amount hero */}
         <div className="px-6 py-8 border-b border-gray-100 bg-gray-50 flex flex-col items-center text-center">
           <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.18em] mb-4">
-            {isIn ? "Received" : tx.direction === "pending" ? "Pending" : "Sent"}
+            {isIn
+              ? "Received"
+              : tx.direction === "pending"
+                ? "Pending"
+                : "Sent"}
           </p>
           <p
             className={`text-[42px] font-bold tracking-tight tabular-nums leading-none ${amtColor}`}
           >
-            {amtSign}{Number(tx.amount).toLocaleString("fr-CM")}
+            {amtSign}
+            {Number(tx.amount).toLocaleString("fr-CM")}
           </p>
           <p className="text-sm font-semibold text-gray-400 mt-2 tracking-wide">
             {tx.currency || "XAF"}
@@ -293,7 +285,6 @@ function DetailPanel({
           </div>
         </div>
 
-        {/* Details */}
         <div className="flex-1 overflow-y-auto px-5 py-2">
           {rows.map(([label, value]) => (
             <div
@@ -310,7 +301,6 @@ function DetailPanel({
           ))}
         </div>
 
-        {/* Download button */}
         <div className="px-5 py-4 border-t border-gray-100">
           <button
             onClick={onDownload}
@@ -320,7 +310,7 @@ function DetailPanel({
             {downloading ? (
               <>
                 <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Generating receipt…
+                Generating receipt&hellip;
               </>
             ) : (
               <>
@@ -346,7 +336,216 @@ function DetailPanel({
   );
 }
 
-// ─── Filter Types ─────────────────────────────────────────────────────────────
+// ─── Statement Modal ──────────────────────────────────────────────────────────
+
+type PdfPeriod =
+  | "this_month"
+  | "last_month"
+  | "3_months"
+  | "6_months"
+  | "all_time"
+  | "custom";
+
+const PERIOD_OPTIONS: { key: PdfPeriod; label: string; sub: string }[] = [
+  { key: "this_month", label: "This month", sub: "Current calendar month" },
+  { key: "last_month", label: "Last month", sub: "Previous calendar month" },
+  { key: "3_months", label: "Last 3 months", sub: "Rolling 90 days" },
+  { key: "6_months", label: "Last 6 months", sub: "Rolling 180 days" },
+  { key: "all_time", label: "All time", sub: "Complete history" },
+  { key: "custom", label: "Custom range", sub: "Pick start and end dates" },
+];
+
+function resolvePeriod(
+  period: PdfPeriod,
+  customFrom: string,
+  customTo: string,
+) {
+  const now = new Date();
+  const pad = (d: Date) => d.toISOString().slice(0, 10);
+  const today = pad(now);
+  if (period === "all_time") return { from: null, to: null };
+  if (period === "custom")
+    return { from: customFrom || null, to: customTo || null };
+  if (period === "this_month")
+    return {
+      from: pad(new Date(now.getFullYear(), now.getMonth(), 1)),
+      to: today,
+    };
+  if (period === "last_month")
+    return {
+      from: pad(new Date(now.getFullYear(), now.getMonth() - 1, 1)),
+      to: pad(new Date(now.getFullYear(), now.getMonth(), 0)),
+    };
+  if (period === "3_months") {
+    const s = new Date(now);
+    s.setDate(s.getDate() - 90);
+    return { from: pad(s), to: today };
+  }
+  const s = new Date(now);
+  s.setDate(s.getDate() - 180);
+  return { from: pad(s), to: today };
+}
+
+function StatementModal({
+  onClose,
+  onDownload,
+  loading,
+}: {
+  onClose: () => void;
+  onDownload: (from: string | null, to: string | null) => void;
+  loading: boolean;
+}) {
+  const [period, setPeriod] = useState<PdfPeriod>("this_month");
+  const [customFrom, setCustomFrom] = useState("");
+  const [customTo, setCustomTo] = useState("");
+
+  const canDownload = period !== "custom" || customFrom || customTo;
+
+  return (
+    <>
+      <div
+        className="fixed inset-0 bg-black/30 z-[85] backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div className="fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-0 sm:p-6 pointer-events-none">
+        <div
+          className="pointer-events-auto w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="sm:hidden flex justify-center pt-3">
+            <div className="w-8 h-1 rounded-full bg-gray-200" />
+          </div>
+
+          <div className="flex items-start justify-between px-6 pt-5 pb-4">
+            <div>
+              <h2 className="text-base font-bold text-gray-900">
+                Download Statement
+              </h2>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Choose a period &mdash; we&apos;ll generate a professional PDF
+                statement.
+              </p>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition-colors flex-shrink-0 mt-0.5"
+            >
+              <svg
+                width={13}
+                height={13}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="px-6 grid grid-cols-2 sm:grid-cols-3 gap-2 pb-4">
+            {PERIOD_OPTIONS.map((opt) => (
+              <button
+                key={opt.key}
+                onClick={() => setPeriod(opt.key)}
+                className={`rounded-xl border px-3 py-3 text-left transition-all ${
+                  period === opt.key
+                    ? "border-gray-900 bg-gray-900"
+                    : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                }`}
+              >
+                <p
+                  className={`text-xs font-semibold leading-snug ${period === opt.key ? "text-white" : "text-gray-800"}`}
+                >
+                  {opt.label}
+                </p>
+                <p
+                  className={`text-[10px] mt-0.5 ${period === opt.key ? "text-white/65" : "text-gray-400"}`}
+                >
+                  {opt.sub}
+                </p>
+              </button>
+            ))}
+          </div>
+
+          {period === "custom" && (
+            <div className="px-6 pb-4 grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+                  From
+                </label>
+                <input
+                  type="date"
+                  value={customFrom}
+                  onChange={(e) => setCustomFrom(e.target.value)}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-900"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+                  To
+                </label>
+                <input
+                  type="date"
+                  value={customTo}
+                  onChange={(e) => setCustomTo(e.target.value)}
+                  className="w-full h-9 px-3 rounded-lg border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-900"
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="px-6 pb-6 pt-2 flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 h-10 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                const { from, to } = resolvePeriod(
+                  period,
+                  customFrom,
+                  customTo,
+                );
+                onDownload(from, to);
+              }}
+              disabled={loading || !canDownload}
+              className="flex-1 h-10 rounded-lg bg-gray-900 hover:bg-gray-700 disabled:opacity-50 text-white text-sm font-semibold flex items-center justify-center gap-2 transition-colors"
+            >
+              {loading ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Generating&hellip;
+                </>
+              ) : (
+                <>
+                  <svg
+                    width={13}
+                    height={13}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.3}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 16v-8m-4 4l4 4 4-4M20 21H4" />
+                  </svg>
+                  Download PDF
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ─── Filter constants ─────────────────────────────────────────────────────────
 
 type FilterDirection = "all" | "in" | "out";
 type FilterType =
@@ -382,9 +581,13 @@ export default function TransactionsPage() {
   const [selected, setSelected] = useState<Transaction | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [exportingCsv, setExportingCsv] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
+  const [showStatementModal, setShowStatementModal] = useState(false);
   const [filterDir, setFilterDir] = useState<FilterDirection>("all");
   const [filterType, setFilterType] = useState<FilterType>("all");
   const [search, setSearch] = useState("");
+  const downloadMenuRef = useRef<HTMLDivElement>(null);
 
   const fetchTransactions = useCallback(async () => {
     setLoading(true);
@@ -412,10 +615,23 @@ export default function TransactionsPage() {
     fetchTransactions();
   }, [fetchTransactions]);
 
-  // ── Derived: filtered + grouped ─────────────────────────────────────────────
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        downloadMenuRef.current &&
+        !downloadMenuRef.current.contains(e.target as Node)
+      ) {
+        setShowDownloadMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // ── Filtered + grouped ───────────────────────────────────────────────────────
   const filtered = useMemo(() => {
     let list = transactions;
-
     if (filterDir !== "all") {
       list = list.filter((tx) =>
         filterDir === "in"
@@ -423,7 +639,6 @@ export default function TransactionsPage() {
           : tx.direction === "out" || tx.direction === "pending",
       );
     }
-
     if (filterType !== "all") {
       list = list.filter((tx) => {
         if (filterType === "purchase")
@@ -431,7 +646,6 @@ export default function TransactionsPage() {
         return tx.type === filterType;
       });
     }
-
     if (search.trim()) {
       const q = search.trim().toLowerCase();
       list = list.filter(
@@ -443,7 +657,6 @@ export default function TransactionsPage() {
           (tx.order_reference && tx.order_reference.toLowerCase().includes(q)),
       );
     }
-
     return list;
   }, [transactions, filterDir, filterType, search]);
 
@@ -457,10 +670,9 @@ export default function TransactionsPage() {
     return Array.from(map.entries());
   }, [filtered]);
 
-  // ── Derived: summary stats ───────────────────────────────────────────────────
   const stats = useMemo(() => {
-    let totalIn = 0;
-    let totalOut = 0;
+    let totalIn = 0,
+      totalOut = 0;
     for (const tx of transactions) {
       if (tx.direction === "in") totalIn += Number(tx.amount);
       else if (tx.direction === "out") totalOut += Number(tx.amount);
@@ -468,32 +680,58 @@ export default function TransactionsPage() {
     return { totalIn, totalOut, net: totalIn - totalOut };
   }, [transactions]);
 
-  // ── Download CSV ─────────────────────────────────────────────────────────────
+  // ── Download helpers ──────────────────────────────────────────────────────────
+  const triggerDownload = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleExportCsv = async () => {
     setExportingCsv(true);
+    setShowDownloadMenu(false);
     try {
       const res = await fetch(`${API_BASE}/api/transactions/export`, {
         credentials: "include",
       });
-      if (!res.ok) throw new Error("Export failed");
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download =
-        "njimbong-transactions-" +
-        new Date().toISOString().slice(0, 10) +
-        ".csv";
-      a.click();
-      URL.revokeObjectURL(url);
+      if (!res.ok) throw new Error();
+      triggerDownload(
+        await res.blob(),
+        `njimbong-transactions-${new Date().toISOString().slice(0, 10)}.csv`,
+      );
     } catch {
-      // silent — the user will notice the download didn't start
+      /* silent */
     } finally {
       setExportingCsv(false);
     }
   };
 
-  // ── Download receipt ─────────────────────────────────────────────────────────
+  const handleExportPdf = async (from: string | null, to: string | null) => {
+    setExportingPdf(true);
+    try {
+      const params = new URLSearchParams();
+      if (from) params.set("from", from);
+      if (to) params.set("to", to);
+      const q = params.toString() ? "?" + params.toString() : "";
+      const res = await fetch(`${API_BASE}/api/transactions/export/pdf${q}`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error();
+      triggerDownload(
+        await res.blob(),
+        `njimbong-statement-${new Date().toISOString().slice(0, 10)}.pdf`,
+      );
+      setShowStatementModal(false);
+    } catch {
+      /* silent */
+    } finally {
+      setExportingPdf(false);
+    }
+  };
+
   const handleDownloadReceipt = async () => {
     if (!selected) return;
     setDownloading(true);
@@ -502,23 +740,16 @@ export default function TransactionsPage() {
         `${API_BASE}/api/transactions/${encodeURIComponent(selected.id)}/receipt`,
         { credentials: "include" },
       );
-      if (!res.ok) throw new Error("Receipt generation failed");
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `njimbong-receipt-${selected.id}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
+      if (!res.ok) throw new Error();
+      triggerDownload(await res.blob(), `njimbong-receipt-${selected.id}.pdf`);
     } catch {
-      // silent
+      /* silent */
     } finally {
       setDownloading(false);
     }
   };
 
   // ── Render ───────────────────────────────────────────────────────────────────
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ── Page header ── */}
@@ -534,32 +765,112 @@ export default function TransactionsPage() {
               </p>
             </div>
 
-            <button
-              onClick={handleExportCsv}
-              disabled={exportingCsv || loading}
-              className="flex-shrink-0 inline-flex items-center gap-2 h-9 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-600 disabled:opacity-50 transition-colors"
-            >
-              {exportingCsv ? (
-                <span className="w-3.5 h-3.5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-              ) : (
+            {/* Download dropdown */}
+            <div className="relative flex-shrink-0" ref={downloadMenuRef}>
+              <button
+                onClick={() => setShowDownloadMenu((v) => !v)}
+                disabled={loading}
+                className="inline-flex items-center gap-2 h-9 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 disabled:opacity-40 transition-colors"
+              >
+                {exportingCsv || exportingPdf ? (
+                  <span className="w-3.5 h-3.5 border-2 border-gray-300 border-t-gray-700 rounded-full animate-spin" />
+                ) : (
+                  <svg
+                    width={13}
+                    height={13}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2.2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 16v-8m-4 4l4 4 4-4M20 21H4" />
+                  </svg>
+                )}
+                Download
                 <svg
-                  width={13}
-                  height={13}
+                  width={11}
+                  height={11}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth={2.2}
+                  strokeWidth={2.5}
                   strokeLinecap="round"
-                  strokeLinejoin="round"
                 >
-                  <path d="M12 16v-8m-4 4l4 4 4-4M20 21H4" />
+                  <path d="M6 9l6 6 6-6" />
                 </svg>
+              </button>
+
+              {showDownloadMenu && (
+                <div className="absolute right-0 top-full mt-1.5 w-56 bg-white rounded-xl border border-gray-100 shadow-xl overflow-hidden z-30">
+                  <button
+                    onClick={() => {
+                      setShowDownloadMenu(false);
+                      setShowStatementModal(true);
+                    }}
+                    className="w-full flex items-start gap-3 px-4 py-3.5 hover:bg-gray-50 transition-colors text-left"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-gray-900 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg
+                        width={13}
+                        height={13}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth={2.2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900 leading-snug">
+                        Statement PDF
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        Professional formatted report
+                      </p>
+                    </div>
+                  </button>
+
+                  <div className="mx-4 border-t border-gray-50" />
+
+                  <button
+                    onClick={handleExportCsv}
+                    className="w-full flex items-start gap-3 px-4 py-3.5 hover:bg-gray-50 transition-colors text-left"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg
+                        width={13}
+                        height={13}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#374151"
+                        strokeWidth={2.2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <path d="M14 2v6h6M8 13h8M8 17h5" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900 leading-snug">
+                        Raw data CSV
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        Spreadsheet-compatible
+                      </p>
+                    </div>
+                  </button>
+                </div>
               )}
-              Export CSV
-            </button>
+            </div>
           </div>
 
-          {/* ── Summary strip ── */}
+          {/* Summary strip */}
           {!loading && transactions.length > 0 && (
             <div className="mt-6 grid grid-cols-3 gap-3">
               {[
@@ -567,17 +878,19 @@ export default function TransactionsPage() {
                   label: "Total received",
                   value: stats.totalIn,
                   positive: true,
+                  prefix: "",
                 },
                 {
                   label: "Total sent",
                   value: stats.totalOut,
                   positive: false,
+                  prefix: "",
                 },
                 {
                   label: "Net",
                   value: Math.abs(stats.net),
                   positive: stats.net >= 0,
-                  prefix: stats.net >= 0 ? "+" : "−",
+                  prefix: stats.net >= 0 ? "+" : "\u2212",
                 },
               ].map(({ label, value, positive, prefix }) => (
                 <div
@@ -588,11 +901,9 @@ export default function TransactionsPage() {
                     {label}
                   </p>
                   <p
-                    className={`text-base font-bold tabular-nums leading-none ${
-                      positive ? "text-emerald-600" : "text-gray-900"
-                    }`}
+                    className={`text-base font-bold tabular-nums leading-none ${positive ? "text-emerald-600" : "text-gray-900"}`}
                   >
-                    {prefix || ""}
+                    {prefix}
                     {formatAmount(value)}
                   </p>
                 </div>
@@ -602,11 +913,10 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      {/* ── Filters ── */}
+      {/* ── Filter bar ── */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="flex items-center gap-3 py-3 overflow-x-auto no-scrollbar">
-            {/* Direction tabs */}
             <div className="flex items-center gap-1 flex-shrink-0 bg-gray-100 p-0.5 rounded-lg">
               {DIRECTION_TABS.map((tab) => (
                 <button
@@ -623,7 +933,6 @@ export default function TransactionsPage() {
               ))}
             </div>
 
-            {/* Type select */}
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value as FilterType)}
@@ -641,7 +950,6 @@ export default function TransactionsPage() {
               ))}
             </select>
 
-            {/* Search */}
             <div className="relative flex-1 min-w-32">
               <svg
                 className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
@@ -670,7 +978,7 @@ export default function TransactionsPage() {
 
       {/* ── Content ── */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
-        {/* Loading */}
+        {/* Loading skeleton */}
         {loading && (
           <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
@@ -684,7 +992,7 @@ export default function TransactionsPage() {
                     <div className="h-3.5 bg-gray-100 rounded w-2/5" />
                     <div className="h-2.5 bg-gray-100 rounded w-1/3" />
                   </div>
-                  <div className="text-right space-y-2">
+                  <div className="space-y-2">
                     <div className="h-3.5 bg-gray-100 rounded w-20" />
                     <div className="h-2.5 bg-gray-100 rounded w-12 ml-auto" />
                   </div>
@@ -707,7 +1015,7 @@ export default function TransactionsPage() {
           </div>
         )}
 
-        {/* Empty */}
+        {/* Empty state */}
         {!loading && !error && transactions.length === 0 && (
           <div className="text-center py-20">
             <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
@@ -732,7 +1040,7 @@ export default function TransactionsPage() {
           </div>
         )}
 
-        {/* No results for filter */}
+        {/* No filter results */}
         {!loading &&
           !error &&
           transactions.length > 0 &&
@@ -759,17 +1067,14 @@ export default function TransactionsPage() {
           !error &&
           grouped.map(([groupLabel, txList]) => (
             <div key={groupLabel} className="mb-7">
-              {/* Group header */}
               <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-2 px-1">
                 {groupLabel}
               </p>
-
-              {/* Rows container */}
               <div className="bg-white rounded-xl border border-gray-100 overflow-hidden divide-y divide-gray-50">
                 {txList.map((tx) => {
                   const isIn = tx.direction === "in";
                   const isPending = tx.direction === "pending";
-                  const amtSign = isIn ? "+" : isPending ? "" : "−";
+                  const amtSign = isIn ? "+" : isPending ? "" : "\u2212";
                   const amtColor = isIn ? "text-emerald-600" : "text-gray-900";
 
                   return (
@@ -801,7 +1106,6 @@ export default function TransactionsPage() {
                         </div>
                       </div>
 
-                      {/* Chevron */}
                       <svg
                         className="flex-shrink-0 text-gray-300 group-hover:text-gray-400 transition-colors ml-1"
                         width={14}
@@ -829,6 +1133,15 @@ export default function TransactionsPage() {
           onClose={() => setSelected(null)}
           onDownload={handleDownloadReceipt}
           downloading={downloading}
+        />
+      )}
+
+      {/* ── Statement download modal ── */}
+      {showStatementModal && (
+        <StatementModal
+          onClose={() => setShowStatementModal(false)}
+          onDownload={handleExportPdf}
+          loading={exportingPdf}
         />
       )}
 

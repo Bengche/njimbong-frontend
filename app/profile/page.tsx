@@ -713,34 +713,57 @@ export default function ProfilePage() {
       </div>
 
       {/* ── KYC REJECTION REASON ─────────────────────────────────────────────── */}
-      {kycStatus?.status === "rejected" && kycStatus.rejectionreason && (
+      {kycStatus?.status === "rejected" && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-3">
-          <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
-            <svg
-              className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-            <div className="flex-1">
-              <p className="text-xs font-semibold text-red-700">
-                {pr.kycRejectedBanner}
-              </p>
-              <p className="text-xs text-red-600 mt-0.5">
-                {kycStatus.rejectionreason}
-              </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-red-50 border border-red-200 rounded-2xl px-4 py-4">
+            <div className="flex items-start gap-3 flex-1">
+              <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                <svg
+                  className="w-4 h-4 text-red-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-red-700">
+                  {pr.kycRejectedBanner}
+                </p>
+                {kycStatus.rejectionreason && (
+                  <p className="text-xs text-red-600 mt-0.5">
+                    <span className="font-medium">Reason:</span>{" "}
+                    {kycStatus.rejectionreason}
+                  </p>
+                )}
+                <p className="text-xs text-red-500 mt-1">
+                  Please re-submit with clearer documents to get verified.
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setShowKYCModal(true)}
-              className="flex-shrink-0 text-xs font-semibold text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-xl transition-colors"
+              className="flex-shrink-0 inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 px-4 py-2.5 rounded-xl transition-colors shadow-sm"
             >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
               {pr.resubmit}
             </button>
           </div>

@@ -384,36 +384,57 @@ export default function AdminListingsPage() {
         }
       />
 
-      {/* Notification */}
+      {/* Toast notification — fixed top-right, always above modals */}
       {notification && (
         <div
-          className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
+          className={`fixed top-5 right-5 z-[200] flex items-start gap-3 px-4 py-3.5 rounded-xl shadow-2xl border max-w-sm w-full transition-all ${
             notification.type === "success"
-              ? "bg-green-100 text-green-800 border border-green-200"
-              : "bg-red-100 text-red-800 border border-red-200"
+              ? "bg-white border-green-200 text-green-800"
+              : "bg-white border-red-200 text-red-800"
           }`}
         >
-          {notification.type === "success" ? (
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clipRule="evenodd"
-              />
-            </svg>
-          ) : (
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-          )}
-          <span>{notification.message}</span>
+          <div
+            className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+              notification.type === "success" ? "bg-green-100" : "bg-red-100"
+            }`}
+          >
+            {notification.type === "success" ? (
+              <svg
+                className="w-4 h-4 text-green-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="w-4 h-4 text-red-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            )}
+          </div>
+          <div className="flex-1 pt-0.5">
+            <p className="text-sm font-semibold">
+              {notification.type === "success" ? "Success" : "Error"}
+            </p>
+            <p className="text-sm mt-0.5 text-gray-600">
+              {notification.message}
+            </p>
+          </div>
           <button
             onClick={() => setNotification(null)}
-            className="ml-auto text-gray-500 hover:text-gray-700"
+            className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path

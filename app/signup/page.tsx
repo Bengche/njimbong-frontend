@@ -111,7 +111,7 @@ export default function Signup() {
       });
       popUp();
       window.scrollTo(0, 0);
-      window.location.href = process.env.NEXT_PUBLIC_LOGIN_ENDPOINT || "/login";
+      window.location.href = `/verify-email?email=${encodeURIComponent(formData.email)}`;
       console.log(formData);
     } catch (error) {
       setError(a.errorToast);

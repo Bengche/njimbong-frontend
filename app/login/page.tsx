@@ -55,7 +55,14 @@ export default function Login() {
       }, 7000);
       window.location.href =
         process.env.NEXT_PUBLIC_DASHBOARD_ENDPOINT || "/dashboard";
-    } catch (error) {
+    } catch (error: any) {
+      if (
+        error.response?.status === 403 &&
+        error.response?.data?.emailNotVerified
+      ) {
+        window.location.href = `/verify-email?email=${encodeURIComponent(formData.email)}`;
+        return;
+      }
       setError(a.errorToast);
       setTimeout(() => {
         setError("");

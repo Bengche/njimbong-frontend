@@ -173,9 +173,7 @@ export default function KYCVerificationModal({
       fd.append("documentFront", documentFront);
       if (documentBack) fd.append("documentBack", documentBack);
       fd.append("selfie", selfie);
-      await Axios.post(`${API_BASE}/api/kyc/submit`, fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await Axios.post(`${API_BASE}/api/kyc/submit`, fd);
       onSuccess();
       handleClose();
     } catch (err: any) {

@@ -88,8 +88,8 @@ export default function KYCVerificationModal({
         err.name === "NotAllowedError"
           ? "Camera access was denied. Please allow camera access in your browser settings and try again."
           : err.name === "NotFoundError"
-            ? "No camera was found on this device. Please upload a selfie photo instead."
-            : "Unable to start camera. Please upload a selfie photo instead.";
+            ? "No camera was found on this device. Please use a device with a front-facing camera."
+            : "Unable to start camera. Please check your browser permissions and try again.";
       setCameraError(msg);
       setCameraState("error");
     }
@@ -139,23 +139,6 @@ export default function KYCVerificationModal({
       reader.readAsDataURL(file);
       setError("");
     };
-
-  const handleSelfieFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 10 * 1024 * 1024) {
-      setError(k.errors.fileSize);
-      return;
-    }
-    setSelfie(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setSelfiePreview(reader.result as string);
-      setCameraState("captured");
-    };
-    reader.readAsDataURL(file);
-    setError("");
-  };
 
   const handleSubmit = async () => {
     setError("");
@@ -230,7 +213,7 @@ export default function KYCVerificationModal({
             <div>
               <h2 className="text-lg font-bold">{k.title}</h2>
               <p className="text-xs text-emerald-200 mt-0.5">
-                Step {step} of 3 â€” {k.verifyIdentity}
+                Step {step} of 3 &ndash; {k.verifyIdentity}
               </p>
             </div>
             <button
@@ -442,269 +425,50 @@ export default function KYCVerificationModal({
 
         {/* â•â• STEP 3 â€” Live selfie â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {step === 3 && (
-          <div className="p-5 sm:p-6">
-            <div className="mb-5">
-              <h3 className="text-base font-bold text-slate-800 mb-0.5">
-                {k.step3.title}
-              </h3>
-              <p className="text-sm text-slate-500">{k.step3.subtitle}</p>
+          <div className="flex flex-col">
+            {/* Tips strip */}
+            <div className="px-5 pt-4 pb-3 flex flex-wrap gap-x-3 gap-y-2">
+              {[
+                "Look straight at camera",
+                "Good lighting",
+                "Remove glasses",
+                "No face coverings",
+              ].map((tip) => (
+                <span
+                  key={tip}
+                  className="inline-flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full"
+                >
+                  <svg
+                    className="w-3 h-3 text-emerald-500 flex-shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {tip}
+                </span>
+              ))}
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-5">
-              {/* Camera / preview */}
-              <div className="flex-1 min-w-0">
-                {/* idle */}
-                {cameraState === "idle" && (
-                  <div className="aspect-[4/3] rounded-2xl bg-slate-900 flex flex-col items-center justify-center gap-5 px-6">
-                    <div className="w-20 h-20 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-                      <svg
-                        className="w-9 h-9 text-white/60"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-white font-semibold text-sm">
-                        Ready for selfie
-                      </p>
-                      <p className="text-white/40 text-xs mt-1">
-                        Allow camera access when prompted
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* requesting */}
-                {cameraState === "requesting" && (
-                  <div className="aspect-[4/3] rounded-2xl bg-slate-900 flex flex-col items-center justify-center gap-4">
-                    <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-                    <p className="text-white/60 text-sm">
-                      Requesting camera accessâ€¦
-                    </p>
-                  </div>
-                )}
-
-                {/* active â€” live feed with oval guide */}
-                {cameraState === "active" && (
-                  <div className="relative rounded-2xl overflow-hidden bg-slate-900 select-none">
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      playsInline
-                      muted
-                      className="w-full block [transform:scaleX(-1)]"
-                    />
-                    {/* Darkened frame with oval cutout + animated guide ring */}
+            {/* Camera area – full-width, tall */}
+            <div
+              className="relative w-full overflow-hidden bg-slate-900"
+              style={{ minHeight: "clamp(300px, 58dvh, 520px)" }}
+            >
+              {/* idle */}
+              {cameraState === "idle" && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-6">
+                  <div className="w-20 h-20 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
                     <svg
-                      className="absolute inset-0 w-full h-full pointer-events-none"
-                      viewBox="0 0 100 75"
-                      preserveAspectRatio="xMidYMid slice"
-                    >
-                      <defs>
-                        <mask id="face-oval">
-                          <rect width="100" height="75" fill="white" />
-                          <ellipse
-                            cx="50"
-                            cy="38"
-                            rx="23"
-                            ry="30"
-                            fill="black"
-                          />
-                        </mask>
-                      </defs>
-                      <rect
-                        width="100"
-                        height="75"
-                        fill="rgba(0,0,0,0.55)"
-                        mask="url(#face-oval)"
-                      />
-                      <ellipse
-                        cx="50"
-                        cy="38"
-                        rx="23"
-                        ry="30"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="0.4"
-                        opacity="0.7"
-                      />
-                      <ellipse
-                        cx="50"
-                        cy="38"
-                        rx="23"
-                        ry="30"
-                        fill="none"
-                        stroke="#34d399"
-                        strokeWidth="0.6"
-                        strokeDasharray="5 46"
-                        opacity="0.9"
-                      />
-                    </svg>
-                    {/* Hint label */}
-                    <div className="absolute top-3 inset-x-0 flex justify-center">
-                      <span className="bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full">
-                        Center your face in the oval
-                      </span>
-                    </div>
-                    {/* Shutter button */}
-                    <div className="absolute bottom-0 inset-x-0 flex justify-center pb-5">
-                      <button
-                        onClick={capturePhoto}
-                        aria-label="Take photo"
-                        className="w-16 h-16 rounded-full bg-white ring-4 ring-white/30 hover:scale-105 active:scale-95 transition-transform shadow-xl flex items-center justify-center"
-                      >
-                        <div className="w-12 h-12 rounded-full bg-white border-[4px] border-slate-300" />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* captured â€” selfie preview */}
-                {cameraState === "captured" && selfiePreview && (
-                  <div className="relative rounded-2xl overflow-hidden">
-                    <img
-                      src={selfiePreview}
-                      alt="Your selfie"
-                      className="w-full block"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-                    <div className="absolute top-3 right-3">
-                      <span className="inline-flex items-center gap-1.5 bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow">
-                        <svg
-                          className="w-3 h-3"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        Photo captured
-                      </span>
-                    </div>
-                    <div className="absolute bottom-4 inset-x-0 flex justify-center">
-                      <button
-                        onClick={retakePhoto}
-                        className="inline-flex items-center gap-1.5 bg-white/90 hover:bg-white text-slate-800 text-xs font-semibold px-4 py-2 rounded-full shadow transition-colors"
-                      >
-                        <svg
-                          className="w-3.5 h-3.5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-                          />
-                        </svg>
-                        Retake
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* error */}
-                {cameraState === "error" && (
-                  <div className="aspect-[4/3] rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-4 p-6 text-center">
-                    <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
-                      <svg
-                        className="w-7 h-7 text-red-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
-                        />
-                      </svg>
-                    </div>
-                    <p className="text-sm text-slate-600 font-medium max-w-xs">
-                      {cameraError}
-                    </p>
-                    <button
-                      onClick={startCamera}
-                      className="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
-                    >
-                      Try again
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Sidebar */}
-              <div className="lg:w-60 flex flex-col gap-4">
-                {/* Tips */}
-                <div className="bg-slate-50 rounded-2xl p-4">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">
-                    Selfie Tips
-                  </p>
-                  <ul className="space-y-2.5">
-                    {[
-                      "Look directly into the camera",
-                      "Ensure your face is well-lit",
-                      "Remove glasses or hat",
-                      "No face coverings",
-                      "Keep a neutral expression",
-                    ].map((tip) => (
-                      <li
-                        key={tip}
-                        className="flex items-start gap-2 text-xs text-slate-600"
-                      >
-                        <svg
-                          className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        {tip}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Context-aware action */}
-                {(cameraState === "idle" || cameraState === "error") && (
-                  <button
-                    onClick={startCamera}
-                    className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
-                  >
-                    <svg
-                      className="w-4 h-4"
+                      className="w-9 h-9 text-white/60"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
-                      strokeWidth={2}
+                      strokeWidth={1.5}
                     >
                       <path
                         strokeLinecap="round"
@@ -717,54 +481,188 @@ export default function KYCVerificationModal({
                         d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
                       />
                     </svg>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-white font-semibold text-sm">
+                      Ready to take your selfie
+                    </p>
+                    <p className="text-white/50 text-xs mt-1">
+                      Allow camera access when prompted
+                    </p>
+                  </div>
+                  <button
+                    onClick={startCamera}
+                    className="px-7 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-semibold text-sm transition-colors shadow-lg"
+                  >
                     Open Camera
                   </button>
-                )}
+                </div>
+              )}
 
-                {cameraState === "active" && (
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs text-emerald-700 font-medium leading-relaxed">
-                    Camera is live. Align your face in the oval, then press the
-                    white shutter button to capture.
-                  </div>
-                )}
+              {/* requesting */}
+              {cameraState === "requesting" && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                  <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+                  <p className="text-white/60 text-sm">
+                    Starting camera&hellip;
+                  </p>
+                </div>
+              )}
 
-                {cameraState === "captured" && (
-                  <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+              {/* active – live feed with oval guide */}
+              {cameraState === "active" && (
+                <>
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="absolute inset-0 w-full h-full object-cover [transform:scaleX(-1)]"
+                  />
+                  <svg
+                    className="absolute inset-0 w-full h-full pointer-events-none"
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="xMidYMid slice"
                   >
-                    {loading && (
-                      <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                    )}
-                    {loading ? "Submittingâ€¦" : "Submit Verification"}
-                  </button>
-                )}
-
-                {/* Fallback file upload â€” always available on idle/error */}
-                {(cameraState === "idle" || cameraState === "error") && (
-                  <div className="text-center">
-                    <p className="text-xs text-slate-400 mb-1.5">or</p>
-                    <label
-                      htmlFor="selfie-fallback"
-                      className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 cursor-pointer underline underline-offset-2"
-                    >
-                      Upload a photo instead
-                      <input
-                        id="selfie-fallback"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleSelfieFile}
-                        className="hidden"
-                      />
-                    </label>
+                    <defs>
+                      <mask id="face-oval">
+                        <rect width="100" height="100" fill="white" />
+                        <ellipse cx="50" cy="46" rx="28" ry="36" fill="black" />
+                      </mask>
+                    </defs>
+                    <rect
+                      width="100"
+                      height="100"
+                      fill="rgba(0,0,0,0.50)"
+                      mask="url(#face-oval)"
+                    />
+                    <ellipse
+                      cx="50"
+                      cy="46"
+                      rx="28"
+                      ry="36"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="0.4"
+                      opacity="0.7"
+                    />
+                    <ellipse
+                      cx="50"
+                      cy="46"
+                      rx="28"
+                      ry="36"
+                      fill="none"
+                      stroke="#34d399"
+                      strokeWidth="0.6"
+                      strokeDasharray="6 50"
+                      opacity="0.9"
+                    />
+                  </svg>
+                  {/* Hint */}
+                  <div className="absolute top-4 inset-x-0 flex justify-center pointer-events-none">
+                    <span className="bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full">
+                      Center your face in the oval
+                    </span>
                   </div>
-                )}
-              </div>
+                  {/* Shutter button */}
+                  <div className="absolute bottom-0 inset-x-0 flex justify-center pb-6">
+                    <button
+                      onClick={capturePhoto}
+                      aria-label="Take photo"
+                      className="rounded-full bg-white ring-4 ring-white/30 hover:scale-105 active:scale-95 transition-transform shadow-xl flex items-center justify-center"
+                      style={{ width: 72, height: 72 }}
+                    >
+                      <div
+                        className="rounded-full bg-white border-[5px] border-slate-300"
+                        style={{ width: 56, height: 56 }}
+                      />
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* captured – selfie preview */}
+              {cameraState === "captured" && selfiePreview && (
+                <>
+                  <img
+                    src={selfiePreview}
+                    alt="Your selfie"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute top-4 right-4">
+                    <span className="inline-flex items-center gap-1.5 bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow">
+                      <svg
+                        className="w-3 h-3"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Photo captured
+                    </span>
+                  </div>
+                  <div className="absolute bottom-5 inset-x-0 flex justify-center">
+                    <button
+                      onClick={retakePhoto}
+                      className="inline-flex items-center gap-1.5 bg-white/90 hover:bg-white text-slate-800 text-xs font-semibold px-5 py-2.5 rounded-full shadow transition-colors"
+                    >
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                        />
+                      </svg>
+                      Retake
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* error */}
+              {cameraState === "error" && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-8 text-center">
+                  <div className="w-14 h-14 rounded-full bg-red-500/10 border border-red-400/30 flex items-center justify-center">
+                    <svg
+                      className="w-6 h-6 text-red-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-white/80 leading-relaxed">
+                    {cameraError}
+                  </p>
+                  <button
+                    onClick={startCamera}
+                    className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-semibold text-sm transition-colors"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
             </div>
 
-            {/* Bottom nav */}
-            <div className="flex gap-3 mt-6">
+            {/* Bottom controls */}
+            <div className="px-5 py-4 flex gap-3">
               <button
                 onClick={() => {
                   stopCamera();
@@ -775,17 +673,16 @@ export default function KYCVerificationModal({
               >
                 Back
               </button>
-              {/* Submit on mobile mirrors sidebar button */}
               {cameraState === "captured" && (
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 lg:hidden"
+                  className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
                 >
                   {loading && (
                     <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                   )}
-                  {loading ? "Submittingâ€¦" : "Submit"}
+                  {loading ? "Submitting\u2026" : "Submit Verification"}
                 </button>
               )}
             </div>
@@ -868,7 +765,7 @@ function DocumentUpload({
               Click to upload
             </p>
             <p className="text-xs text-slate-400 mt-0.5">
-              JPG, PNG or WEBP Â· Max 10 MB
+              JPG, PNG or WEBP &middot; Max 10 MB
             </p>
           </div>
           <input

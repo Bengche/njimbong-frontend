@@ -247,13 +247,20 @@ export default function ListingDetailPage() {
     if (!listingId || !currentUserId) return;
     Axios.get(`${API_BASE}/api/offers/listing/${listingId}`)
       .then((res) => {
-        const myOffers: { buyer_id: number; status: string; amount: string | number; id: number }[] =
-          (res.data.offers || []).filter(
-            (o: { buyer_id: number }) => o.buyer_id === currentUserId,
-          );
+        const myOffers: {
+          buyer_id: number;
+          status: string;
+          amount: string | number;
+          id: number;
+        }[] = (res.data.offers || []).filter(
+          (o: { buyer_id: number }) => o.buyer_id === currentUserId,
+        );
         const accepted = myOffers.find((o) => o.status === "accepted");
         if (accepted) {
-          setAcceptedOffer({ id: accepted.id, amount: Number(accepted.amount) });
+          setAcceptedOffer({
+            id: accepted.id,
+            amount: Number(accepted.amount),
+          });
         }
         // Disable the offer button if any offer is still active
         const hasActive = myOffers.some((o) =>

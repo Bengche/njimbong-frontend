@@ -117,7 +117,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-        <div className="h-1 w-24 sm:w-32 rounded-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-emerald-500 mb-8" />
+        <div className="h-1 w-24 sm:w-32 rounded-full bg-emerald-500 mb-8" />
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div className="space-y-3">
             <h3 className="text-base font-bold text-emerald-700">Njimbong</h3>

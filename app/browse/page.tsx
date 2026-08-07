@@ -61,7 +61,7 @@ export default function BrowsePage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-yellow-50 to-white">
+    <main className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-20 shadow-sm">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-4 flex items-center gap-4">

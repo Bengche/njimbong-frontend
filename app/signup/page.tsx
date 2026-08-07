@@ -317,8 +317,6 @@ export default function Signup() {
                   <p className="text-xs text-gray-500 mt-1">{a.phoneHint}</p>
                 </div>
               </div>
-
-
             </div>
             {/* Security Section */}
             <div className="space-y-4">

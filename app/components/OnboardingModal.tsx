@@ -105,17 +105,19 @@ export default function OnboardingModal({
 
       {/* Modal */}
       <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeIn flex flex-col max-h-[calc(100dvh-6rem)] md:max-h-[90vh]">
-        {/* Header with gradient */}
-        <div className="bg-gradient-to-r from-green-600 via-green-500 to-yellow-500 px-4 py-5 text-white sm:px-8 sm:py-6">
+        {/* Header */}
+        <div className="bg-emerald-600 px-4 py-5 text-white sm:px-8 sm:py-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-              <span className="text-2xl">🎯</span>
+            <div className="w-10 h-10 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h8" />
+              </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-bold">
+              <h2 className="text-lg font-semibold leading-snug">
                 {step === 1 ? ob.welcome : ob.personalizeTitle}
               </h2>
-              <p className="text-white/80 text-sm mt-1">
+              <p className="text-white/75 text-sm mt-0.5">
                 {step === 1
                   ? ob.personalizeSubtitle
                   : `${ob.selectAtLeast} (${selectedCategories.length} selected)`}
@@ -123,54 +125,59 @@ export default function OnboardingModal({
             </div>
           </div>
 
-          {/* Progress indicator */}
+          {/* Step progress */}
           <div className="flex gap-2 mt-4">
-            <div
-              className={`h-1 flex-1 rounded-full ${
-                step >= 1 ? "bg-white" : "bg-white/30"
-              }`}
-            />
-            <div
-              className={`h-1 flex-1 rounded-full ${
-                step >= 2 ? "bg-white" : "bg-white/30"
-              }`}
-            />
+            <div className={`h-0.5 flex-1 rounded-full ${step >= 1 ? "bg-white" : "bg-white/30"}`} />
+            <div className={`h-0.5 flex-1 rounded-full ${step >= 2 ? "bg-white" : "bg-white/30"}`} />
           </div>
         </div>
 
         {/* Content */}
         <div className="flex-1 p-4 overflow-y-auto sm:p-8">
           {step === 1 ? (
-            // Welcome Step
             <div className="text-center py-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-5xl">🛍️</span>
+              <div className="w-14 h-14 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-6">
+                <svg className="w-7 h-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7h11" />
+                </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
                 {ob.step1.title}
               </h3>
-              <p className="text-gray-600 max-w-lg mx-auto mb-8 leading-relaxed">
+              <p className="text-sm text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
                 {ob.step1.desc}
               </p>
 
-              <div className="grid grid-cols-1 gap-4 max-w-md mx-auto mb-8 sm:grid-cols-3">
-                <div className="bg-green-50 rounded-xl p-4 text-center">
-                  <div className="text-2xl mb-2">🎯</div>
-                  <p className="text-sm text-gray-600">{ob.step1.feature1}</p>
+              <div className="grid grid-cols-3 gap-3 max-w-md mx-auto mb-8">
+                <div className="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                  </div>
+                  <p className="text-xs text-gray-500 leading-snug">{ob.step1.feature1}</p>
                 </div>
-                <div className="bg-yellow-50 rounded-xl p-4 text-center">
-                  <div className="text-2xl mb-2">🔔</div>
-                  <p className="text-sm text-gray-600">{ob.step1.feature2}</p>
+                <div className="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                  </div>
+                  <p className="text-xs text-gray-500 leading-snug">{ob.step1.feature2}</p>
                 </div>
-                <div className="bg-green-50 rounded-xl p-4 text-center">
-                  <div className="text-2xl mb-2">⚡</div>
-                  <p className="text-sm text-gray-600">{ob.step1.feature3}</p>
+                <div className="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
+                  <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                    <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <p className="text-xs text-gray-500 leading-snug">{ob.step1.feature3}</p>
                 </div>
               </div>
 
               <button
                 onClick={() => setStep(2)}
-                className="w-full px-8 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all sm:w-auto"
+                className="px-8 py-2.5 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
               >
                 {ob.step1.cta}
               </button>
@@ -199,41 +206,22 @@ export default function OnboardingModal({
                         <button
                           key={category.id}
                           onClick={() => toggleCategory(category.id)}
-                          className={`relative p-4 min-h-[96px] rounded-xl border-2 transition-all transform hover:scale-102 text-left ${
+                          className={`relative px-3 py-3 rounded-lg border text-left transition-colors ${
                             isSelected
-                              ? "border-green-500 bg-green-50 shadow-md"
+                              ? "border-emerald-500 bg-emerald-50"
                               : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
                           }`}
                         >
-                          {/* Selection indicator */}
                           {isSelected && (
-                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-md">
-                              <svg
-                                className="w-4 h-4 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M5 13l4 4L19 7"
-                                />
+                            <div className="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
+                              <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
                           )}
-
-                          <div className="text-3xl mb-2">
-                            {category.icon || "📦"}
-                          </div>
-                          <div
-                            className={`text-sm font-medium break-words ${
-                              isSelected ? "text-green-700" : "text-gray-700"
-                            }`}
-                          >
+                          <span className={`text-xs font-medium leading-snug pr-4 ${isSelected ? "text-emerald-700" : "text-gray-700"}`}>
                             {category.name}
-                          </div>
+                          </span>
                         </button>
                       );
                     })}
@@ -259,16 +247,10 @@ export default function OnboardingModal({
                         />
                       ))}
                     </div>
-                    <span
-                      className={`text-sm font-medium ${
-                        selectedCategories.length >= 5
-                          ? "text-green-600"
-                          : "text-gray-500"
-                      }`}
-                    >
+                    <span className={`text-xs font-medium ${selectedCategories.length >= 5 ? "text-emerald-600" : "text-gray-400"}`}>
                       {selectedCategories.length >= 5
-                        ? "Great! You can select more if you'd like"
-                        : `Select ${5 - selectedCategories.length} more`}
+                        ? `${selectedCategories.length} selected`
+                        : `${5 - selectedCategories.length} more required`}
                     </span>
                   </div>
                 </>
@@ -303,10 +285,10 @@ export default function OnboardingModal({
               <button
                 onClick={handleSave}
                 disabled={saving || selectedCategories.length < 5}
-                className={`w-full px-6 py-2 rounded-xl font-semibold transition-all sm:w-auto ${
+                className={`w-full px-6 py-2 text-sm rounded-lg font-semibold transition-colors sm:w-auto ${
                   selectedCategories.length >= 5
-                    ? "bg-gradient-to-r from-green-600 to-green-500 text-white hover:shadow-lg"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
                 }`}
               >
                 {saving ? (
@@ -325,21 +307,10 @@ export default function OnboardingModal({
 
       <style jsx>{`
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: scale(0.95) translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
+          from { opacity: 0; transform: scale(0.97) translateY(12px); }
+          to   { opacity: 1; transform: scale(1)    translateY(0);    }
         }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-        .hover\\:scale-102:hover {
-          transform: scale(1.02);
-        }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
       `}</style>
     </div>
   );

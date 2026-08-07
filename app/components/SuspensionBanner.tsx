@@ -265,7 +265,7 @@ export default function SuspensionBanner({
       {showAppealForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4 pb-20 md:pb-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[calc(100dvh-6rem)] md:max-h-[90vh] overflow-y-auto">
-            <div className="p-4 sm:p-6 border-b bg-gradient-to-r from-green-600 to-yellow-500 text-white rounded-t-xl">
+            <div className="p-4 sm:p-6 border-b bg-emerald-600 text-white rounded-t-xl">
               <h2 className="text-xl font-bold">Submit an Appeal</h2>
               <p className="text-sm opacity-90 mt-1">
                 Explain why you believe your suspension should be lifted

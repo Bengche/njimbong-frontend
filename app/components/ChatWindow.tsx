@@ -1311,7 +1311,7 @@ export default function ChatWindow({
                 className="w-10 h-10 rounded-full object-cover"
               />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-yellow-500 flex items-center justify-center text-white font-semibold">
+              <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-semibold">
                 {getInitials(conversation?.participant?.name || "?")}
               </div>
             )}
@@ -1661,7 +1661,7 @@ export default function ChatWindow({
                                 className="w-7 h-7 rounded-full object-cover"
                               />
                             ) : (
-                              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-yellow-500 flex items-center justify-center text-white text-xs font-semibold">
+                              <div className="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs font-semibold">
                                 {getInitials(message.sender_name)}
                               </div>
                             ))}

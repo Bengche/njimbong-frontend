@@ -290,7 +290,7 @@ export default function TopSellers({ className = "" }: TopSellersProps) {
                             className="w-4 h-4 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="w-4 h-4 rounded-full bg-gradient-to-br from-green-400 to-yellow-400 flex items-center justify-center text-white text-[8px] font-bold">
+                          <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[8px] font-bold">
                             {listing.seller.name?.charAt(0) || "?"}
                           </div>
                         )}

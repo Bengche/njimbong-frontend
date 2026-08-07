@@ -1001,7 +1001,7 @@ export default function Dashboard() {
       <div className="hidden md:flex flex-row flex-wrap gap-4 mb-8">
         <button
           onClick={() => setShowSellModal(true)}
-          className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 flex items-center gap-2"
+          className="w-full sm:w-auto px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
         >
           <svg
             className="w-5 h-5"

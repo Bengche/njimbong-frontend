@@ -186,7 +186,7 @@ export default function KYCVerificationModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] px-3 pt-3 pb-20 sm:px-4 sm:pt-4 md:pb-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[calc(100dvh-6rem)] md:max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-green-600 via-yellow-500 to-green-600 text-white p-4 sm:p-6 rounded-t-2xl flex justify-between items-center">
+        <div className="sticky top-0 bg-emerald-600 text-white p-4 sm:p-6 rounded-t-2xl flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold">{k.title}</h2>
             <p className="text-sm opacity-90">

@@ -30,8 +30,8 @@ export default function Login() {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
+    const trimmedEmail = formData.email.trim();
     try {
-      const trimmedEmail = formData.email.trim();
       const response = await Axios.post(
         `${API_BASE}/auth/login`,
         { email: trimmedEmail, password: formData.password },

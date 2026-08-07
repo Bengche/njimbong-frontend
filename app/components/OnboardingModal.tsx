@@ -109,8 +109,18 @@ export default function OnboardingModal({
         <div className="bg-emerald-600 px-4 py-5 text-white sm:px-8 sm:py-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/15 rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h8" />
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.75}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 10h16M4 14h8"
+                />
               </svg>
             </div>
             <div>
@@ -127,8 +137,12 @@ export default function OnboardingModal({
 
           {/* Step progress */}
           <div className="flex gap-2 mt-4">
-            <div className={`h-0.5 flex-1 rounded-full ${step >= 1 ? "bg-white" : "bg-white/30"}`} />
-            <div className={`h-0.5 flex-1 rounded-full ${step >= 2 ? "bg-white" : "bg-white/30"}`} />
+            <div
+              className={`h-0.5 flex-1 rounded-full ${step >= 1 ? "bg-white" : "bg-white/30"}`}
+            />
+            <div
+              className={`h-0.5 flex-1 rounded-full ${step >= 2 ? "bg-white" : "bg-white/30"}`}
+            />
           </div>
         </div>
 
@@ -137,8 +151,18 @@ export default function OnboardingModal({
           {step === 1 ? (
             <div className="text-center py-8">
               <div className="w-14 h-14 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-6">
-                <svg className="w-7 h-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7h11" />
+                <svg
+                  className="w-7 h-7 text-emerald-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.75}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7h11"
+                  />
                 </svg>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -151,27 +175,63 @@ export default function OnboardingModal({
               <div className="grid grid-cols-3 gap-3 max-w-md mx-auto mb-8">
                 <div className="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
                   <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                    <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    <svg
+                      className="w-4 h-4 text-emerald-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                      />
                     </svg>
                   </div>
-                  <p className="text-xs text-gray-500 leading-snug">{ob.step1.feature1}</p>
+                  <p className="text-xs text-gray-500 leading-snug">
+                    {ob.step1.feature1}
+                  </p>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
                   <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                    <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    <svg
+                      className="w-4 h-4 text-emerald-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                      />
                     </svg>
                   </div>
-                  <p className="text-xs text-gray-500 leading-snug">{ob.step1.feature2}</p>
+                  <p className="text-xs text-gray-500 leading-snug">
+                    {ob.step1.feature2}
+                  </p>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
                   <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                    <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <svg
+                      className="w-4 h-4 text-emerald-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
                     </svg>
                   </div>
-                  <p className="text-xs text-gray-500 leading-snug">{ob.step1.feature3}</p>
+                  <p className="text-xs text-gray-500 leading-snug">
+                    {ob.step1.feature3}
+                  </p>
                 </div>
               </div>
 
@@ -214,12 +274,24 @@ export default function OnboardingModal({
                         >
                           {isSelected && (
                             <div className="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
-                              <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              <svg
+                                className="w-2.5 h-2.5 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={3}
+                                  d="M5 13l4 4L19 7"
+                                />
                               </svg>
                             </div>
                           )}
-                          <span className={`text-xs font-medium leading-snug pr-4 ${isSelected ? "text-emerald-700" : "text-gray-700"}`}>
+                          <span
+                            className={`text-xs font-medium leading-snug pr-4 ${isSelected ? "text-emerald-700" : "text-gray-700"}`}
+                          >
                             {category.name}
                           </span>
                         </button>
@@ -247,7 +319,9 @@ export default function OnboardingModal({
                         />
                       ))}
                     </div>
-                    <span className={`text-xs font-medium ${selectedCategories.length >= 5 ? "text-emerald-600" : "text-gray-400"}`}>
+                    <span
+                      className={`text-xs font-medium ${selectedCategories.length >= 5 ? "text-emerald-600" : "text-gray-400"}`}
+                    >
                       {selectedCategories.length >= 5
                         ? `${selectedCategories.length} selected`
                         : `${5 - selectedCategories.length} more required`}
@@ -307,10 +381,18 @@ export default function OnboardingModal({
 
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: scale(0.97) translateY(12px); }
-          to   { opacity: 1; transform: scale(1)    translateY(0);    }
+          from {
+            opacity: 0;
+            transform: scale(0.97) translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
         }
-        .animate-fadeIn { animation: fadeIn 0.2s ease-out; }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
       `}</style>
     </div>
   );

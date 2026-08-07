@@ -31,9 +31,14 @@ export default function Login() {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      const response = await Axios.post(`${API_BASE}/auth/login`, formData, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const trimmedEmail = formData.email.trim();
+      const response = await Axios.post(
+        `${API_BASE}/auth/login`,
+        { email: trimmedEmail, password: formData.password },
+        {
+          headers: { "Content-Type": "application/json" },
+        },
+      );
 
       if (response.data?.token) {
         window.localStorage.setItem("authToken", response.data.token);
@@ -60,7 +65,7 @@ export default function Login() {
         error.response?.status === 403 &&
         error.response?.data?.emailNotVerified
       ) {
-        window.location.href = `/verify-email?email=${encodeURIComponent(formData.email)}`;
+        window.location.href = `/verify-email?email=${encodeURIComponent(trimmedEmail)}`;
         return;
       }
       setError(a.errorToast);

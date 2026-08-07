@@ -262,7 +262,9 @@ export default function Dashboard() {
   } | null>(null);
   const [withdrawingOffer, setWithdrawingOffer] = useState<number | null>(null);
   const [respondingOffer, setRespondingOffer] = useState<number | null>(null);
-  const [buyerCounteringOfferId, setBuyerCounteringOfferId] = useState<number | null>(null);
+  const [buyerCounteringOfferId, setBuyerCounteringOfferId] = useState<
+    number | null
+  >(null);
   const [buyerCounterAmount, setBuyerCounterAmount] = useState("");
   const [buyerCounterMessage, setBuyerCounterMessage] = useState("");
   const [incomingOffers, setIncomingOffers] = useState<any[]>([]);
@@ -984,7 +986,14 @@ export default function Dashboard() {
       setMyOffers((prev) =>
         prev.map((o) =>
           o.id === offerId
-            ? { ...o, status: "pending", amount: parsed, round: data.round, counter_amount: null, counter_message: null }
+            ? {
+                ...o,
+                status: "pending",
+                amount: parsed,
+                round: data.round,
+                counter_amount: null,
+                counter_message: null,
+              }
             : o,
         ),
       );
@@ -2133,7 +2142,11 @@ export default function Dashboard() {
                                           type="number"
                                           min="1"
                                           value={buyerCounterAmount}
-                                          onChange={(e) => setBuyerCounterAmount(e.target.value)}
+                                          onChange={(e) =>
+                                            setBuyerCounterAmount(
+                                              e.target.value,
+                                            )
+                                          }
                                           placeholder="Your revised amount"
                                           className="flex-1 px-3 py-2 outline-none text-sm font-semibold bg-transparent"
                                           autoFocus
@@ -2142,21 +2155,33 @@ export default function Dashboard() {
                                       <input
                                         type="text"
                                         value={buyerCounterMessage}
-                                        onChange={(e) => setBuyerCounterMessage(e.target.value)}
+                                        onChange={(e) =>
+                                          setBuyerCounterMessage(e.target.value)
+                                        }
                                         placeholder="Optional note to seller"
                                         maxLength={300}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-emerald-500"
                                       />
                                       <div className="flex gap-2">
                                         <button
-                                          onClick={() => submitBuyerCounter(offer.id)}
-                                          disabled={respondingOffer === offer.id}
+                                          onClick={() =>
+                                            submitBuyerCounter(offer.id)
+                                          }
+                                          disabled={
+                                            respondingOffer === offer.id
+                                          }
                                           className="flex-1 py-2 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition"
                                         >
-                                          {respondingOffer === offer.id ? "Sending…" : "Submit revised offer"}
+                                          {respondingOffer === offer.id
+                                            ? "Sending…"
+                                            : "Submit revised offer"}
                                         </button>
                                         <button
-                                          onClick={() => { setBuyerCounteringOfferId(null); setBuyerCounterAmount(""); setBuyerCounterMessage(""); }}
+                                          onClick={() => {
+                                            setBuyerCounteringOfferId(null);
+                                            setBuyerCounterAmount("");
+                                            setBuyerCounterMessage("");
+                                          }}
                                           className="px-3 py-2 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
                                         >
                                           Cancel
@@ -2166,22 +2191,37 @@ export default function Dashboard() {
                                   ) : (
                                     <>
                                       <button
-                                        onClick={() => respondToCounter(offer.id, "accept_counter")}
+                                        onClick={() =>
+                                          respondToCounter(
+                                            offer.id,
+                                            "accept_counter",
+                                          )
+                                        }
                                         disabled={respondingOffer === offer.id}
                                         className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition"
                                       >
-                                        {respondingOffer === offer.id ? "…" : "Accept counter"}
+                                        {respondingOffer === offer.id
+                                          ? "…"
+                                          : "Accept counter"}
                                       </button>
                                       {(offer.round ?? 1) < 3 && (
                                         <button
-                                          onClick={() => { setBuyerCounteringOfferId(offer.id); setBuyerCounterAmount(""); }}
+                                          onClick={() => {
+                                            setBuyerCounteringOfferId(offer.id);
+                                            setBuyerCounterAmount("");
+                                          }}
                                           className="px-3 py-1.5 text-xs font-semibold border border-emerald-400 text-emerald-700 rounded-lg hover:bg-emerald-50 transition"
                                         >
                                           Adjust offer
                                         </button>
                                       )}
                                       <button
-                                        onClick={() => respondToCounter(offer.id, "decline_counter")}
+                                        onClick={() =>
+                                          respondToCounter(
+                                            offer.id,
+                                            "decline_counter",
+                                          )
+                                        }
                                         disabled={respondingOffer === offer.id}
                                         className="px-3 py-1.5 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition"
                                       >

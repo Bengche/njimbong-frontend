@@ -25,7 +25,6 @@ export default function Signup() {
     username: "",
     email: "",
     phone: "",
-    country: "",
     password: "",
     confirmPassword: "",
     terms: false,
@@ -100,7 +99,6 @@ export default function Signup() {
       formDataToSend.append("username", formData.username);
       formDataToSend.append("email", formData.email);
       formDataToSend.append("phone", formData.phone);
-      formDataToSend.append("country", formData.country);
       formDataToSend.append("password", formData.password);
       if (image) {
         formDataToSend.append("profileImage", image);
@@ -132,7 +130,6 @@ export default function Signup() {
       username: "",
       email: "",
       phone: "",
-      country: "",
       password: "",
       confirmPassword: "",
       terms: false,
@@ -321,24 +318,7 @@ export default function Signup() {
                 </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="country"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  {a.country} <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="country"
-                  name="country"
-                  required
-                  onChange={handleInputChange}
-                  value={formData.country}
-                  placeholder={a.countryPlaceholder}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 outline-none hover:border-green-300"
-                />
-              </div>
+
             </div>
             {/* Security Section */}
             <div className="space-y-4">

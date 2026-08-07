@@ -119,6 +119,7 @@ export default function AdminListingsPage() {
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
   const [notification, setNotification] = useState<{
@@ -206,6 +207,29 @@ export default function AdminListingsPage() {
       showNotification(
         "error",
         axiosError.response?.data?.error || "Failed to approve listing",
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const deleteListing = async (id: number) => {
+    try {
+      setActionLoading(true);
+      await Axios.delete(`${API_BASE}/api/admin/listings/${id}`);
+      showNotification("success", "Listing permanently deleted");
+      setShowDeleteModal(false);
+      setShowDetailModal(false);
+      setSelectedListing(null);
+      fetchListings(activeTab, pagination.page);
+      fetchStats();
+    } catch (error: unknown) {
+      const axiosError = error as {
+        response?: { data?: { error?: string } };
+      };
+      showNotification(
+        "error",
+        axiosError.response?.data?.error || "Failed to delete listing",
       );
     } finally {
       setActionLoading(false);
@@ -697,6 +721,28 @@ export default function AdminListingsPage() {
                           <button
                             onClick={() => {
                               setSelectedListing(listing);
+                              setShowDeleteModal(true);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete permanently"
+                          >
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedListing(listing);
                               setShowDetailModal(true);
                             }}
                             className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
@@ -1161,48 +1207,138 @@ export default function AdminListingsPage() {
             </div>
 
             {/* Modal Actions */}
-            {selectedListing.moderation_status === "pending" && (
-              <div className="sticky bottom-0 bg-gray-50 border-t border-gray-100 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
-                <button
-                  onClick={() => {
-                    setShowRejectModal(true);
-                  }}
-                  disabled={actionLoading}
-                  className="w-full sm:w-auto px-6 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors disabled:opacity-50"
+            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-100 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              <button
+                onClick={() => {
+                  setShowDetailModal(false);
+                  setShowDeleteModal(true);
+                }}
+                disabled={actionLoading}
+                className="w-full sm:w-auto px-4 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  Reject Listing
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+                Delete Listing
+              </button>
+              {selectedListing.moderation_status === "pending" && (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <button
+                    onClick={() => {
+                      setShowRejectModal(true);
+                    }}
+                    disabled={actionLoading}
+                    className="w-full sm:w-auto px-6 py-2.5 border border-red-200 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors disabled:opacity-50"
+                  >
+                    Reject Listing
+                  </button>
+                  <button
+                    onClick={() => approveListing(selectedListing.id)}
+                    disabled={actionLoading}
+                    className="w-full sm:w-auto px-6 py-2.5 bg-green-600 text-white hover:bg-green-700 rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {actionLoading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        Approve Listing
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && selectedListing && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-red-100 rounded-full">
+                  <svg
+                    className="w-6 h-6 text-red-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800">
+                    Delete Listing
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    This action cannot be undone
+                  </p>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to permanently delete{" "}
+                <span className="font-semibold text-gray-800">
+                  "{selectedListing.title}"
+                </span>
+                ? The listing and all its images will be removed immediately.
+              </p>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  disabled={actionLoading}
+                  className="w-full sm:w-auto px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  Cancel
                 </button>
                 <button
-                  onClick={() => approveListing(selectedListing.id)}
+                  onClick={() => deleteListing(selectedListing.id)}
                   disabled={actionLoading}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-green-600 text-white hover:bg-green-700 rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
+                  className="w-full sm:w-auto px-6 py-2 bg-red-600 text-white hover:bg-red-700 rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {actionLoading ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Processing...
+                      Deleting...
                     </>
                   ) : (
-                    <>
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      Approve Listing
-                    </>
+                    "Delete Permanently"
                   )}
                 </button>
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}

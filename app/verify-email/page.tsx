@@ -35,7 +35,7 @@ export default function VerifyEmailPage() {
 
     const verify = async () => {
       try {
-        await axios.get(`${API_BASE}/api/auth/verify-email`, {
+        await axios.get(`${API_BASE}/auth/verify-email`, {
           params: { token },
         });
         setVerifyState("success");
@@ -76,7 +76,7 @@ export default function VerifyEmailPage() {
     setResendStatus("sending");
     setResendError("");
     try {
-      await axios.post(`${API_BASE}/api/auth/resend-verification`, { email });
+      await axios.post(`${API_BASE}/auth/resend-verification`, { email });
       setResendStatus("sent");
       setCooldown(RESEND_COOLDOWN);
       setTimeout(() => setResendStatus("idle"), 5000);

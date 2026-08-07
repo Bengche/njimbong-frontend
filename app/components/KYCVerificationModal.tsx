@@ -68,6 +68,13 @@ export default function KYCVerificationModal({
     return () => stopCamera();
   }, [isOpen, stopCamera]);
 
+  // Wire srcObject after video element mounts (state change renders it after stream is obtained)
+  useEffect(() => {
+    if (cameraState === "active" && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [cameraState]);
+
   const startCamera = async () => {
     setCameraError("");
     setCameraState("requesting");
@@ -519,64 +526,23 @@ export default function KYCVerificationModal({
                     muted
                     className="absolute inset-0 w-full h-full object-cover [transform:scaleX(-1)]"
                   />
-                  <svg
-                    className="absolute inset-0 w-full h-full pointer-events-none"
-                    viewBox="0 0 100 100"
-                    preserveAspectRatio="xMidYMid slice"
-                  >
-                    <defs>
-                      <mask id="face-oval">
-                        <rect width="100" height="100" fill="white" />
-                        <ellipse cx="50" cy="46" rx="28" ry="36" fill="black" />
-                      </mask>
-                    </defs>
-                    <rect
-                      width="100"
-                      height="100"
-                      fill="rgba(0,0,0,0.50)"
-                      mask="url(#face-oval)"
-                    />
-                    <ellipse
-                      cx="50"
-                      cy="46"
-                      rx="28"
-                      ry="36"
-                      fill="none"
-                      stroke="white"
-                      strokeWidth="0.4"
-                      opacity="0.7"
-                    />
-                    <ellipse
-                      cx="50"
-                      cy="46"
-                      rx="28"
-                      ry="36"
-                      fill="none"
-                      stroke="#34d399"
-                      strokeWidth="0.6"
-                      strokeDasharray="6 50"
-                      opacity="0.9"
-                    />
-                  </svg>
-                  {/* Hint */}
+                  {/* box-shadow oval: reliable alternative to SVG mask */}
+                  <div
+                    className="absolute pointer-events-none left-[20%] right-[20%] sm:left-[28%] sm:right-[28%]"
+                    style={{
+                      top: "6%",
+                      bottom: "6%",
+                      borderRadius: "50%",
+                      boxShadow: "0 0 0 9999px rgba(0,0,0,0.55)",
+                      border: "2.5px solid rgba(255,255,255,0.8)",
+                      outline: "2px solid rgba(52,211,153,0.7)",
+                      outlineOffset: "3px",
+                    }}
+                  />
                   <div className="absolute top-4 inset-x-0 flex justify-center pointer-events-none">
                     <span className="bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full">
                       Center your face in the oval
                     </span>
-                  </div>
-                  {/* Shutter button */}
-                  <div className="absolute bottom-0 inset-x-0 flex justify-center pb-6">
-                    <button
-                      onClick={capturePhoto}
-                      aria-label="Take photo"
-                      className="rounded-full bg-white ring-4 ring-white/30 hover:scale-105 active:scale-95 transition-transform shadow-xl flex items-center justify-center"
-                      style={{ width: 72, height: 72 }}
-                    >
-                      <div
-                        className="rounded-full bg-white border-[5px] border-slate-300"
-                        style={{ width: 56, height: 56 }}
-                      />
-                    </button>
                   </div>
                 </>
               )}
@@ -662,28 +628,55 @@ export default function KYCVerificationModal({
             </div>
 
             {/* Bottom controls */}
-            <div className="px-5 py-4 flex gap-3">
-              <button
-                onClick={() => {
-                  stopCamera();
-                  setCameraState("idle");
-                  setStep(2);
-                }}
-                className="flex-1 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
-              >
-                Back
-              </button>
-              {cameraState === "captured" && (
-                <button
-                  onClick={handleSubmit}
-                  disabled={loading}
-                  className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
-                >
-                  {loading && (
-                    <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+            <div className="px-5 py-4">
+              {cameraState === "active" ? (
+                <div className="flex items-center">
+                  <button
+                    onClick={() => {
+                      stopCamera();
+                      setCameraState("idle");
+                      setStep(2);
+                    }}
+                    className="py-3 px-5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shrink-0"
+                  >
+                    Back
+                  </button>
+                  <div className="flex-1 flex justify-center">
+                    <button
+                      onClick={capturePhoto}
+                      aria-label="Take photo"
+                      className="w-16 h-16 rounded-full bg-white ring-4 ring-emerald-500/40 hover:scale-105 active:scale-95 transition-transform shadow-xl flex items-center justify-center"
+                    >
+                      <div className="w-12 h-12 rounded-full bg-white border-[4px] border-slate-300" />
+                    </button>
+                  </div>
+                  <div className="w-[72px] shrink-0" />
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      stopCamera();
+                      setCameraState("idle");
+                      setStep(2);
+                    }}
+                    className="flex-1 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    Back
+                  </button>
+                  {cameraState === "captured" && (
+                    <button
+                      onClick={handleSubmit}
+                      disabled={loading}
+                      className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                    >
+                      {loading && (
+                        <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                      )}
+                      {loading ? "Submitting\u2026" : "Submit Verification"}
+                    </button>
                   )}
-                  {loading ? "Submitting\u2026" : "Submit Verification"}
-                </button>
+                </div>
               )}
             </div>
           </div>

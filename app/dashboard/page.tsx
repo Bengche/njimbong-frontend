@@ -262,6 +262,9 @@ export default function Dashboard() {
   } | null>(null);
   const [withdrawingOffer, setWithdrawingOffer] = useState<number | null>(null);
   const [respondingOffer, setRespondingOffer] = useState<number | null>(null);
+  const [buyerCounteringOfferId, setBuyerCounteringOfferId] = useState<number | null>(null);
+  const [buyerCounterAmount, setBuyerCounterAmount] = useState("");
+  const [buyerCounterMessage, setBuyerCounterMessage] = useState("");
   const [incomingOffers, setIncomingOffers] = useState<any[]>([]);
   const [sellerRespondingOffer, setSellerRespondingOffer] = useState<
     number | null
@@ -960,6 +963,39 @@ export default function Dashboard() {
     } catch (error: unknown) {
       console.error("Error responding to counter:", error);
       alert("Failed to respond to offer. Please try again.");
+    } finally {
+      setRespondingOffer(null);
+    }
+  };
+
+  const submitBuyerCounter = async (offerId: number) => {
+    const parsed = parseFloat(buyerCounterAmount);
+    if (isNaN(parsed) || parsed <= 0) {
+      alert("Please enter a valid offer amount.");
+      return;
+    }
+    setRespondingOffer(offerId);
+    try {
+      const { data } = await Axios.put(`${API_BASE}/api/offers/${offerId}`, {
+        action: "buyer_counter",
+        amount: parsed,
+        message: buyerCounterMessage.trim() || undefined,
+      });
+      setMyOffers((prev) =>
+        prev.map((o) =>
+          o.id === offerId
+            ? { ...o, status: "pending", amount: parsed, round: data.round, counter_amount: null, counter_message: null }
+            : o,
+        ),
+      );
+      setBuyerCounteringOfferId(null);
+      setBuyerCounterAmount("");
+      setBuyerCounterMessage("");
+    } catch (error: unknown) {
+      const msg = Axios.isAxiosError(error)
+        ? error.response?.data?.error
+        : undefined;
+      alert(msg || "Failed to submit revised offer. Please try again.");
     } finally {
       setRespondingOffer(null);
     }
@@ -2076,32 +2112,83 @@ export default function Dashboard() {
                             <div className="flex items-center gap-2 mt-2.5 flex-wrap">
                               {offer.status === "countered" && (
                                 <>
-                                  <button
-                                    onClick={() =>
-                                      respondToCounter(
-                                        offer.id,
-                                        "accept_counter",
-                                      )
-                                    }
-                                    disabled={respondingOffer === offer.id}
-                                    className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition"
-                                  >
-                                    {respondingOffer === offer.id
-                                      ? "…"
-                                      : "Accept counter"}
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      respondToCounter(
-                                        offer.id,
-                                        "decline_counter",
-                                      )
-                                    }
-                                    disabled={respondingOffer === offer.id}
-                                    className="px-3 py-1.5 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition"
-                                  >
-                                    Decline
-                                  </button>
+                                  {/* Round indicator */}
+                                  <div className="w-full mb-1">
+                                    <p className="text-xs text-amber-700 font-medium">
+                                      Round {offer.round ?? 1} of 3
+                                      {(offer.round ?? 1) >= 3
+                                        ? " — final round. Accept or decline only."
+                                        : ` — ${3 - (offer.round ?? 1)} adjustment${3 - (offer.round ?? 1) === 1 ? "" : "s"} remaining.`}
+                                    </p>
+                                  </div>
+
+                                  {/* Inline adjust-offer form */}
+                                  {buyerCounteringOfferId === offer.id ? (
+                                    <div className="w-full space-y-2 pt-1">
+                                      <div className="flex rounded-lg border border-gray-300 overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500">
+                                        <span className="flex items-center px-3 bg-gray-50 border-r border-gray-200 text-gray-500 text-xs font-medium select-none whitespace-nowrap">
+                                          {offer.currency}
+                                        </span>
+                                        <input
+                                          type="number"
+                                          min="1"
+                                          value={buyerCounterAmount}
+                                          onChange={(e) => setBuyerCounterAmount(e.target.value)}
+                                          placeholder="Your revised amount"
+                                          className="flex-1 px-3 py-2 outline-none text-sm font-semibold bg-transparent"
+                                          autoFocus
+                                        />
+                                      </div>
+                                      <input
+                                        type="text"
+                                        value={buyerCounterMessage}
+                                        onChange={(e) => setBuyerCounterMessage(e.target.value)}
+                                        placeholder="Optional note to seller"
+                                        maxLength={300}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-emerald-500"
+                                      />
+                                      <div className="flex gap-2">
+                                        <button
+                                          onClick={() => submitBuyerCounter(offer.id)}
+                                          disabled={respondingOffer === offer.id}
+                                          className="flex-1 py-2 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition"
+                                        >
+                                          {respondingOffer === offer.id ? "Sending…" : "Submit revised offer"}
+                                        </button>
+                                        <button
+                                          onClick={() => { setBuyerCounteringOfferId(null); setBuyerCounterAmount(""); setBuyerCounterMessage(""); }}
+                                          className="px-3 py-2 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <button
+                                        onClick={() => respondToCounter(offer.id, "accept_counter")}
+                                        disabled={respondingOffer === offer.id}
+                                        className="px-3 py-1.5 text-xs font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition"
+                                      >
+                                        {respondingOffer === offer.id ? "…" : "Accept counter"}
+                                      </button>
+                                      {(offer.round ?? 1) < 3 && (
+                                        <button
+                                          onClick={() => { setBuyerCounteringOfferId(offer.id); setBuyerCounterAmount(""); }}
+                                          className="px-3 py-1.5 text-xs font-semibold border border-emerald-400 text-emerald-700 rounded-lg hover:bg-emerald-50 transition"
+                                        >
+                                          Adjust offer
+                                        </button>
+                                      )}
+                                      <button
+                                        onClick={() => respondToCounter(offer.id, "decline_counter")}
+                                        disabled={respondingOffer === offer.id}
+                                        className="px-3 py-1.5 text-xs font-semibold border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 transition"
+                                      >
+                                        Decline
+                                      </button>
+                                    </>
+                                  )}
                                 </>
                               )}
                               {offer.status === "accepted" && (

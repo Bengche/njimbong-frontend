@@ -6,11 +6,24 @@ import { useLanguage } from "../i18n/LanguageContext";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
+interface ListingResult {
+  id: number;
+  title: string;
+  price: number;
+  currency: string;
+  city?: string;
+  location?: string;
+  condition?: string;
+  category?: string;
+  image_url?: string;
+}
+
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   streaming?: boolean;
+  listings?: ListingResult[];
 }
 
 function renderMarkdown(text: string): string {
@@ -168,6 +181,13 @@ export default function NjimbongChat() {
             if (data === "[DONE]") break;
             try {
               const parsed = JSON.parse(data);
+              if (parsed.listings) {
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === streamId ? { ...m, listings: parsed.listings } : m,
+                  ),
+                );
+              }
               if (parsed.text) {
                 setMessages((prev) =>
                   prev.map((m) =>
@@ -345,58 +365,136 @@ export default function NjimbongChat() {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-gray-50/50">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                {/* AI avatar */}
-                {msg.role === "assistant" && (
-                  <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
-                    <svg
-                      className="w-3.5 h-3.5 text-white"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
-                      />
-                    </svg>
-                  </div>
-                )}
-
+            {messages.map((msg) => {
+              const hasListings =
+                msg.role === "assistant" && !!msg.listings?.length;
+              return (
                 <div
-                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 shadow-sm
-                    ${
-                      msg.role === "user"
-                        ? "bg-emerald-600 text-white rounded-br-md"
-                        : "bg-white text-gray-800 border border-gray-100 rounded-bl-md"
-                    }`}
+                  key={msg.id}
+                  className={`flex gap-2.5 items-start ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  {msg.streaming && msg.content === "" ? (
-                    <TypingDots />
-                  ) : msg.role === "assistant" ? (
+                  {/* AI avatar */}
+                  {msg.role === "assistant" && (
+                    <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                      <svg
+                        className="w-3.5 h-3.5 text-white"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+                        />
+                      </svg>
+                    </div>
+                  )}
+
+                  {/* Column wrapper expands to fill row when listing cards are present */}
+                  <div
+                    className={
+                      hasListings
+                        ? "flex-1 min-w-0 flex flex-col gap-2"
+                        : "max-w-[80%]"
+                    }
+                  >
                     <div
-                      className="text-sm leading-relaxed prose-sm [&_strong]:font-semibold [&_em]:italic [&_code]:bg-gray-100 [&_code]:px-1 [&_code]:rounded [&_p]:mb-1 [&_p:last-child]:mb-0"
-                      dangerouslySetInnerHTML={{
-                        __html: renderMarkdown(msg.content),
-                      }}
-                    />
-                  ) : (
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                      {msg.content}
-                    </p>
-                  )}
-                  {msg.streaming && msg.content !== "" && (
-                    <span className="inline-block w-0.5 h-3.5 bg-slate-400 ml-0.5 animate-pulse align-middle" />
-                  )}
+                      className={`rounded-2xl px-3.5 py-2.5 shadow-sm
+                        ${hasListings ? "self-start max-w-[85%]" : ""}
+                        ${
+                          msg.role === "user"
+                            ? "bg-emerald-600 text-white rounded-br-md"
+                            : "bg-white text-gray-800 border border-gray-100 rounded-bl-md"
+                        }`}
+                    >
+                      {msg.streaming && msg.content === "" ? (
+                        <TypingDots />
+                      ) : msg.role === "assistant" ? (
+                        <div
+                          className="text-sm leading-relaxed prose-sm [&_strong]:font-semibold [&_em]:italic [&_code]:bg-gray-100 [&_code]:px-1 [&_code]:rounded [&_p]:mb-1 [&_p:last-child]:mb-0"
+                          dangerouslySetInnerHTML={{
+                            __html: renderMarkdown(msg.content),
+                          }}
+                        />
+                      ) : (
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {msg.content}
+                        </p>
+                      )}
+                      {msg.streaming && msg.content !== "" && (
+                        <span className="inline-block w-0.5 h-3.5 bg-slate-400 ml-0.5 animate-pulse align-middle" />
+                      )}
+                    </div>
+
+                    {/* Listing cards — horizontal snap scroll outside the bubble */}
+                    {hasListings && (
+                      <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        {msg.listings!.map((listing) => (
+                          <a
+                            key={listing.id}
+                            href={`/listing/${listing.id}`}
+                            className="group flex-none w-[40%] min-w-[118px] snap-start rounded-2xl overflow-hidden bg-white border border-gray-100 hover:border-emerald-200 hover:shadow-lg active:scale-[0.97] transition-all duration-200 [touch-action:manipulation]"
+                          >
+                            <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50">
+                              {listing.image_url ? (
+                                <img
+                                  src={listing.image_url}
+                                  alt={listing.title}
+                                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <svg
+                                    className="w-6 h-6 text-gray-300"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                                    />
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                            <div className="p-2.5 flex flex-col gap-0.5">
+                              <p className="text-[11px] font-semibold text-gray-800 line-clamp-2 leading-snug">
+                                {listing.title}
+                              </p>
+                              <p className="text-[11px] font-bold text-emerald-600">
+                                {listing.currency || "XAF"}{" "}
+                                {Number(listing.price).toLocaleString()}
+                              </p>
+                              {(listing.condition ||
+                                listing.city ||
+                                listing.location) && (
+                                <div className="flex items-center gap-1 mt-0.5 flex-wrap">
+                                  {listing.condition && (
+                                    <span className="text-[9px] font-medium text-gray-500 bg-gray-100 rounded-full px-1.5 py-0.5 capitalize leading-none">
+                                      {listing.condition}
+                                    </span>
+                                  )}
+                                  {(listing.city || listing.location) && (
+                                    <span className="text-[9px] text-gray-400 truncate">
+                                      {listing.city || listing.location}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Error message */}
             {error && (
